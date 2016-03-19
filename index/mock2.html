@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <script src="jquery.js"></script>
+    <title> Java with the Flow!</title>
+
+    <script>
+    $(function() {
+        $("#grouptraffic").hide();
+        $("#sorter").select(function() {
+            console.log("hello");
+            console.log(this);
+            if($(this).val() == "useful") {
+                $("#grouptraffic").hide();
+                $("#usefulposts").show();
+            } else {
+                $("#grouptraffic").show();
+                $("#usefulposts").hide();
+            }
+        });
+    });
+    </script>
+
+</head>
+
+<body class="container">
+    <h1 class="heading"> Java with the flow </h1>
+    <br/>
+
+    <div class="questionsList">
+
+        <div class="sortbyBox">
+            <select id="sorter">
+                <option value="sortby" disabled="disabled"> Sort By </option>
+                <option value="useful"> Usefulness </option>
+                <option value="group"> Group Traffic </option>
+            </select>
+        </div>
+        <br/>
+
+        <div id="usefulposts">
+
+            <div class="post">
+                <span class="bulbholder"><a href="#"><img class="bulb" src="bulb3.png"> </img> </a> </span>
+                <span class="groupholder"><a href="#"><img class="group" src="group3.png"> </img> </a> </span>        
+                <div class="setwidth"> 
+                    <a class="questionText" href="#"> <span> Java inheritance of autowired properties Java inheritance of autowired properties Java inheritance of autowired properties Java inheritance of autowired properties </span> </a>
+                </div>
+            </div>
+
+             <div class="post">
+                <span class="bulbholder"><a href="#"><img class="bulb" src="bulb2.png"> </img> </a> </span>
+                <span class="groupholder"><a href="#"><img class="group" src="group1.png"> </img> </a> </span>        
+                <div class="setwidth"> 
+                    <a class="questionText" href="#"> <span> Java inheritance of autowired properties </span> </a>
+                </div>
+            </div>
+
+             <div class="post">
+                <span class="bulbholder"><a href="#"><img class="bulb" src="bulb1.png"> </img> </a> </span>
+                <span class="groupholder"><a href="#"><img class="group" src="group2.png"> </img> </a> </span>        
+                <div class="setwidth"> 
+                    <a class="questionText" href="#"> <span> Java inheritance of autowired properties J </span> </a>
+                </div>
+            </div>
+
+        </div>
+        <div id="grouptraffic">
+            <div class="post">
+                <span class="bulbholder"><a href="#"><img class="bulb" src="bulb3.png"> </img> </a> </span>
+                <span class="groupholder"><a href="#"><img class="group" src="group3.png"> </img> </a> </span>        
+                <div class="setwidth"> 
+                    <a class="questionText" href="#"> <span> Java inheritance of autowired properties Java inheritance of autowired properties Java inheritance of autowired properties Java inheritance of autowired properties </span> </a>
+                </div>
+            </div>
+
+             <div class="post">
+                <span class="bulbholder"><a href="#"><img class="bulb" src="bulb3.png"> </img> </a> </span>
+                <span class="groupholder"><a href="#"><img class="group" src="group2.png"> </img> </a> </span>        
+                <div class="setwidth"> 
+                    <a class="questionText" href="#"> <span> Java inheritance of autowired properties </span> </a>
+                </div>
+            </div>
+
+             <div class="post">
+                <span class="bulbholder"><a href="#"><img class="bulb" src="bulb2.png"> </img> </a> </span>
+                <span class="groupholder"><a href="#"><img class="group" src="group1.png"> </img> </a> </span>        
+                <div class="setwidth"> 
+                    <a class="questionText" href="#"> <span> Java inheritance of autowired properties J </span> </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+
+</body>
+</html>
