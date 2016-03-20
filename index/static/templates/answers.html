@@ -1,0 +1,41 @@
+<!-- Template for adding list of answers on the page -->
+<div class='answerdiv' data-id = 'answerid'>
+	<div class='table-responsive'>
+		<table class='table'>
+			<tbody>
+				<tr>
+					<td class='votecell'>
+						<div class='vote' data-id = 'answervoteid'>
+							<div class='slider-wrapper hide'>
+								<input type='text' class='js-customized' name='upvoter' data-id='upvoteid' />
+							 </div>
+							<a class='vote-up glyphicon glyphicon-thumbs-up' title = 'This answer is useful'></a><br />
+							<span class='usefulness-count' data-content="usefulnesscount"></span><br />
+							<a class='vote-down glyphicon glyphicon-thumbs-down' title = 'This answer is not useful'> </a>
+							<div class='slider-wrapper-downvote hide'>
+								<input type='text' class='js-downvote' name='downvoter' data-id='downvoteid'  />
+							 </div>
+						</div>
+					</td>
+					<td class='answercell'>
+						<div class='answer-text' data-content = 'answercontent'>
+						</div>
+						<div class='time-text'>
+							 <p>
+								<span class='glyphicon glyphicon-time'></span> 	
+								<span data-content='answertime'></span>
+							 </p>
+						</div>
+						<div class='user-details'>
+							<p>
+								by <a data-href= 'userUrl' data-content='ansusername'></a>
+							</p>
+						</div>
+						<div class = 'answer-comments' data-id="answercommentdivid" data-content='answercomments'>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,118 @@
+{
+  "question" :
+  {
+    "postId": 1,
+    "postTypeId": 1,
+    "postTitle": "How to use inheritance?",
+    "postText": "Java inheritance of autowired properties Java inheritance of autowired properties Java inheritance of autowired properties Java inheritance of autowired properties",
+    "usefulness": 9,
+    "traffic": 30,
+    "upvotes": 50,
+    "downvotes": 10,
+    "score": 60,
+    "isFavorite": 0,
+    "tags": "java;inheritance;polymorphism",
+    "askedDate": "Jul 11, 2015 at 11:51",
+    "status": 1,
+    "askedbyUserName": "John",
+    "askedbyUserId": "1011",
+    "askedUserProfile": "#",
+    "noOfAnswers": 2
+  },
+
+  "comments" : 
+  [
+    {
+        "commentId": 1,
+        "commentedUser": "Max",
+        "commentedTime": "Sep 8, 2015 at 10:29",
+        "commentText": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.",
+        "userUrl": "#"
+    },
+    {
+        "commentId": 2,
+        "commentedUser": "Julia",
+        "commentedTime": "Sep 11, 2015 at 10:29",
+        "commentText": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.",
+        "userUrl": "#"
+    }
+  ],
+
+  "answers" :
+  [
+    {
+        "answer": 
+        {
+            "postId": 10,
+            "postTypeId": 2,
+            "postText": "For Java inheritance use extends keyword and mention the class from which you need to inherit the properties",
+            "answeredbyUserName": "Prakash",
+            "answeredbyUserId": "1234",
+            "answeredUserProfile": "#",
+            "answeredDate": "Jul 13, 2015 at 13:51",
+            "isAcceptedAnswer": 1,
+            "usefulness": 200,
+            "score": 10,
+            "upvotes": 120,
+            "downvotes": 0
+        },
+        "comments":
+        [
+          {
+            "commentId": 1,
+            "commentedUser": "Julia",
+            "commentedTime": "Sep 11, 2015 at 10:29",
+            "commentText": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.",
+            "userUrl": "#"
+          },
+
+          {
+            "commentId": 2,
+            "commentedUser": "John",
+            "commentedTime": "Sep 11, 2015 at 10:29",
+            "commentText": "Thank you very much for the answer! you saved my life!",
+            "userUrl": "#"
+          }
+
+        ]
+    },
+
+{
+        "answer": 
+        {
+            "postId": 11,
+            "postTypeId": 2,
+            "postText": "Java does not support inheritance concept",
+            "answeredbyUserName": "Peter",
+            "answeredbyUserId": "1212",
+            "answeredUserProfile": "#",
+            "answeredDate": "Jul 11, 2015 at 13:51",
+            "isAcceptedAnswer": 0,
+            "usefulness": 0,
+            "score": -9,
+            "upvotes": 1,
+            "downvotes": 150
+        },
+        "comments":
+        [
+          {
+            "commentId": 1,
+            "commentedUser": "Julia",
+            "commentedTime": "Sep 11, 2015 at 10:29",
+            "commentText": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.",
+            "userUrl": "#"
+          },
+
+          {
+            "commentId": 2,
+            "commentedUser": "John",
+            "commentedTime": "Sep 11, 2015 at 10:29",
+            "commentText": "You stupid, this is wrong answer!",
+            "userUrl": "#"
+          }
+
+        ]
+    }
+
+  ]
+}

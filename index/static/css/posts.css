@@ -1,0 +1,127 @@
+#qTitle{
+	clear: both;
+    padding: 5px 0;
+    border-bottom: 1px solid #E5E5E5;
+    margin-bottom: 1em;
+}
+#questioncontainer{
+	clear: both;
+    border-bottom: 1px solid #E5E5E5;
+    margin-bottom: 1em;
+}
+.comment-p{
+	clear: both;
+    border-bottom: 1px solid #E5E5E5;
+    margin-bottom: 1em;
+    
+}
+#questioncomments{
+	padding-left: 20px;	
+
+}
+.add-comment-link{
+	color: #888;
+    opacity: .6;
+    padding: 0 3px 2px 3px;
+}
+a.add-comment-link:hover {
+    padding: 0 3px 2px 3px;
+    text-decoration: none;
+}
+.answerheader {
+    height: 34px;
+    border-bottom: 1px solid #eaebec;
+}
+
+.vote{
+	margin: 20px 0 0 0px;
+}
+
+.vote-up{
+	cursor: pointer;
+}
+
+.vote-down{
+	cursor: pointer;
+}
+
+.answercell{
+	padding-left: 40px !important;
+
+}
+
+.answer-text{
+	margin: 20px 0 0 10px;
+}
+
+.time-text{
+	margin: 20px 0 0 10px;
+}
+
+.user-details{
+	margin: 20px 0 0 10px;
+	clear: both;
+    border-bottom: 1px solid #E5E5E5;
+    margin-bottom: 1em;
+}
+
+.slider-wrapper {
+    margin: 30px 0 10px 0px;
+    position: relative;
+    width: 100px;
+}
+.hide{
+	visibility: visible;
+}
+
+.answer-comments{
+	padding-left: 60px;	
+}
+
+.slider-wrapper-downvote{
+	margin: 10px 0 30px 0px;
+    position: relative;
+    width: 100px;
+}
+
+
+.range-bar {
+    background-color: #a9acb1;
+    border-radius: 15px;
+    display: block;
+    height: 4px;
+    position: relative;
+    width: 100%;
+}
+
+.range-handle {
+    background-color: #fff;
+    border-radius: 100%;
+    cursor: pointer;
+    height: 25px !important;
+    left: 0;
+    top: -13px !important;
+    position: absolute;
+    width: 10px !important;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.range-min, .range-max {
+    color: #181819;
+    font-size: 12px;
+    height: 20px;
+    padding-top: 4px;
+    position: absolute;
+    text-align: center;
+    top: -9px;
+    width: 24px;
+}
+
+.range-quantity {
+    background-color: #017afd;
+    border-radius: 15px;
+    display: block;
+    height: 100%;
+    width: 0;
+}

@@ -1,0 +1,21 @@
+[
+  {
+    "postId": 1,
+    "postTypeId": 2,
+    "QuestionId": 1,
+    "postText": "Java inheritance of autowired properties Java inheritance of autowired properties Java inheritance of autowired properties Java inheritance of autowired properties",
+    "usefulness": 9,
+    "traffic": 30,
+    "upvotes": 50,
+    "downvotes": 10,
+    "score": 60,
+    "isFavorite": 0,
+    "tags": "java;inheritance;polymorphism",
+    "askedDate": "Jul 11, 2015 at 11:51",
+    "status": 1,
+    "askedbyUserName": "John",
+    "askedbyUserId": "1011",
+    "noOfAnswers": 10
+  }
+
+]
