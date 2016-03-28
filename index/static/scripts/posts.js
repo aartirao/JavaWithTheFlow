@@ -17,7 +17,7 @@ var answerArray = [];
 
 
 $(document).ready(function(){
-	$.getJSON("static/data/question.json", function(json){
+	$.getJSON("/static/data/question.json", function(json){
 		$("#qTitle").html(json.question.postTitle);
 		$("#userdetail").html("by <a href='"+json.question.askedUserProfile+"'>" + json.question.askedbyUserName + "</a>");
 		$("#askedtime").html("<span class='glyphicon glyphicon-time'></span> " + json.question.askedDate);
@@ -75,7 +75,7 @@ $(document).ready(function(){
 			answerArray.push(answerobj);
 
 		});
-	$("#answercontentcontainer").loadTemplate("static/templates/answers.html", answerArray);
+	$("#answercontentcontainer").loadTemplate("/static/templates/answers.html", answerArray);
 
 	});
 
