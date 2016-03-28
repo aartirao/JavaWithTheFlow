@@ -1,5 +1,11 @@
-from bottle import Bottle, run, template, static_file, get
+from bottle import Bottle, run, template, static_file, get, post, request, response, abort
 import pymysql.cursors
+'''
+POST - 201 - Created, 200 - OK {error message}
+GET - 200 - OK, 404 - Not Found
+DELETE - 200 - OK, 404 - Not Found
+PUT - 200 - OK, 404 - Not Found
+'''
 app = Bottle()
 
 connection = pymysql.connect(host='localhost',
@@ -14,10 +20,10 @@ connection = pymysql.connect(host='localhost',
 def hello():
     return "Hello World!"
 
+@app.route('/awww')
 @app.route('/awww/')
-@app.route('/awww/<name>')
-def index(name='User'):
-    return template('index/mock.html', name=name)
+def index():
+    return template('index/mock.html')
 
 # Static Routes
 @app.route('/static/<path:path>')
@@ -29,6 +35,19 @@ def stylesheets(path):
 @app.route('/awww/posts/')
 def index():
     return template('index/posts.html')
+
+@app.route('/login', method='POST')
+def login():
+
+    username = request.forms.get('username')
+    password = request.forms.get('password')
+    
+    if (username == 'karthik' and password == 'hello'):
+        response.status = 201
+        return {"status": "success"}    
+    else:
+        response.status = 401
+        return {"status": "user does not exist"}
 
 try:
 	with connection.cursor() as cursor:
@@ -49,4 +68,6 @@ try:
 finally:
 	connection.close()
 
+
 run(app, host='localhost', port=8080, debug=True)
+
