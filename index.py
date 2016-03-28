@@ -1,5 +1,6 @@
 from bottle import Bottle, run, template, static_file, get, post, request, response, abort
 import pymysql.cursors
+from posts import saveAnswer, saveComment, addQuestion
 '''
 POST - 201 - Created, 200 - OK {error message}
 GET - 200 - OK, 404 - Not Found
@@ -48,6 +49,41 @@ def login():
     else:
         response.status = 401
         return {"status": "user does not exist"}
+
+@app.route('/saveAnswer', method='POST')
+def postAnswer():
+	data = request.json
+	returnValue = saveAnswer(data)
+	if(returnValue == 1):
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+
+#Post service to add comments
+@app.route('/saveComment', method='POST')
+def postComment():
+	data = request.json
+	returnValue = saveComment(data)
+	if(returnValue == 1):
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+
+#Post service to add comments
+@app.route('/addQuestion', method='POST')
+def postQuestion():
+	data = request.json
+	returnValue = addQuestion(data)
+	if(returnValue == 1):
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
 
 try:
 	with connection.cursor() as cursor:
