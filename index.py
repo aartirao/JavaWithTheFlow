@@ -11,8 +11,8 @@ app = Bottle()
 
 connection = pymysql.connect(host='localhost',
 							 user='root',
-							 password='admin123+',
-							 db = 'ans',
+							 password='1234',
+							 db = 'ANS',
 							 charset = 'utf8mb4',
 							 cursorclass=pymysql.cursors.DictCursor)
 
@@ -20,6 +20,10 @@ connection = pymysql.connect(host='localhost',
 @app.route('/hello')
 def hello():
     return "Hello World!"
+@app.route('/mainPage')
+@app.route('/mainPage/')
+def index():
+    return template('index/index.html')
 
 @app.route('/awww')
 @app.route('/awww/')
@@ -84,25 +88,6 @@ def postQuestion():
 	else:
 		response.status = 200
 		return {"status": "some error occured"}
-
-try:
-	with connection.cursor() as cursor:
-		# Create a new record
-		sql = "INSERT INTO `Sample` (`Id`, `Name`) VALUES (%s, %s)"
-		cursor.execute(sql, (2, 'Karthik'))
-
-		#connection is not autocommit by default. So you must commit to save
-		#your changes.
-		connection.commit()
-
-	with connection.cursor() as cursor:
-		#Select a record
-		sql = "SELECT `Id`, `Name` FROM `Sample` WHERE `Id` = %s"
-		cursor.execute(sql, (1))
-		result = cursor.fetchone()
-		print(result)
-finally:
-	connection.close()
 
 
 run(app, host='localhost', port=8080, debug=True)

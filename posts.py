@@ -5,8 +5,8 @@ import traceback
 
 connection = pymysql.connect(host='localhost',
 							 user='root',
-							 password='admin123+',
-							 db = 'ans',
+							 password='1234',
+							 db = 'ANS',
 							 charset = 'utf8mb4',
 							 cursorclass=pymysql.cursors.DictCursor)
 
