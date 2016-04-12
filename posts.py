@@ -4,10 +4,10 @@ import traceback
 import json
 
 
-connection = pymysql.connect(host='localhost',
-							 user='root',
-							 password='1234',
-							 db = 'ANS',
+connection = pymysql.connect(host='54.191.105.144',
+							 user='aweb',
+							 password='aweb',
+							 db = 'aweb',
 							 charset = 'utf8mb4',
 							 cursorclass=pymysql.cursors.DictCursor)
 
@@ -262,13 +262,14 @@ def getAnswers(aId):
 
 #Method to retrieve post details 
 def getQuestion(data):
-	qId = data["PostId"]
+	#qId = data["PostId"]
+	qId = data
 	question = {}
 
 	try:
 		#Select the question with the particular postId
 		with connection.cursor() as cursor:
-			sql = "SELECT * FROM 'Posts' WHERE 'Id' = %s"
+			sql = "SELECT * FROM `Posts` WHERE `Id` = %s"
 			cursor.execute(sql, (qId))
 			results = cursor.fetchall()
 			for row in results:
