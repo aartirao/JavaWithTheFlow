@@ -9,15 +9,6 @@ PUT - 200 - OK, 404 - Not Found
 '''
 app = Bottle()
 
-
-connection = pymysql.connect(host='54.191.105.144',
-							 user='aweb',
-							 password='aweb',
-							 db = 'aweb',
-							 charset = 'utf8mb4',
-							 cursorclass=pymysql.cursors.DictCursor)
-
-
 @app.route('/hello')
 def hello():
     return "Hello World!"
@@ -103,6 +94,6 @@ def findQuestion(qId):
 		response.status = 201
 		return {"status": "successfully retrieved", "data": returnValue}
 
-run(app, host='localhost', port=8000, debug=True)
+run(app, host='localhost', port=8080, debug=True)
 
  

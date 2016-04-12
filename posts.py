@@ -4,10 +4,10 @@ import traceback
 import json
 
 
-connection = pymysql.connect(host='54.191.105.144',
-							 user='aweb',
-							 password='aweb',
-							 db = 'aweb',
+connection = pymysql.connect(host='localhost',
+							 user='root',
+							 password='1234',
+							 db = 'ANS',
 							 charset = 'utf8mb4',
 							 cursorclass=pymysql.cursors.DictCursor)
 
@@ -180,33 +180,34 @@ def addQuestion(data):
 #Method to retrieve comments
 def getComments(parentId):
 	comments = []
+	comment = {}
 	try:
 		with connection.cursor() as cursor:
-			sql = "SELECT * FROM 'Comments' WHERE 'PostId' = %s"
-			cursor.execute(sql, (parentId))
-			results = cursor.fetchall()
-			for row  in results:
-				commentId = row[0]
-				commentedUser = row[5]
-        		commentedTime = row[4]
-        		commentText = row[3]
-        		userUrl = "#"
-        		comment = {
+			sql = "SELECT * FROM `Comments` WHERE `PostId` = %s"
+			rowCount = cursor.execute(sql, (parentId))
+			if rowCount > 0:
+				results = cursor.fetchall()
+				for row  in results:
+					commentId = row[u'Id']
+					commentedUser = row[u'UserDisplayName']
+	        		commentedTime = str(row[u'CreationDate'])
+	        		commentText = row[u'Text']
+	        		userUrl = "#"
+	        		comment = {
 			        "commentId": commentId,
 			        "commentedUser": commentedUser,
 			        "commentedTime": commentedTime,
 			        "commentText": commentText,
 			        "userUrl": userUrl 
-			    }
-                comments.append(comment)
-			
+				    }
+	                comments.append(comment)
+                
 		connection.commit()
 		return comments
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
-	finally:
-		connection.close()
+	
 
 #Method to retrieve answers along with comments
 def getAnswers(aId):
@@ -216,28 +217,30 @@ def getAnswers(aId):
 	try:
 		#Select the answer with the particular id
 		with connection.cursor() as cursor:
-			sql = "SELECT * FROM 'Posts' WHERE 'Id' = %s"
-			cursor.execute(sql, (aId))
-			results = cursor.fetchall()
-			for row in results:
-				postId = row[0]
-				postTypeId = row[1]
-				postText =  row[8]
- 				answeredByUserName = row[10]
- 				answeredUserProfile = "#"
- 				answeredDate = row[4]
- 				isAcceptedAnswer = "#"
- 				usefulness = "#"
- 				score = row[6]
- 				upvotes = "#"
- 				downvotes = "#"
+			sql = "SELECT * FROM `Posts` WHERE `ParentId` = %s"
+			rowCount = cursor.execute(sql, (aId))
+			if rowCount > 0:
+				results = cursor.fetchall()
+				for row in results:
+					postId = row[u'Id']				
+					postTypeId = row[u'PostTypeId']
+					postText =  row[u'Body']
+	 				answeredByUserName = row[u'OwnerDisplayName']
+	 				answeredByUserId = row[u'OwnerUserId']
+	 				answeredUserProfile = "#"
+	 				answeredDate = str(row[u'CreationDate'])
+	 				isAcceptedAnswer = "#"
+	 				usefulness = "#"
+	 				score = row[u'Score']
+	 				upvotes = "#"
+	 				downvotes = "#"
 
- 				answer = {
+	 				answer = {
 		            "postId": postId,
 		            "postTypeId": postTypeId,
 		            "postText": postText,
-		            "answeredbyUserName": answeredbyUserName,
-		            "answeredbyUserId": answeredbyUserId,
+		            "answeredbyUserName": answeredByUserName,
+		            "answeredbyUserId": answeredByUserId,
 		            "answeredUserProfile": answeredUserProfile,
 		            "answeredDate": answeredDate,
 		            "isAcceptedAnswer": isAcceptedAnswer,
@@ -245,53 +248,50 @@ def getAnswers(aId):
 		            "score": score,
 		            "upvotes": "#",
 		            "downvotes": "#"
-        		}
+	        		}
 
-        		comments = getComments(aId)
-        		temp = {"answer" : answer, "comments" : comments}
-        		answers.append(temp)
+	        		comments = getComments(aId)
+	        		temp = {"answer" : answer, "comments" : comments}
+	        		answers.append(temp)
 
 		return answers
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
-	finally:
-		connection.close()
-
-
-
+	
 #Method to retrieve post details 
 def getQuestion(data):
-	#qId = data["PostId"]
 	qId = data
 	question = {}
+	trial= []
 
 	try:
 		#Select the question with the particular postId
 		with connection.cursor() as cursor:
 			sql = "SELECT * FROM `Posts` WHERE `Id` = %s"
-			cursor.execute(sql, (qId))
-			results = cursor.fetchall()
-			for row in results:
-				postId = row[0]
-				postTypeId = row[1]
-				postTitle = row[15]
-				postText = row[8]
-				usefulness = "#"
-				traffic = "#"
-				upvotes = "#"
-				downvotes = "#"
-				score = row[6]
-				isFavorite = "#"
-				tags = row[16]
-				askedDate = row[4]
-				status = "#"
-				askedByUserName = row[10]
-				askedByUserId = row[9]
-				askedUserProfile = "#"
-				noOfAnswers = row[17]
+			rowCount = cursor.execute(sql, (qId))
+			if rowCount > 0:
+				results = cursor.fetchall()
+				for row in results:																
+					postId = row[u'Id']
+					postTypeId = row[u'PostTypeId']
+					postTitle = row[u'Title']
+					postText = row[u'Body']
+					usefulness = "#"
+					traffic = "#"
+					upvotes = "#"
+					downvotes = "#"
+					score = row[u'Score']
+					isFavorite = "#"
+					tags = row[u'Tags']
+					askedDate = str(row[u'CreationDate'])
+					status = "#"
+					askedByUserName = row[u'OwnerDisplayName']
+					askedByUserId = row[u'OwnerUserId']
+					askedUserProfile = "#"
+					noOfAnswers = row[u'AnswerCount']
 
-				question =  {
+					question =  {
 				    "postId": postId,
 				    "postTypeId": postTypeId,
 				    "postTitle": postTitle,
@@ -309,19 +309,17 @@ def getQuestion(data):
 				    "askedbyUserId": askedByUserId,
 				    "askedUserProfile": "#",
 				    "noOfAnswers": noOfAnswers
-  				}
+	  				}
 
 		comments = getComments(qId)
-		answers = getAnswer(qId)
-		final = json.dump({"question" : question, "comments" : comments, "answers" : answers})
+		answers = getAnswers(qId)		
 
-
+		final = {"question" : question, "comments" : comments, "answers" : answers}
 		connection.commit()
 		return final
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
-	finally:
-		connection.close()
+	
 
 	
