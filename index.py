@@ -1,6 +1,6 @@
 from bottle import Bottle, run, template, static_file, get, post, request, response, abort
 import pymysql.cursors
-from posts import saveAnswer, saveComment, addQuestion
+from posts import saveAnswer, saveComment, addQuestion, getQuestion
 '''
 POST - 201 - Created, 200 - OK {error message}
 GET - 200 - OK, 404 - Not Found
@@ -11,7 +11,7 @@ app = Bottle()
 
 connection = pymysql.connect(host='localhost',
 							 user='root',
-							 password='1234',
+							 password='Zigzag12!',
 							 db = 'ANS',
 							 charset = 'utf8mb4',
 							 cursorclass=pymysql.cursors.DictCursor)
@@ -54,6 +54,7 @@ def login():
         response.status = 401
         return {"status": "user does not exist"}
 
+#Post service to add answers
 @app.route('/saveAnswer', method='POST')
 def postAnswer():
 	data = request.json
@@ -77,7 +78,7 @@ def postComment():
 		response.status = 200
 		return {"status": "some error occured"}
 
-#Post service to add comments
+#Post service to add questions
 @app.route('/addQuestion', method='POST')
 def postQuestion():
 	data = request.json
@@ -89,6 +90,17 @@ def postQuestion():
 		response.status = 200
 		return {"status": "some error occured"}
 
+#Get service to retrieve posts
+@app.route('/getQuestion/<qId>', method ='GET')
+def findQuestion():
+	returnValue = getQuestion(qId)
+	if(returnValue == -1):
+		response.status = 200
+		return {"status": "some error occured"}
+	else:
+		response.status = 201
+		return {"status": "successfully retrieved", "data": returnValue}
 
-run(app, host='localhost', port=8080, debug=True)
+run(host='localhost', port=8080, debug=True)
 
+ 
