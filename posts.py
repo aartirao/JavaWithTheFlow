@@ -6,7 +6,7 @@ import json
 
 connection = pymysql.connect(host='localhost',
 							 user='root',
-							 password='1234',
+							 password='',
 							 db = 'ANS',
 							 charset = 'utf8mb4',
 							 cursorclass=pymysql.cursors.DictCursor)
@@ -187,21 +187,23 @@ def getComments(parentId):
 			rowCount = cursor.execute(sql, (parentId))
 			if rowCount > 0:
 				results = cursor.fetchall()
-				for row  in results:
+				for row  in results:					
 					commentId = row[u'Id']
 					commentedUser = row[u'UserDisplayName']
-	        		commentedTime = str(row[u'CreationDate'])
-	        		commentText = row[u'Text']
-	        		userUrl = "#"
-	        		comment = {
-			        "commentId": commentId,
-			        "commentedUser": commentedUser,
-			        "commentedTime": commentedTime,
-			        "commentText": commentText,
-			        "userUrl": userUrl 
-				    }
-	                comments.append(comment)
-                
+					commentedTime = str(row[u'CreationDate'])
+					commentText = row[u'Text']
+					userUrl = "#"
+					comment = {
+						"commentId": commentId,
+						"commentedUser": commentedUser,
+						"commentedTime": commentedTime,
+						"commentText": commentText,
+						"userUrl": userUrl 
+					}
+					comments.append(comment)
+
+				
+        
 		connection.commit()
 		return comments
 	except Exception, e:
@@ -210,7 +212,7 @@ def getComments(parentId):
 	
 
 #Method to retrieve answers along with comments
-def getAnswers(aId):
+def getAnswers(parentId):
 	answers = []
 	comments = []
 	temp = {}
@@ -218,41 +220,42 @@ def getAnswers(aId):
 		#Select the answer with the particular id
 		with connection.cursor() as cursor:
 			sql = "SELECT * FROM `Posts` WHERE `ParentId` = %s"
-			rowCount = cursor.execute(sql, (aId))
+			rowCount = cursor.execute(sql, (parentId))
 			if rowCount > 0:
 				results = cursor.fetchall()
-				for row in results:
+				for row in results:					
 					postId = row[u'Id']				
 					postTypeId = row[u'PostTypeId']
 					postText =  row[u'Body']
-	 				answeredByUserName = row[u'OwnerDisplayName']
-	 				answeredByUserId = row[u'OwnerUserId']
-	 				answeredUserProfile = "#"
-	 				answeredDate = str(row[u'CreationDate'])
-	 				isAcceptedAnswer = "#"
-	 				usefulness = "#"
-	 				score = row[u'Score']
-	 				upvotes = "#"
-	 				downvotes = "#"
+					answeredByUserName = row[u'OwnerDisplayName']
+					answeredByUserId = row[u'OwnerUserId']
+					answeredUserProfile = "#"
+					answeredDate = str(row[u'CreationDate'])
+					isAcceptedAnswer = "#"
+					usefulness = "#"
+					score = row[u'Score']
+					upvotes = "#"
+					downvotes = "#"
 
-	 				answer = {
-		            "postId": postId,
-		            "postTypeId": postTypeId,
-		            "postText": postText,
-		            "answeredbyUserName": answeredByUserName,
-		            "answeredbyUserId": answeredByUserId,
-		            "answeredUserProfile": answeredUserProfile,
-		            "answeredDate": answeredDate,
-		            "isAcceptedAnswer": isAcceptedAnswer,
-		            "usefulness": usefulness,
-		            "score": score,
-		            "upvotes": "#",
-		            "downvotes": "#"
-	        		}
+					answer = {
+						"postId": postId,
+						"postTypeId": postTypeId,
+						"postText": postText,
+						"answeredbyUserName": answeredByUserName,
+						"answeredbyUserId": answeredByUserId,
+						"answeredUserProfile": answeredUserProfile,
+						"answeredDate": answeredDate,
+						"isAcceptedAnswer": isAcceptedAnswer,
+						"usefulness": usefulness,
+						"score": score,
+						"upvotes": "#",
+						"downvotes": "#"
+					}
 
-	        		comments = getComments(aId)
-	        		temp = {"answer" : answer, "comments" : comments}
-	        		answers.append(temp)
+					comments = getComments(postId)
+					temp = {"answer" : answer, "comments" : comments}
+					answers.append(temp)
+					
 
 		return answers
 	except Exception, e:
@@ -263,8 +266,7 @@ def getAnswers(aId):
 def getQuestion(data):
 	qId = data
 	question = {}
-	trial= []
-
+	
 	try:
 		#Select the question with the particular postId
 		with connection.cursor() as cursor:
@@ -292,28 +294,27 @@ def getQuestion(data):
 					noOfAnswers = row[u'AnswerCount']
 
 					question =  {
-				    "postId": postId,
-				    "postTypeId": postTypeId,
-				    "postTitle": postTitle,
-				    "postText": postText,
-				    "usefulness": usefulness,
-				    "traffic": traffic,
-				    "upvotes": upvotes,
-				    "downvotes": downvotes,
-				    "score": score,
-				    "isFavorite": isFavorite,
-				    "tags": tags,
-				    "askedDate": askedDate,
-				    "status": status,
-				    "askedbyUserName": askedByUserName,
-				    "askedbyUserId": askedByUserId,
-				    "askedUserProfile": "#",
-				    "noOfAnswers": noOfAnswers
+						"postId": postId,
+						"postTypeId": postTypeId,
+						"postTitle": postTitle,
+						"postText": postText,
+						"usefulness": usefulness,
+						"traffic": traffic,
+						"upvotes": upvotes,
+						"downvotes": downvotes,
+						"score": score,
+						"isFavorite": isFavorite,
+						"tags": tags,
+						"askedDate": askedDate,
+						"status": status,
+						"askedbyUserName": askedByUserName,
+						"askedbyUserId": askedByUserId,
+						"askedUserProfile": "#",
+						"noOfAnswers": noOfAnswers
 	  				}
 
 		comments = getComments(qId)
-		answers = getAnswers(qId)		
-
+		answers = getAnswers(qId)					
 		final = {"question" : question, "comments" : comments, "answers" : answers}
 		connection.commit()
 		return final
