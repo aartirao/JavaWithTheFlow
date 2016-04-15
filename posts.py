@@ -314,13 +314,49 @@ def getQuestion(data):
 	  				}
 
 		comments = getComments(qId)
-		answers = getAnswers(qId)					
+		answers = getAnswers(qId)
 		final = {"question" : question, "comments" : comments, "answers" : answers}
+
 		connection.commit()
 		return final
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
 	
-
-	
+#Method to return view counts for each topic
+def getViewCount():
+	data = {}
+	try:
+		# Get all topics
+		with connection.cursor() as cursor:
+			sql = "SELECT * FROM `Topics`"
+			rowCount = cursor.execute(sql)
+			if rowCount > 0:
+				results = cursor.fetchall()
+				for row in results:
+					# Get list of question ids under each topic
+					topicSql = "SELECT `PostId` from `PostTopicMap` where `TopicId` = %s"
+					topicRowCount = cursor.execute(topicSql, (row[u'Id']))					
+					if(topicRowCount > 0):
+						topicResults = cursor.fetchall()
+						postIds = []
+						for topicRow in topicResults:
+							postIds.append(topicRow[u'PostId'])
+						# Calculate sum of view counts
+						viewCountSql = "SELECT sum(`ViewCount`) from `Posts` where `Id` in (%s)"
+						# Some high tech execution #YOLO 
+						in_p=', '.join(list(map(lambda x: '%s', postIds)))
+						viewCountSql = viewCountSql % in_p
+						viewCountRowCount = cursor.execute(viewCountSql, postIds)
+						temp = {}
+						temp["topicName"] = str(row[u'Name'])
+						if(viewCountRowCount > 0):
+							viewCountResults = cursor.fetchone()	
+							temp["viewCount"] = str(viewCountResults[u'sum(`ViewCount`)'])
+						else:
+							temp["viewCount"] = '0'	
+						data[row[u'Id']] = temp			
+		return data
+	except Exception, e:
+		print traceback.print_exc()
+		return -1	
