@@ -88,10 +88,10 @@ def postQuestion():
 def findQuestion(qId):
 	returnValue = getQuestion(qId)
 	if(returnValue == -1):
-		response.status = 200
-		return {"status": "some error occured"}
+		response.status = 404
+		return {"status": "not found"}
 	else:
-		response.status = 201
+		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
 
 #Get service to retrieve view counts
@@ -99,10 +99,10 @@ def findQuestion(qId):
 def getViews():
 	returnValue = getViewCount()
 	if(returnValue == -1):
-		response.status = 200
-		return {"status": "some error occured"}
+		response.status = 404
+		return {"status": "not found"}
 	else:
-		response.status = 201
+		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
 
 run(app, host='localhost', port=8080, debug=True)
