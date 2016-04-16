@@ -86,7 +86,7 @@ CREATE TABLE Votes(
 Id INT,
 PostId  INT,
 VoteTypeId  INT,
-UseId  INT,
+UserId  INT,
 CreationDate  DATETIME);
 
 CREATE TABLE UserInfo(
