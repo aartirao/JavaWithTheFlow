@@ -30,8 +30,8 @@ def stylesheets(path):
     return static_file(path, root='index/static')
 
 # Route for posts page
-@app.route('/awww/posts')
-@app.route('/awww/posts/')
+@app.route('/posts')
+@app.route('/posts/')
 def index():
     return template('index/posts.html')
 
