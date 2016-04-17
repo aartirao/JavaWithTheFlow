@@ -1,6 +1,7 @@
 from bottle import Bottle, run, template, static_file, get, post, request, response, abort
 import pymysql.cursors
 from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount
+from browserEvents import updateTimeSpent
 '''
 POST - 201 - Created, 200 - OK {error message}
 GET - 200 - OK, 404 - Not Found
@@ -105,6 +106,20 @@ def getViews():
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
 
+#Method to update the time spend by user in a page
+@app.route('/updateTime', method = 'POST')
+def updateTime():
+	data = request.json
+	returnValue = updateTimeSpent(data)
+	if(returnValue == 1):
+		response.status = 201
+		return {"status:" "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+
+
 run(app, host='localhost', port=8080, debug=True)
+
 
  
