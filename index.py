@@ -1,7 +1,7 @@
 from bottle import Bottle, run, template, static_file, get, post, request, response, abort
 import pymysql.cursors
 from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount
-from browserEvents import updateTimeSpent
+from browserEvents import updateTimeSpent, updateSelectAction
 '''
 POST - 201 - Created, 200 - OK {error message}
 GET - 200 - OK, 404 - Not Found
@@ -114,6 +114,18 @@ def updateTime():
 	if(returnValue == 1):
 		response.status = 201
 		return {"status:" "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+
+#Method to update the text selection action performed by the user
+@app.route('/updateSelectAction', method = 'POST')
+def updateSelect():
+	data = request.json
+	returnValue = updateSelectAction(data)
+	if(returnValue == 1):
+		response.status = 201
+		return {"status": "successfully saved"}
 	else:
 		response.status = 200
 		return {"status": "some error occured"}

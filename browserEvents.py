@@ -28,7 +28,7 @@ def updateTimeSpent(data):
 			cursor.execute(sql,(userId,eventId))
 			count = cursor.fetchone()
 			count = count["COUNT(*)"]
-			print count
+			#print count
 
 		if(count != 0):
 			with connection.cursor() as cursor:
@@ -36,7 +36,7 @@ def updateTimeSpent(data):
 				AND `EventId` = %s AND `EndTime` IS NULL""";
 				cursor.execute(sql,(userId,eventId))
 				res = cursor.fetchone()
-				print res
+				#print res
 				existingstarttime = res["StartTime"]
 				existingrowId = res["Id"]
 
@@ -44,15 +44,15 @@ def updateTimeSpent(data):
 
 			timeDiff = currentTime - existingstarttime
 			mins = divmod(timeDiff.days * 86400 + timeDiff.seconds, 60)
-			print "mins"
-			print mins
-			print timeDiff
+			#print "mins"
+			#print mins
+			#print timeDiff
 			if(mins[0] <= 30):
 				#Time difference between last entry is less than 30 mins, so update the endtime for the previous entry
-				print "if"
+				#print "if"
 				#duration = timeDiff[0]*60 + timeDiff[1]
-				duration = mins[0]
-				print duration
+				duration = mins[0]*60 + mins[1]
+				#print duration
 				with connection.cursor() as cursor:
 					sql = """UPDATE `UserEventStore` SET `EndTime` = %s, `Duration` = %s
 					WHERE `Id` = %s"""
@@ -73,4 +73,26 @@ def updateTimeSpent(data):
 		return -1
 
 
-	#Insert start time into database for this user & post
+#Method for capturing the select action performed by user in a page
+def updateSelectAction(data):
+	postTypeId = data["PostTypeId"]
+	userId = data["UserId"]
+	eventId = 3
+	userDisplayName = data["UserName"]
+	currentTime = datetime.datetime.now()
+	postId = data["PostId"]
+	try:
+		#Insert a new row in the table for text selection action
+		with connection.cursor() as cursor:
+			sql = """INSERT INTO `UserEventStore` (`UserDisplayName`,
+				`UserId`,
+				`EventId`,
+				`StartTime`,
+				`PostId`,
+				`PostTypeId`) VALUES (%s, %s, %s, %s, %s, %s)"""
+			cursor.execute(sql, (userDisplayName,userId, eventId, currentTime, postId, postTypeId))
+		connection.commit()
+		return 1
+	except Exception, e:
+		print traceback.print_exc()
+		return -1
