@@ -1,6 +1,8 @@
 from bottle import Bottle, run, template, static_file, get, post, request, response, abort
 import pymysql.cursors
 from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, getQuestionListByTopic
+from browserEvents import updateTimeSpent, updateSelectAction
+from search import searchQuery
 '''
 POST - 201 - Created, 200 - OK {error message}
 GET - 200 - OK, 404 - Not Found
@@ -29,8 +31,8 @@ def stylesheets(path):
     return static_file(path, root='index/static')
 
 # Route for posts page
-@app.route('/awww/posts')
-@app.route('/awww/posts/')
+@app.route('/posts')
+@app.route('/posts/')
 def index():
     return template('index/posts.html')
 
@@ -105,9 +107,40 @@ def getViews():
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
 
+<<<<<<< HEAD
 @app.route('/getQuestionList/<topic>', method='GET')
 def getQuestionList(topic):
 	returnValue = getQuestionListByTopic(topic)
+=======
+#Method to update the time spend by user in a page
+@app.route('/updateTime', method = 'POST')
+def updateTime():
+	data = request.json
+	returnValue = updateTimeSpent(data)
+	if(returnValue == 1):
+		response.status = 201
+		return {"status:" "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+
+#Method to update the text selection action performed by the user
+@app.route('/updateSelectAction', method = 'POST')
+def updateSelect():
+	data = request.json
+	returnValue = updateSelectAction(data)
+	if(returnValue == 1):
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+
+#Method to return search results for a given query
+@app.route('/search/<query>', method = 'GET')
+def callSearch(query):
+	returnValue = searchQuery(query)
+>>>>>>> 08f66d66343e3f4f2c33f6484e7a397b79975ddc
 	if(returnValue == -1):
 		response.status = 404
 		return {"status": "not found"}
@@ -115,6 +148,7 @@ def getQuestionList(topic):
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
 
+<<<<<<< HEAD
 @app.route('/questionList/', method='GET')
 def questionList():
 	return template('index/mock2.html')
@@ -122,3 +156,9 @@ def questionList():
 run(app, host='localhost', port=8000, debug=True)
 
  
+=======
+run(app, host='localhost', port=8080, debug=True)
+
+
+ 
+>>>>>>> 08f66d66343e3f4f2c33f6484e7a397b79975ddc

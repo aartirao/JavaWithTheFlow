@@ -6,8 +6,8 @@ import json
 
 connection = pymysql.connect(host='localhost',
 							 user='root',
-							 password='',
-							 db = 'aweb',
+							 password='admin123+',
+							 db = 'ANS',
 							 charset = 'utf8mb4',
 							 cursorclass=pymysql.cursors.DictCursor)
 
@@ -32,7 +32,7 @@ def saveAnswer(data):
 			
 		#save the answer in database
 		with connection.cursor() as cursor:
-			sql = """INSERT INTO `posts` (`Id`,
+			sql = """INSERT INTO `posts` (
 				`PostTypeId`,
 				`AcceptedAnswerId`,
 				`ParentId`,
@@ -52,11 +52,11 @@ def saveAnswer(data):
 				`AnswerCount`,
 				`CommentCount`,
 				`FavouriteCount`,
-				`ClosedDate`) VALUES (%s, %s, %s, %s, %s, %s,
+				`ClosedDate`) VALUES (%s, %s, %s, %s, %s,
 				%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
 				%s, %s, %s)"""
 				
-			cursor.execute(sql, (1, postTypeId, None, parentId, creationDate, None, 
+			cursor.execute(sql, (postTypeId, None, parentId, creationDate, None, 
 			score, viewcount, body, userId["Id"], displayname, None, None, None, None, None, 
 			None, None, 0, None, None))
 
@@ -90,14 +90,14 @@ def saveComment(data):
 
 		#Insert the new comment into database
 		with connection.cursor() as cursor:
-			sql = """INSERT INTO `Comments` (`Id`,
+			sql = """INSERT INTO `Comments` (
 				`PostId`,
 				`Score`,
 				`Text`,
 				`CreationDate`,
 				`UserDisplayName`,
-				`UserId`) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
-			cursor.execute(sql, (1,postId, score, text, creationDate, 
+				`UserId`) VALUES (%s, %s, %s, %s, %s, %s)"""
+			cursor.execute(sql, (postId, score, text, creationDate, 
 				displayname, userId["Id"]))
 
 		#update comment count for the post
@@ -139,7 +139,7 @@ def addQuestion(data):
 			userId = cursor.fetchone()
 		#save the question in database
 		with connection.cursor() as cursor:
-			sql = """INSERT INTO `posts` (`Id`,
+			sql = """INSERT INTO `posts` (
 				`PostTypeId`,
 				`AcceptedAnswerId`,
 				`ParentId`,
@@ -159,11 +159,11 @@ def addQuestion(data):
 				`AnswerCount`,
 				`CommentCount`,
 				`FavouriteCount`,
-				`ClosedDate`) VALUES (%s, %s, %s, %s, %s, %s,
+				`ClosedDate`) VALUES (%s, %s, %s, %s, %s,
 				%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
 				%s, %s, %s)"""
 				
-			cursor.execute(sql, (1, postTypeId, acceptedAnswerId, 
+			cursor.execute(sql, (postTypeId, acceptedAnswerId, 
 				parentId, creationDate, None, 
 				score, viewcount, body, userId["Id"], 
 				displayname, None, None, None, None, title, 
