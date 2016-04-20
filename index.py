@@ -2,6 +2,7 @@ from bottle import Bottle, run, template, static_file, get, post, request, respo
 import pymysql.cursors
 from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount
 from browserEvents import updateTimeSpent, updateSelectAction
+from search import searchQuery
 '''
 POST - 201 - Created, 200 - OK {error message}
 GET - 200 - OK, 404 - Not Found
@@ -130,6 +131,16 @@ def updateSelect():
 		response.status = 200
 		return {"status": "some error occured"}
 
+#Method to return search results for a given query
+@app.route('/search/<query>', method = 'GET')
+def callSearch(query):
+	returnValue = searchQuery(query)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "successfully retrieved", "data": returnValue}
 
 run(app, host='localhost', port=8080, debug=True)
 
