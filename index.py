@@ -1,6 +1,6 @@
 from bottle import Bottle, run, template, static_file, get, post, request, response, abort
 import pymysql.cursors
-from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount
+from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, getQuestionListByTopic
 '''
 POST - 201 - Created, 200 - OK {error message}
 GET - 200 - OK, 404 - Not Found
@@ -105,6 +105,20 @@ def getViews():
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
 
-run(app, host='localhost', port=8080, debug=True)
+@app.route('/getQuestionList/<topic>', method='GET')
+def getQuestionList(topic):
+	returnValue = getQuestionListByTopic(topic)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "successfully retrieved", "data": returnValue}
+
+@app.route('/questionList/', method='GET')
+def questionList():
+	return template('index/mock2.html')
+	
+run(app, host='localhost', port=8000, debug=True)
 
  
