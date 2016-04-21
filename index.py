@@ -54,9 +54,9 @@ def login():
 def postAnswer():
 	data = request.json
 	returnValue = saveAnswer(data)
-	if(returnValue == 1):
+	if(returnValue != -1):
 		response.status = 201
-		return {"status": "successfully saved"}
+		return {"status": "successfully saved", "postId": returnValue}
 	else:
 		response.status = 200
 		return {"status": "some error occured"}

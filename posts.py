@@ -21,7 +21,6 @@ def saveAnswer(data):
 	viewcount = 1
 	body = data["Body"]
 	displayname = data["DisplayName"]
-
 	#insert this into database in Posts table
 	try:
 		#Get user id for the diplayname
@@ -59,6 +58,8 @@ def saveAnswer(data):
 			cursor.execute(sql, (postTypeId, None, parentId, creationDate, None, 
 			score, viewcount, body, userId["Id"], displayname, None, None, None, None, None, 
 			None, None, 0, None, None))
+			
+			newRowId = cursor.lastrowid
 
 		#Update the answer count in database for the question
 		with connection.cursor() as cursor:
@@ -67,12 +68,10 @@ def saveAnswer(data):
 				WHERE `Id` = %s"""
 			cursor.execute(sql, (parentId))
 		connection.commit()
-		return 1
+		return newRowId
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
-	finally:
-		connection.close()
 
 #Method to save comments
 def saveComment(data):
@@ -99,7 +98,7 @@ def saveComment(data):
 				`UserId`) VALUES (%s, %s, %s, %s, %s, %s)"""
 			cursor.execute(sql, (postId, score, text, creationDate, 
 				displayname, userId["Id"]))
-
+			#print("id="+str(cursor.lastrowid))
 		#update comment count for the post
 		with connection.cursor() as cursor:
 			sql = """UPDATE `Posts` SET 
@@ -111,8 +110,6 @@ def saveComment(data):
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
-	finally:
-		connection.close()
 
 #Method for adding new question
 def addQuestion(data):
@@ -174,8 +171,6 @@ def addQuestion(data):
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
-	finally:
-		connection.close()
 
 #Method to retrieve comments
 def getComments(parentId):
@@ -266,7 +261,7 @@ def getAnswers(parentId):
 def getQuestion(data):
 	qId = data
 	question = {}
-	
+	print(connection.open)
 	try:
 		#Select the question with the particular postId
 		with connection.cursor() as cursor:
@@ -322,7 +317,7 @@ def getQuestion(data):
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
-	
+
 #Method to return view counts for each topic
 def getViewCount():
 	data = {}
