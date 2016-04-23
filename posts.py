@@ -2,12 +2,15 @@ import pymysql.cursors
 import datetime
 import traceback
 import json
+import ConfigParser
 
+config = ConfigParser.ConfigParser()
+config.read('db.cfg')
 
-connection = pymysql.connect(host='localhost',
-							 user='root',
-							 password='admin123+',
-							 db = 'ANS',
+connection = pymysql.connect(host=config.get('database','host'),
+							 user=config.get('database','username'),
+							 password=config.get('database','password'),
+							 db = config.get('database','db'),
 							 charset = 'utf8mb4',
 							 cursorclass=pymysql.cursors.DictCursor)
 

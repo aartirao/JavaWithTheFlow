@@ -107,11 +107,16 @@ def getViews():
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
 
-<<<<<<< HEAD
 @app.route('/getQuestionList/<topic>', method='GET')
 def getQuestionList(topic):
 	returnValue = getQuestionListByTopic(topic)
-=======
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "successfully retrieved", "data": returnValue}
+
 #Method to update the time spend by user in a page
 @app.route('/updateTime', method = 'POST')
 def updateTime():
@@ -140,7 +145,6 @@ def updateSelect():
 @app.route('/search/<query>', method = 'GET')
 def callSearch(query):
 	returnValue = searchQuery(query)
->>>>>>> 08f66d66343e3f4f2c33f6484e7a397b79975ddc
 	if(returnValue == -1):
 		response.status = 404
 		return {"status": "not found"}
@@ -148,17 +152,10 @@ def callSearch(query):
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
 
-<<<<<<< HEAD
+
 @app.route('/questionList/', method='GET')
 def questionList():
 	return template('index/mock2.html')
 	
 run(app, host='localhost', port=8000, debug=True)
 
- 
-=======
-run(app, host='localhost', port=8080, debug=True)
-
-
- 
->>>>>>> 08f66d66343e3f4f2c33f6484e7a397b79975ddc

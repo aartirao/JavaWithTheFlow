@@ -5,12 +5,18 @@ import json
 from elasticsearch import Elasticsearch
 es = Elasticsearch()
 
-connection = pymysql.connect(host='localhost',
-							 user='root',
-							 password='admin123+',
-							 db = 'ANS',
+import ConfigParser
+
+config = ConfigParser.ConfigParser()
+config.read('db.cfg')
+
+connection = pymysql.connect(host=config.get('database','host'),
+							 user=config.get('database','username'),
+							 password=config.get('database','password'),
+							 db = config.get('database','db'),
 							 charset = 'utf8mb4',
 							 cursorclass=pymysql.cursors.DictCursor)
+
 
 #Method to index Posts table based on Body, Title and Tag fields.
 def indexPosts():

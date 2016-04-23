@@ -2,12 +2,18 @@ import pymysql.cursors
 import datetime
 import json
 import traceback
-connection = pymysql.connect(host='localhost',
-							 user='root',
-							 password='admin123+',
-							 db = 'ANS',
+import ConfigParser
+
+config = ConfigParser.ConfigParser()
+config.read('db.cfg')
+
+connection = pymysql.connect(host=config.get('database','host'),
+							 user=config.get('database','username'),
+							 password=config.get('database','password'),
+							 db = config.get('database','db'),
 							 charset = 'utf8mb4',
 							 cursorclass=pymysql.cursors.DictCursor)
+
 
 #Method to insert/update start/end time
 def updateTimeSpent(data):
