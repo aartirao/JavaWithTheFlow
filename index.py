@@ -155,7 +155,7 @@ def callSearch(query):
 
 @app.route('/questionList/', method='GET')
 def questionList():
-	return template('index/mock2.html')
+	return template('index/questions.html')
 	
 run(app, host='localhost', port=8000, debug=True)
 
