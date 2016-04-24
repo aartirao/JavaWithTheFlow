@@ -1,6 +1,7 @@
 from bottle import Bottle, run, template, static_file, get, post, request, response, abort
 import pymysql.cursors
-from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, getQuestionListByTopic
+
+from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, getQuestionListByTopic, saveUserRating
 from browserEvents import updateTimeSpent, updateSelectAction
 from search import searchQuery
 '''
@@ -54,9 +55,9 @@ def login():
 def postAnswer():
 	data = request.json
 	returnValue = saveAnswer(data)
-	if(returnValue == 1):
+	if(returnValue != -1):
 		response.status = 201
-		return {"status": "successfully saved"}
+		return {"status": "successfully saved", "postId": returnValue}
 	else:
 		response.status = 200
 		return {"status": "some error occured"}
@@ -87,8 +88,9 @@ def postQuestion():
 
 #Get service to retrieve posts
 @app.route('/getQuestion/<qId>', method ='GET')
-def findQuestion(qId):
-	returnValue = getQuestion(qId)
+@app.route('/getQuestion/<qId>/<uId>', method ='GET')
+def findQuestion(qId,uId=0):
+	returnValue = getQuestion(qId,uId)
 	if(returnValue == -1):
 		response.status = 404
 		return {"status": "not found"}
@@ -107,6 +109,7 @@ def getViews():
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
 
+#Method to get the list of questions for a topic
 @app.route('/getQuestionList/<topic>', method='GET')
 def getQuestionList(topic):
 	returnValue = getQuestionListByTopic(topic)
@@ -151,7 +154,18 @@ def callSearch(query):
 	else:
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
-
+		
+#Method to save the user ratings
+@app.route('/saveUserRating', method = 'POST')
+def saveUserRatingScore():
+	data = request.json
+	returnValue = saveUserRating(data)
+	if(returnValue == 1):
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
 
 @app.route('/questionList/', method='GET')
 def questionList():

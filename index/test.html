@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> Java with the Flow - Test!</title>
+        <link rel="stylesheet" href="/static/css/styles.css">
+        <link rel="stylesheet" href="/static/css/bootstrap.css" type="text/css" />
+        <link rel="stylesheet" href="/static/css/jquery-ui.css" type="text/css" />
+        <link rel="stylesheet" href="/static/css/powerange.css" type="text/css" />
+        <script src="/static/scripts/vendor/jquery.js"></script>
+        <script src="/static/scripts/vendor/bootstrap.js"></script>
+        <script src="/static/scripts/vendor/jquery-ui.js"></script>
+        <script src="/static/scripts/vendor/jquery_loadTemplate.js"></script>
+        <script src="/static/scripts/vendor/powerange.js"></script>
+        <script src="/static/scripts/vendor/ckeditor.js"></script>
+        <script src="/static/scripts/vendor/mustache.min.js"></script>
+        <script src="/static/scripts/vendor/sb-admin-2.js"></script>
+        <script src="/static/scripts/richtexteditor.js"></script>
+       
+    <!-- Custom CSS -->
+    <link href="/static/css/sb-admin-2.css" rel="stylesheet" />
+    <!-- Custom Fonts -->
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script type="text/javascript">
+        var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+      };       
+        
+    $(function() {
+        $("#usefulposts").hide();
+        
+        $.ajax({url: '/getQuestionList/'+getUrlParameter('topic'), success: function(result){
+            $("#templates").load("/static/templates/question.html", function() {
+                var template = document.getElementById('qTemplate').innerHTML;
+                qList = result["data"];
+                for(var i=0; i<qList.length; i++) {
+                    var output = Mustache.render(template, qList[i]);
+                    $("#grouptraffic").append(output);
+                }    
+            });            
+        }});            
+    });
+    </script>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Java With the flow !</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Browse <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="portfolio-1-col.html">Question</a>
+                            </li>
+                            <li>
+                                <a href="portfolio-2-col.html">Answer</a>
+                            </li>
+                            <li>
+                                <a href="portfolio-3-col.html">Comments</a>
+                            </li>
+                            <li>
+                                <a href="portfolio-4-col.html">Likes</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    
+                    <li>
+                        <a href="services.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="contact.html">Profile</a>
+                    </li>
+                   
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-alerts">
+                       
+                    </ul>
+                    <!-- /.dropdown-alerts -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                             <li>
+                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> All Activities</a>
+                        </li>
+                        <br>
+                        <li>
+                            <a href="forms.html"> Answers </a>
+                        </li>
+                        <li>
+                            <a href="forms.html"> Questions </a>
+                        </li>
+                        <li>
+                            <a href="forms.html"> Bookmarks </a>
+                        </li>
+                        <li>
+                            <a href="forms.html">Interests </a>
+                        </li>
+                        <li>
+                            <a href="forms.html">Followers </a>
+                        </li>
+                        <li>
+                            <a href="forms.html"> Following </a>
+                        </li>
+                        <li>
+                            <a href="forms.html"> Account </a>
+                        </li>
+                            
+                       
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Questions</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <br/>
+                    <div id="qList" class="questionsList">
+
+                        <div class="sortbyBox">
+                            <select id="sorter">
+                                <option value="sortby" disabled="disabled"> Sort By </option>
+                                <option value="useful"> Usefulness </option>
+                                <option value="group"> Group Traffic </option>
+                            </select>
+                        </div>
+                        <br/>
+
+                        <div id="usefulposts">
+
+                           
+                        </div>
+                        <div id="grouptraffic">
+                            
+                        </div>
+
+                    </div>
+                    <div id ="templates" style="display:none;" > </div>
+            </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->    
+
+</body>
+
+</html>

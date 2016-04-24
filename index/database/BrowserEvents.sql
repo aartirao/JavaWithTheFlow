@@ -52,6 +52,9 @@ ALTER TABLE UserRatingsScore ADD CONSTRAINT FK_PostId_UserRatingsScore FOREIGN K
 REFERENCES Posts (Id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
+ALTER TABLE UserRatingsScore MODIFY Id  INT NOT NULL AUTO_INCREMENT;
+
+
 #select count(*) from Posts where PostTypeId = 1 and MATCH(Body, Title) against ('+*iterator* -php -android' in boolean mode) or MATCH(Body, Title) against ('+loop* -php -android' in boolean mode) or tags like '%iterator%' or tags like 'loop%';
 
 

@@ -24,9 +24,18 @@
     opacity: .6;
     padding: 0 3px 2px 3px;
 }
+.answerdiv{
+    border-bottom: 1px solid #E5E5E5;
+}
 a.add-comment-link:hover {
     padding: 0 3px 2px 3px;
     text-decoration: none;
+}
+.new-comment-element{
+    width: 100%;
+}
+.newcomment-txtarea{
+    width: inherit;
 }
 .answerheader {
     height: 34px;
@@ -40,11 +49,32 @@ a.add-comment-link:hover {
 .vote-up{
 	cursor: pointer;
 }
-
+.add-comment-link{
+    cursor: pointer;
+}
 .vote-down{
 	cursor: pointer;
 }
-
+.validation{
+    margin-top: 5px;
+    display: block;
+    color: #ff0000;
+}
+.submit{
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 100px;
+}
+.post-answer{
+    width: 200px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 20px;
+}
+.cancel{
+    margin-left: 10px;
+    width: 100px;
+}
 .answercell{
 	padding-left: 40px !important;
 
@@ -124,4 +154,17 @@ a.add-comment-link:hover {
     display: block;
     height: 100%;
     width: 0;
+}
+
+.votecell{
+    width: 30%;
+}
+.emoticon{
+    width: 7%;
+    height: 7%;
+    display: inline;
+    cursor: pointer;
+}
+.selected-image{
+   box-shadow:0px 12px 22px 1px #333;
 }

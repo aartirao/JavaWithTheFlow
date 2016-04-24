@@ -54,7 +54,14 @@
             "usefulness": 200,
             "score": 10,
             "upvotes": 120,
-            "downvotes": 0
+            "downvotes": 0,
+            //Newly added
+            "excitedCount": 100,
+            "happyCount": 50,
+            "neutralCount": 20,
+            "confusedCount": 10,
+            "angryCount": 20,
+            "currentUserRating": 10
         },
         "comments":
         [
@@ -91,7 +98,13 @@
             "usefulness": 0,
             "score": -9,
             "upvotes": 1,
-            "downvotes": 150
+            "downvotes": 150,
+            "excitedCount": 100,
+            "happyCount": 50,
+            "neutralCount": 20,
+            "confusedCount": 10,
+            "angryCount": 20,
+            "currentUserRating": 10
         },
         "comments":
         [
