@@ -221,8 +221,6 @@ def getComments(parentId):
 					}
 					comments.append(comment)
 
-				
-        
 		connection.commit()
 		return comments
 	except Exception, e:
@@ -413,7 +411,7 @@ def getQuestion(data,user):
 
 #Method to return view counts for each topic
 def getViewCount():
-	data = {}
+	data = []
 	try:
 		# Get all topics
 		with connection.cursor() as cursor:
@@ -443,7 +441,7 @@ def getViewCount():
 							temp["viewCount"] = str(viewCountResults[u'sum(`ViewCount`)'])
 						else:
 							temp["viewCount"] = '0'	
-						data[row[u'Id']] = temp			
+						data.append(temp)			
 		return data
 	except Exception, e:
 		print traceback.print_exc()
