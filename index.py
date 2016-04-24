@@ -87,8 +87,9 @@ def postQuestion():
 
 #Get service to retrieve posts
 @app.route('/getQuestion/<qId>', method ='GET')
-def findQuestion(qId):
-	returnValue = getQuestion(qId)
+@app.route('/getQuestion/<qId>/<uId>', method ='GET')
+def findQuestion(qId,uId=0):
+	returnValue = getQuestion(qId,uId)
 	if(returnValue == -1):
 		response.status = 404
 		return {"status": "not found"}
@@ -154,7 +155,7 @@ def saveUserRatingScore():
 		response.status = 200
 		return {"status": "some error occured"}
 
-run(app, host='localhost', port=8080, debug=True)
+run(app, host='localhost', port=8000, debug=True)
 
 
  
