@@ -45,8 +45,7 @@ def stopWordsAndLemmatize(text):
 		for word in text.split() 
 		if word.lower() not in stopWordsSet])
 	return newText
->>>>>>> master
-
+	
 #Method to index Posts table based on Body, Title and Tag fields.
 def indexPosts():
 	try:
