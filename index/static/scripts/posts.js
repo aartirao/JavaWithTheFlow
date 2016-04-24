@@ -121,6 +121,8 @@ $(document).on("click", "p[class='add-comment-link']", function () {
 							<p><button class='submit btn btn-primary'>Save</button><button class='cancel btn btn-primary'>Cancel</button></p>\
 						 </div>";
 	parent.find(".new-comment-element").remove();
+	//voteElement = parent.find(".voters")
+	//$(newCommentHtml).insertBefore(voteElement);
 	parent.append(newCommentHtml);
 });
 
@@ -255,4 +257,65 @@ $(document).on("click", "button[class='post-answer btn btn-primary']", function(
 			//Handle error
 		});
 	}
+});
+
+$(document).on("click", "img[class='emoticon']", function(){
+	var parent = $(this).parent();
+	
+	parent.find("img").each(function(){
+		$(this).removeClass("selected-image");
+	});
+	$(this).addClass("selected-image");
+	
+	var answerid = parent.prop("id");
+	var postId = answerid.substring(answerid.lastIndexOf("-")+1);
+	var alt = $(this).prop("alt");
+	var ratingScore = -1;
+	var userId = 1;
+	if(alt == "excited"){
+		ratingScore = 10;
+	}
+	else if(alt == "happy"){
+		ratingScore = 7;
+	}
+	else if(alt == "poker"){
+		ratingScore = 2;
+	}
+	else if(alt == "confused"){
+		ratingScore = -3;
+	}
+	else if(alt == "angry"){
+		ratingScore = -5;
+	}
+	//Now an ajax call to store the rating score given by user
+	var url = "saveUserRating";
+	var postData = {
+			"PostId" : postId,
+			"RatingScore" : ratingScore,
+			"UserId" : 	userId
+		};
+	$.ajax(
+		{
+			url: url,
+			contentType: "application/json; charset=utf-8",
+			data: JSON.stringify(postData),
+			beforeSend: function(xhr){
+				
+			},
+			error: function(xhr){
+				
+			},
+			type: "POST"
+		})
+		.done(function(data){
+			if(data.status == "successfully saved"){
+				//Successfully saved
+			}
+			else{
+				console.log("error")
+			}
+		})
+		.fail(function(){
+			//Handle error
+		});
 });

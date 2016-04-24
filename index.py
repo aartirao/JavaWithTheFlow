@@ -1,6 +1,6 @@
 from bottle import Bottle, run, template, static_file, get, post, request, response, abort
 import pymysql.cursors
-from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount
+from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, saveUserRating
 from browserEvents import updateTimeSpent, updateSelectAction
 from search import searchQuery
 '''
@@ -141,6 +141,18 @@ def callSearch(query):
 	else:
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
+		
+#Method to save the user ratings
+@app.route('/saveUserRating', method = 'POST')
+def saveUserRatingScore():
+	data = request.json
+	returnValue = saveUserRating(data)
+	if(returnValue == 1):
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
 
 run(app, host='localhost', port=8080, debug=True)
 

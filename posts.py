@@ -110,6 +110,27 @@ def saveComment(data):
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
+		
+#Method to store the user rating for an answer
+def saveUserRating(data):
+	postId = data["PostId"]
+	creationDate = datetime.datetime.now()
+	userId = data["UserId"]
+	ratingScore = data["RatingScore"]
+	ret = -1
+	try:
+		with connection.cursor() as cursor:
+			sql = "CALL `sp_UpdateUserRatingScore`(%s, %s, %s)"
+			cursor.execute(sql, (postId, userId, ratingScore))
+			ret = cursor.fetchone()
+			ret = 1
+		connection.commit()
+		return ret
+	except Exception, e:
+		print traceback.print_exc()
+		return -1
+
+	
 
 #Method for adding new question
 def addQuestion(data):
