@@ -3,14 +3,43 @@ import datetime
 import traceback
 import json
 from elasticsearch import Elasticsearch
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import wordpunct_tokenize
+from nltk.stem import WordNetLemmatizer
+
 es = Elasticsearch()
 
 connection = pymysql.connect(host='localhost',
 							 user='root',
-							 password='aweb',
+							 password='harinimysql',
 							 db = 'ANS',
 							 charset = 'utf8mb4',
 							 cursorclass=pymysql.cursors.DictCursor)
+
+javaKeywords = """abstract  continue  for  new  switch
+assert  default  goto  package  synchronized
+boolean  do  if  private  this
+break  double  implements  protected  throw
+byte  else  import  public  throws
+case  enum  instanceof  return  transient
+catch  extends  int  short  try
+char  final  interface  static  void
+class  finally  long  strictfp  volatile
+const*  float  native  super  while""".split()
+
+# Method to remove stopwords and lemmatize the words in given text.
+def stopWordsAndLemmatize(text):
+	wordnet_lemmatizer = WordNetLemmatizer()
+	stopWordsSet = set(stopwords.words('english'))
+	# Updated punctuations because punctuations could be important for code.
+	stopWordsSet.update(set(['.', ',', '"', "'", '?', '!', 
+				':', ';', '(', ')', '[', ']', '{', '}']))
+	stopWordsSet = stopWordsSet - set(javaKeywords)
+	newText = " ".join([wordnet_lemmatizer.lemmatize(word.lower()) 
+		for word in text.split() 
+		if word.lower() not in stopWordsSet])
+	return newText
 
 #Method to index Posts table based on Body, Title and Tag fields.
 def indexPosts():
@@ -24,9 +53,12 @@ def indexPosts():
 				c += 1
 				for key in row:
 					row[str(key)] = str(row.pop(key))
+				# Remove stopwords and lemmatize words in Body and Title
+				for key in ('Body', 'Title'):
+					row[key] = stopWordsAndLemmatize(row[key])
 				# The ID of each index is the ID of the post in the Posts table
 				docId = row.pop('Id')
-				es.index(index="post_search_index", doc_type="post_content", 
+				es.index(index="posts_index", doc_type="posts_table", 
 						id = docId, body=row)
 
 	except Exception, e:
@@ -35,8 +67,12 @@ def indexPosts():
 def searchQuery(query):
 	postIds = []
 	questionIds = []
+
+	# Remove stopwords from query and lemmatize the words
+	query = stopWordsAndLemmatize(query)
+
 	# Return "size" hits for the given query. Size arbitrarily set to 50 
-	matches = es.search(index = "post_search_index", q = query, size = 50)
+	matches = es.search(index = "posts_index", q = query, size = 50)
 	hits = matches['hits']['hits']
 	for hit in hits:
 		postIds.append(hit['_id'])
@@ -75,7 +111,7 @@ if __name__ == "__main__":
 	# Run this file initially to create index for Posts table.
 	indexPosts()
 	# Sample query
-	qIdList = searchQuery("abstract class create object")
+	#qIdList = searchQuery("abstract class create object")
 
 
 
