@@ -6,7 +6,7 @@ import json
 
 connection = pymysql.connect(host='localhost',
 							 user='root',
-							 password='admin123+',
+							 password='aweb',
 							 db = 'ANS',
 							 charset = 'utf8mb4',
 							 cursorclass=pymysql.cursors.DictCursor)
@@ -226,12 +226,31 @@ def getComments(parentId):
 		print traceback.print_exc()
 		return -1
 	
+#Method to get current user rating of a post
+def getCurrentUserRating(userId, postId) :
+	rating = 0
+	try:	
+		#Select the rating for a post given by a user
+		with connection.cursor() as cursor:
+			sql = "SELECT `Rating` FROM `UserRatingsScore` WHERE `PostId` = %s and `UserId` = %s"
+			rowCount = cursor.execute(sql, (postId, userId))
+			if rowCount > 0:
+				result = cursor.fetchone()
+				rating = result[u'Rating']
+
+	except Exception, e:
+		print traceback.print_exc()
+
+	return rating
+
 
 #Method to retrieve answers along with comments
-def getAnswers(parentId):
+def getAnswers(parentId, userId):
 	answers = []
 	comments = []
 	temp = {}
+	userRating = 0
+
 	try:
 		#Select the answer with the particular id
 		with connection.cursor() as cursor:
@@ -253,6 +272,11 @@ def getAnswers(parentId):
 					upvotes = "#"
 					downvotes = "#"
 
+					ratings = getUserRatings(postId)
+
+					if(userId != 0):
+						userRating = getCurrentUserRating(userId, postId)
+				
 					answer = {
 						"postId": postId,
 						"postTypeId": postTypeId,
@@ -265,24 +289,69 @@ def getAnswers(parentId):
 						"usefulness": usefulness,
 						"score": score,
 						"upvotes": "#",
-						"downvotes": "#"
+						"downvotes": "#",
+						"excitedCount": ratings[0],
+			            "happyCount": ratings[1],
+			            "neutralCount": ratings[2],
+			            "confusedCount": ratings[3],
+			            "angryCount": ratings[4],
+			            "currentUserRating": userRating
 					}
 
 					comments = getComments(postId)
 					temp = {"answer" : answer, "comments" : comments}
 					answers.append(temp)
-					
 
 		return answers
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
-	
+
+#Method to get user ratings for a question   10 7 2 -3 -5
+def getUserRatings(qId):
+
+	count = []
+	excitedCount = 0
+	happyCount = 0
+	neutralCount = 0
+	confusedCount = 0
+	angryCount = 0
+	currentUserRating = 0
+
+	try:
+		#Get count of user ratings
+		with connection.cursor() as cursor:
+			sql = "select count(*) as counts, `Rating` from `UserRatingsScore` WHERE `PostId` = %s GROUP by `Rating`"
+			rowCount = cursor.execute(sql, (qId))
+			if rowCount > 0:
+				results = cursor.fetchall()
+				for row in results:
+					if(row[u'Rating'] == 10):
+						excitedCount = row[u'counts']
+					elif(row[u'Rating'] == 7):
+						happyCount = row[u'counts']
+					elif(row[u'Rating'] == 2):
+						neutralCount = row[u'counts']
+					elif(row[u'Rating'] == -3):
+						confusedCount = row[u'counts']
+					elif(row[u'Rating'] == -5):
+						angryCount = row[u'counts']
+
+			count.extend((excitedCount, happyCount, neutralCount, confusedCount, angryCount,currentUserRating))
+		
+		connection.commit()
+		return count
+
+	except Exception, e:
+		print traceback.print_exc()
+		return -1
+
+
 #Method to retrieve post details 
-def getQuestion(data):
+def getQuestion(data,user):
 	qId = data
+	uId = user
 	question = {}
-	print(connection.open)
 	try:
 		#Select the question with the particular postId
 		with connection.cursor() as cursor:
@@ -330,7 +399,7 @@ def getQuestion(data):
 	  				}
 
 		comments = getComments(qId)
-		answers = getAnswers(qId)
+		answers = getAnswers(qId,uId)
 		final = {"question" : question, "comments" : comments, "answers" : answers}
 
 		connection.commit()
