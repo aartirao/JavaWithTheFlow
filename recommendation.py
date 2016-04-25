@@ -17,6 +17,8 @@ connection = pymysql.connect(host=config.get('database','host'),
 							 charset = 'utf8mb4',
 							 cursorclass=pymysql.cursors.DictCursor)
 
+ratingsData = {}
+
 def getQuestionListByTopic(topic):
 	data = {}
 	try:
@@ -58,48 +60,70 @@ def getQuestionListByTopic(topic):
 		return -1
 
 def getRatings(user):
-	topicRatings = []
 	try:
 		with connection.cursor() as cursor:
-		sql = """select `TopicId`, `Weight` from `UserInterests` 
-				where `UserId` = %s"""
-		rowCount = cursor.execute(sql, user)
-		if rowCount > 0:
-			topics = cursor.fetchall()
-			for row in topics:
-				sqlTopic = """select `Name` from `Topics` where `Id` = %s"""
-				topic = cursor.execute(sqlTopic, row[u'TopicId'])[0][u'Name']
-				topicRatings.append(tuple(topic, row[u'Weight']))
-
-			userRatings = [row[1] for row in topicRatings]
-			return userRatings
+			ratingsData[user] = {}
+			sql = """select `TopicId`, `Weight` from `UserInterests` 
+					where `UserId` = %s"""
+			rowCount = cursor.execute(sql, user)
+			if rowCount > 0:
+				topics = cursor.fetchall()
+				for row in topics:
+					sqlTopic = """select `Name` from `Topics` where `Id` = %s"""
+					rowCountTopic = cursor.execute(sqlTopic, row[u'TopicId'])
+					if rowCountTopic > 0:
+						result = cursor.fetchall()[0]
+						topic = str(result[u'Name'])
+						weight = result[u'Weight']
+						ratingsData[user][topic] = weight
+			return ratingsData[user]
 
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
 
 
-def similarity(user1, user2):
-	user1Ratings = getRatings(user1)
-	user2Ratings = getRatings(user2)
+def pearson_correlation(user1, user2):
+	user1RatingsDict = getRatings[user1]
+	user1Ratings = [row[topic] for topic in user1RatingsDict[user1]]
+	user2RatingsDict = getRatings[user2]
+	user2Ratings = [row[topic] for topic in user1RatingsDict[user2]]
 	return pearsonr(user1Ratings, user2Ratings)[0]
+
+def getAllUsers():
+	allUsers = []
+    try:
+    	with connection.cursor() as cursor:
+    		sql = """select `Id` from `Users`"""
+    		rowCount = cursor.execute(sql)
+    		if rowCount > 0:
+    			result = cursor.fetchall()
+    			for row in result:
+    				allUsers.append(row[u'Id'])
+    		return allUsers
+
+    except Exception, e:
+		print traceback.print_exc()
+		return -1
 
 def getSimilarUsers(user):
     # returns the top 5 similar users for a given user.
-    scores = [(similarity(user, other_user), other_user) 
-    			for other_user in dataset if other_user != user]
+    allUsers = getAllUsers()
+    scores = [(pearson_correlation(user, otherUser), otherUser) 
+    			for otherUser in allUsers if otherUser != user]
  
-    # Sort the similar users so that highest scores user will appear at the first
+    # Sort the similar users so that highest scored user will appear at the first
     scores.sort()
     scores.reverse()
     return scores[0:5]
 
 def getTopicsToRecommend(user):
 	topics = []
+	interestedTopics = []
 	similarUsers = getSimilarUsers(user)
-	userIDs = [record[1] for record in similarUsers[]]
+	userIDs = [record[1] for record in similarUsers]
 	for userID in userIDs:
-		topics.append(dataset[userID].items())
+		topics.append(ratingsData[userID].items())
 
 	interestedTopics = sorted(topics, key=operator.itemgetter(1))[::-1]
 	return interestedTopics
