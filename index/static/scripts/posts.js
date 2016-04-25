@@ -67,6 +67,27 @@ $(document).ready(function () {
 	var url = "getQuestion";
 	var userId = 1
 	url = url + "/" + questionId + "/" + userId;
+	
+	var url1 = "updateViewCount";
+
+	data = {"PostId":questionId};
+	$.ajax(
+	{
+		url: url1,
+		beforeSend: function (xhr) {
+
+		},
+		error: function (xhr) {
+
+		},
+		method: "POST",
+		data: JSON.stringify(data),
+		contentType: 'application/json',
+	})
+	.fail(function () {
+	//Handle the error
+
+	});
 	//Ajax call to get all the details about the question
 	$.ajax(
 		{
@@ -75,6 +96,7 @@ $(document).ready(function () {
 
 			},
 			error: function (xhr) {
+
 
 			},
 			method: "GET"

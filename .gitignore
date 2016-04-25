@@ -1,1 +1,4 @@
 db.cfg
+*.swp
+.vscode
+*.pyc

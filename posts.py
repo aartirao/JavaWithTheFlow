@@ -495,3 +495,70 @@ def getQuestionListByTopic(topic):
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
+
+
+def createBookmark(userId, postId):
+	creationDate = datetime.datetime.now()	
+	try :
+		with connection.cursor() as cursor:
+			sql = "SELECT UserId, PostId, IsDeleted from Bookmarks where UserId = %s and PostId = %s"
+			rowCount = cursor.execute(sql, (userId, postId))
+			
+			if rowCount > 0:
+				dele = 0
+				result = cursor.fetchone()
+				if result[u'IsDeleted'] == 1:
+					dele = 0
+				else:
+					dele = 1
+				sql = "UPDATE Bookmarks set IsDeleted = %s where UserId = %s and PostId = %s"
+				cursor.execute(sql, (dele, userId, postId))
+				connection.commit()
+			else: 
+				sql = "INSERT INTO Bookmarks (UserId, PostId, CreationDate, IsDeleted) values (%s, %s, %s, 0)"
+				cursor.execute(sql, (userId, postId, creationDate))
+				connection.commit()
+		return 1
+	except Exception, e:
+		print traceback.print_exc()
+		return -1
+		
+def getQuestionListByBookmark(user):
+	data = {}
+	try:
+		# Get all questions by topic
+		# order by P.ViewCount desc
+		with connection.cursor() as cursor:
+			sql = "SELECT P.Id, P.Title, P.ViewCount, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
+				P.AnswerCount, P.CreationDate from Posts as P where P.PostTypeId = 1 and P.Id in \
+				(SELECT PostId from Bookmarks where UserId = %s and IsDeleted == 0) LIMIT 10;"
+			rowCount = cursor.execute(sql, (user))	
+			if rowCount > 0:
+				results = cursor.fetchall()
+				sumViewCount = 0
+				viewCounts = []
+				for row in results:
+					viewCounts.append(int(row[u'ViewCount']))
+				viewCounts.sort()
+				splitAt = rowCount / 3
+				v1 = viewCounts[:splitAt]
+				v2 = viewCounts[splitAt:splitAt*2]
+				v3 = viewCounts[splitAt*2:]
+				
+				for row in results:
+					id = row[u'Id']
+					sqlVup = "SELECT count(Id) as count from Votes where VoteTypeId = 2 and PostId = %s"
+					sqlVdown = "SELECT count(Id) as count from Votes where VoteTypeId = 3 and PostId = %s"
+					upCount = cursor.execute(sqlVup, (id))
+					up = cursor.fetchone()
+					downCount = cursor.execute(sqlVdown, (id))
+					down = cursor.fetchone()
+					row[u'CreationDate'] = str(row[u'CreationDate'])
+					row[u'UpVotes'] = up[u'count']
+					row[u'DownVotes'] = down[u'count']	
+					row[u'ViewCountRank'] = getRange(v1, v2, v3, row[u'ViewCount'])
+				data = results
+			return data		
+	except Exception, e:
+		print traceback.print_exc()
+		return -1
