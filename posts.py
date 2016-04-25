@@ -563,3 +563,24 @@ def getQuestionListByBookmark(user):
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
+		
+def createUserInterest(data):
+	try:
+		with connection.cursor() as cursor:
+			for row in data:
+				sql = "SELECT UserId, TopicId FROM UserInterests where UserId = %s and TopicId = %s"
+				rowCount = cursor.execute(sql, (row[u'UserId'], row[u'TopicId']))
+				if rowCount > 0:
+					sql = "UPDATE UserInterests set Weight = %s where UserId = %s and TopicId = %s"
+					cursor.execute(sql, (row[u'Weight'], row[u'UserId'], row[u'TopicId']))
+					connection.commit()
+				else:
+					sql = "INSERT INTO UserInterests (UserId, TopicId, Weight) VALUES (%s, %s, %s)"
+					cursor.execute(sql, (row[u'UserId'], row[u'TopicId'], row[u'Weight']))
+					connection.commit()
+		return 1
+	except Exception, e:
+		print traceback.print_exc()
+		return -1
+			
+				
