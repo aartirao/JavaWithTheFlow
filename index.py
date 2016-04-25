@@ -2,7 +2,8 @@ from bottle import Bottle, run, template, static_file, get, post, request, respo
 import pymysql.cursors
 
 from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, getQuestionListByTopic, saveUserRating, createBookmark, getQuestionListByBookmark
-from browserEvents import updateTimeSpent, updateSelectAction
+from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
+
 from search import searchQuery
 '''
 POST - 201 - Created, 200 - OK {error message}
@@ -74,6 +75,9 @@ def postComment():
 		response.status = 200
 		return {"status": "some error occured"}
 
+		response.status = 200
+		return {"status": "successfully retrieved", "data": returnValue}
+
 #Post service to add questions
 @app.route('/addQuestion', method='POST')
 def postQuestion():
@@ -106,8 +110,8 @@ def getViews():
 		response.status = 404
 		return {"status": "not found"}
 	else:
-		response.status = 200
-		return {"status": "successfully retrieved", "data": returnValue}
+ 		response.status = 200
+ 		return {"status": "successfully retrieved", "data": returnValue}
 
 #Method to get the list of questions for a topic
 @app.route('/getQuestionList/<topic>', method='GET')
@@ -160,6 +164,18 @@ def callSearch(query):
 def saveUserRatingScore():
 	data = request.json
 	returnValue = saveUserRating(data)
+	if(returnValue == 1):
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+		
+#Method to updating view count
+@app.route('/updateViewCount', method = 'POST')
+def updateViewCountForQuestions():
+	data = request.json
+	returnValue = updateViewCount(data)
 	if(returnValue == 1):
 		response.status = 201
 		return {"status": "successfully saved"}

@@ -102,3 +102,19 @@ def updateSelectAction(data):
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
+
+#method for capturing view count of questions
+def updateViewCount(data):
+	print "helloworld"
+	print data
+	postId = data["PostId"]
+	
+	try:
+		with connection.cursor() as cursor:
+			sql = """UPDATE `Posts` SET `ViewCount` = `ViewCount`+1 WHERE `Id` = %s """
+			cursor.execute(sql,(postId))
+		connection.commit()
+		return 1
+	except Exception, e:
+		print traceback.print_exc()
+		return -1
