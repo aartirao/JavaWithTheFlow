@@ -26,10 +26,47 @@ function getParametersByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+function getLevel(counts, value){
+	counts = counts.sort(function(a, b){return a-b});
+	console.log(counts);
+	var returnValue = 0;
+	var i = 0;
+	for (index = 0; index < counts.length; ++index){
+		i = i + 1;
+		if(counts[index] == value){
+			returnValue = i;
+			break;
+		}
+	}
+	return returnValue;
+}
+
+function setClassForImage(initialclass, counts, value, userValue){
+	var level = getLevel(counts, value);
+	if(level == 5){
+		initialclass = initialclass + " opacity-one";
+	}
+	else if(level == 4){
+		initialclass = initialclass + " opacity-two";
+	}
+	else if(level == 3){
+		initialclass = initialclass + " opacity-three";
+	}
+	else if(level == 2){
+		initialclass = initialclass + " opacity-four";
+	}
+	else if(level == 1){
+		initialclass = initialclass + " opacity-five";
+	}
+	
+	return initialclass;
+}
+
 $(document).ready(function () {
 	var questionId = getParametersByName("qId");
 	var url = "getQuestion";
-	url = url + "/" + questionId;
+	var userId = 1
+	url = url + "/" + questionId + "/" + userId;
 	//Ajax call to get all the details about the question
 	$.ajax(
 		{
@@ -75,7 +112,17 @@ $(document).ready(function () {
 					userUrl: "",
 					usefulnesscount: "",
 					upvoteid: "",
-					downvoteid: ""
+					downvoteid: "",
+					isExcited: "",
+					isHappy: "",
+					isPoker: "",
+					isConfused: "",
+					isAngry: "",
+					excitedCount: "",
+					pokerCount: "",
+					angryCount: "",
+					happyCount: "",
+					confusedCount: ""
 				};
 
 				answerobj.answerid = "answer-" + answeritem.answer.postId;
@@ -88,7 +135,58 @@ $(document).ready(function () {
 				answerobj.usefulnesscount = answeritem.answer.upvotes;
 				answerobj.upvoteid = "answerupvote-" + answeritem.answer.postId;
 				answerobj.downvoteid = "answerdownvote-" + answeritem.answer.postId;
-
+				
+				//Change later
+				var countArray = [];
+				countArray.push(answeritem.answer.excitedCount);
+				countArray.push(answeritem.answer.happyCount);
+				countArray.push(answeritem.answer.neutralCount);
+				countArray.push(answeritem.answer.confusedCount);
+				countArray.push(answeritem.answer.angryCount);
+				//To set the class
+				var isAngry = "emoticon" + " width-five";
+				var isConfused = "emoticon" + " width-five";
+				var isExcited = "emoticon" + " width-five";
+				var isHappy = "emoticon" + " width-five";
+				var isPoker = "emoticon" + " width-five";
+				//console.log(countArray);
+				isAngry = setClassForImage(isAngry, countArray, answeritem.answer.angryCount);
+				isConfused = setClassForImage(isConfused, countArray, answeritem.answer.confusedCount);
+				isExcited = setClassForImage(isHappy, countArray, answeritem.answer.excitedCount);
+				isHappy = setClassForImage(isHappy, countArray, answeritem.answer.happyCount);
+				isPoker = setClassForImage(isPoker, countArray, answeritem.answer.neutralCount);
+				
+				//Change later
+				console.log(answeritem.answer.currentUserRating);
+				if(answeritem.answer.currentUserRating == 10){
+					isExcited = isExcited + " selected-image";
+				}
+				else if(answeritem.answer.currentUserRating == 7){
+					isHappy = isHappy + " selected-image";
+				}
+				else if(answeritem.answer.currentUserRating == 2){
+					isPoker = isPoker + " selected-image";
+				}
+				else if(answeritem.answer.currentUserRating == -3){
+					isConfused = isConfused + " selected-image";
+				}
+				else if(answeritem.answer.currentUserRating == -5){
+					isAngry = isAngry + " selected-image";
+				}
+				console.log(isExcited);
+				answerobj.isAngry = isAngry;
+				answerobj.isConfused = isConfused;
+				answerobj.isExcited = isExcited;
+				answerobj.isHappy = isHappy;
+				answerobj.isPoker = isPoker;
+				
+				answerobj.angryCount = answeritem.answer.angryCount;
+				answerobj.happyCount = answeritem.answer.happyCount;
+				answerobj.excitedCount = answeritem.answer.excitedCount;
+				answerobj.confusedCount = answeritem.answer.confusedCount;
+				answerobj.pokerCount = answeritem.answer.neutralCount;
+				//20, 17, 15, 10, 7
+				
 				var answercommentHtml = "";
 
 				$.each(answeritem.comments, function (ckey, comment) {
@@ -104,6 +202,24 @@ $(document).ready(function () {
 
 			});
 			$("#answercontentcontainer").loadTemplate("/static/templates/answers.html", answerArray);
+			
+			$.each(answerArray, function(key, ans){
+				var ansid = ans.answervoteid;
+				$("#"+ansid).find("img[alt='excited']").attr("title",ans.excitedCount);
+				$("#"+ansid).find("img[alt='happy']").attr("title",ans.happyCount);
+				$("#"+ansid).find("img[alt='poker']").attr("title",ans.pokerCount);
+				$("#"+ansid).find("img[alt='confused']").attr("title",ans.confusedCount);
+				$("#"+ansid).find("img[alt='angry']").attr("title",ans.angryCount);
+				
+				
+				
+				/*$("#"+ansid).find("img[alt='excited']").tooltip({ content: ans.excitedCount});
+				$("#"+ansid).find("img[alt='happy']").tooltip({ content: ans.happyCount});
+				$("#"+ansid).find("img[alt='poker']").tooltip({ content: ans.pokerCount});
+				$("#"+ansid).find("img[alt='confused']").tooltip({ content: ans.confusedCount});
+				$("#"+ansid).find("img[alt='angry']").tooltip({ content: ans.angryCount});*/
+				
+			});
 		})
 		.fail(function () {
 			//Handle the error

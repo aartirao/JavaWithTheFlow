@@ -168,3 +168,59 @@ a.add-comment-link:hover {
 .selected-image{
    box-shadow:0px 12px 22px 1px #333;
 }
+
+.border-radius-10{
+    border-radius: 10px;
+}
+.border-radius-20{
+    border-radius: 20px;
+}
+.border-radius-100{
+    border-radius: 100px;
+}
+.width-one{
+    width: 20%;
+    height: 20%;
+}
+.width-two{
+    width: 17%;
+    height: 17%;
+}
+.width-three{
+    width: 15%;
+    height: 15%;
+}
+.width-four{
+    width: 10%;
+    height: 10%;
+}
+.width-five{
+    width: 7%;
+    height: 7%;
+}
+.opacity-one{
+    opacity: 1;
+}
+.opacity-two{
+    opacity: 0.8;
+}
+.opacity-three{
+    opacity: 0.6;
+}
+.opacity-five{
+    opacity: 0.4;
+}
+.opacity-six{
+    opacity: 0.2;
+}
+blockquote {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #FFF8DC;
+    border-left: 2px solid #ffeb8e;
+    overflow-wrap: break-word;
+
+}
+blockquote, q {
+    quotes: none;
+}
