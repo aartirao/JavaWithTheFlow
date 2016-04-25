@@ -79,6 +79,41 @@ def postComment():
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
 
+#Post service to add questions
+@app.route('/addQuestion', method='POST')
+def postQuestion():
+	data = request.json
+	returnValue = addQuestion(data)
+	if(returnValue == 1):
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+
+#Get service to retrieve posts
+@app.route('/getQuestion/<qId>', method ='GET')
+@app.route('/getQuestion/<qId>/<uId>', method ='GET')
+def findQuestion(qId,uId=0):
+	returnValue = getQuestion(qId,uId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "successfully retrieved", "data": returnValue}
+
+#Get service to retrieve view counts
+@app.route('/getViewCount', method ='GET')
+def getViews():
+	returnValue = getViewCount()
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+ 		response.status = 200
+ 		return {"status": "successfully retrieved", "data": returnValue}
+
 #Method to get the list of questions for a topic
 @app.route('/getQuestionList/<topic>', method='GET')
 def getQuestionList(topic):
