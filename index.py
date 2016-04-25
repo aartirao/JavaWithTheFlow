@@ -1,7 +1,8 @@
 from bottle import Bottle, run, template, static_file, get, post, request, response, abort
 import pymysql.cursors
 
-from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, getQuestionListByTopic, saveUserRating, createBookmark, getQuestionListByBookmark
+from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, \
+		getQuestionListByTopic, saveUserRating, createBookmark, getQuestionListByBookmark, createUserInterest
 from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
 
 from search import searchQuery
@@ -187,6 +188,13 @@ def updateViewCountForQuestions():
 def questionList():
 	return template('index/questions.html')
 
+""" Sample
+{
+    "PostId": 27727407,
+    "UserId": 2
+}
+"""
+
 @app.route('/bookmark', method='POST')
 def addBookmark():
 	data = request.json	
@@ -208,5 +216,27 @@ def getQuestionList(userId):
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
 
-run(app, host='localhost', port=8000, debug=True)
+""" Sample
+[
+    { "UserId": 2, "TopicId": 2, "Weight": 4},
+    { "UserId": 2, "TopicId": 1, "Weight": 1},
+    { "UserId": 2, "TopicId": 3, "Weight": 2},
+    { "UserId": 2, "TopicId": 4, "Weight": 3},
+    { "UserId": 2, "TopicId": 5, "Weight": 4}
+]
+"""
+
+
+@app.route('/userinterest', method='POST')
+def addUserInterest():
+	data = request.json	
+	returnValue = createUserInterest(data)
+	if returnValue == 1:
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+
+run(app, host='localhost', port=8100, debug=True)
 
