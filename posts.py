@@ -7,6 +7,7 @@ import ConfigParser
 config = ConfigParser.ConfigParser()
 config.read('db.cfg')
 
+
 connection = pymysql.connect(host=config.get('database','host'),
 							 user=config.get('database','username'),
 							 password=config.get('database','password'),
