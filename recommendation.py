@@ -4,6 +4,7 @@ import pymysql.cursors
 import datetime
 import traceback
 import json
+import operator
 import ConfigParser
 
 config = ConfigParser.ConfigParser()
