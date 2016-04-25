@@ -1,8 +1,10 @@
 from bottle import Bottle, run, template, static_file, get, post, request, response, abort
 import pymysql.cursors
 
+
 from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, getQuestionListByTopic, saveUserRating
-from browserEvents import updateTimeSpent, updateSelectAction
+from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
+
 from search import searchQuery
 '''
 POST - 201 - Created, 200 - OK {error message}
@@ -74,38 +76,6 @@ def postComment():
 		response.status = 200
 		return {"status": "some error occured"}
 
-#Post service to add questions
-@app.route('/addQuestion', method='POST')
-def postQuestion():
-	data = request.json
-	returnValue = addQuestion(data)
-	if(returnValue == 1):
-		response.status = 201
-		return {"status": "successfully saved"}
-	else:
-		response.status = 200
-		return {"status": "some error occured"}
-
-#Get service to retrieve posts
-@app.route('/getQuestion/<qId>', method ='GET')
-@app.route('/getQuestion/<qId>/<uId>', method ='GET')
-def findQuestion(qId,uId=0):
-	returnValue = getQuestion(qId,uId)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "successfully retrieved", "data": returnValue}
-
-#Get service to retrieve view counts
-@app.route('/getViewCount', method ='GET')
-def getViews():
-	returnValue = getViewCount()
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
 
@@ -160,6 +130,18 @@ def callSearch(query):
 def saveUserRatingScore():
 	data = request.json
 	returnValue = saveUserRating(data)
+	if(returnValue == 1):
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+		
+#Method to updating view count
+@app.route('/updateViewCount', method = 'POST')
+def updateViewCountForQuestions():
+	data = request.json
+	returnValue = updateViewCount(data)
 	if(returnValue == 1):
 		response.status = 201
 		return {"status": "successfully saved"}
