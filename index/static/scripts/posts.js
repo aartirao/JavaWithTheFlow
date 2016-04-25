@@ -105,7 +105,14 @@ $(document).ready(function () {
 		.done(function (data) {
 			var json = data.data;
 			console.log(json)
-			$("#qTitle").html(json.question.postTitle);
+			var titleContent = json.question.postTitle;
+			if(json.question.isBookMarked == 1){
+				titleContent = "<i id = 'bookmarked' class='fa fa-bookmark fa-lg' aria-hidden='true'></i>" + titleContent;
+			}
+			else{
+				titleContent =  "<i id = 'bookmarked' class='fa fa-bookmark-o fa-lg' aria-hidden='true'></i>" + titleContent;
+			}
+			$("#qTitle").html(titleContent);
 			$("#userdetail").html("by <a href='" + json.question.askedUserProfile + "'>" + json.question.askedbyUserName + "</a>");
 			$("#askedtime").html("<span class='glyphicon glyphicon-time'></span> " + json.question.askedDate);
 			$("#qtext").html(json.question.postText);
@@ -456,4 +463,46 @@ $(document).on("click", "img[class='emoticon']", function(){
 		.fail(function(){
 			//Handle error
 		});
+});
+
+$(document).on("click", "i[id = 'bookmarked']", function(){
+	var url = "/bookmark";
+	var questionId = getParametersByName("qId");
+	var postData = {
+		"UserId" : 1,
+		"PostId" : questionId
+	};
+	var classname = $(this).attr("class");
+	var element = $(this);
+	$.ajax(
+		{
+			url: url,
+			contentType: "application/json; charset=utf-8",
+			data: JSON.stringify(postData),
+			beforeSend: function(xhr){
+				
+			},
+			error: function(xhr){
+				
+			},
+			type: "POST"
+		})
+		.done(function(data){
+			if(data.status == "successfully saved"){
+				if(classname == "fa fa-bookmark-o fa-lg"){
+					element.removeClass("fa fa-bookmark-o fa-lg");
+					element.addClass("fa fa-bookmark fa-lg");
+				}
+				else{
+					element.removeClass("fa fa-bookmark fa-lg");
+					element.addClass("fa fa-bookmark-o fa-lg");
+				}
+			}
+			else{
+				//handle error
+			}
+		})
+		.fail(function(){
+			//Handle error
+		})
 });

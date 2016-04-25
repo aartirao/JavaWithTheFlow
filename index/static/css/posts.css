@@ -224,3 +224,7 @@ blockquote {
 blockquote, q {
     quotes: none;
 }
+#bookmarked{
+     padding-right: 5%;
+     color: #ffd700;
+}

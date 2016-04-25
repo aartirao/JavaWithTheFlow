@@ -17,7 +17,8 @@
     "askedbyUserName": "John",
     "askedbyUserId": "1011",
     "askedUserProfile": "#",
-    "noOfAnswers": 2
+    "noOfAnswers": 2,
+    "isBookMarked": 1
   },
 
   "comments" : 
