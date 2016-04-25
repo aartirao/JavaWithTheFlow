@@ -1,7 +1,7 @@
 from bottle import Bottle, run, template, static_file, get, post, request, response, abort
 import pymysql.cursors
 
-from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, getQuestionListByTopic, saveUserRating
+from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, getQuestionListByTopic, saveUserRating, createBookmark, getQuestionListByBookmark
 from browserEvents import updateTimeSpent, updateSelectAction
 from search import searchQuery
 '''
@@ -170,6 +170,27 @@ def saveUserRatingScore():
 @app.route('/questionList/', method='GET')
 def questionList():
 	return template('index/questions.html')
-	
+
+@app.route('/bookmark', method='POST')
+def addBookmark():
+	data = request.json	
+	returnValue = createBookmark(data['UserId'], data['PostId'])
+	if returnValue == 1:
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+
+@app.route('/getBookmarks/<userId>', method='GET')
+def getQuestionList(userId):
+	returnValue = getQuestionListByBookmark(userId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "successfully retrieved", "data": returnValue}
+
 run(app, host='localhost', port=8000, debug=True)
 
