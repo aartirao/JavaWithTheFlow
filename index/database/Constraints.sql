@@ -52,6 +52,8 @@ ALTER TABLE Votes AUTO_INCREMENT = 111489335;
 ALTER TABLE Posts ADD FULLTEXT Body_Index(Body);
 ALTER TABLE Posts ADD FULLTEXT Body_Title_Index(Body, Title);
 
+ALTER TABLE Posts ADD Column Usefulness INT;
+
 #SELECT DISTINCT PostId FROM Comments;
 
 #SELECT * FROM Posts WHERE Id IN (

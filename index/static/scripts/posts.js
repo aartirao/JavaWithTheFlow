@@ -26,14 +26,14 @@ function getParametersByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function getLevel(counts, value){
-	counts = counts.sort(function(a, b){return a-b});
-	console.log(counts);
+function getLevel(counts, value) {
+	counts = counts.sort(function (a, b) { return a - b });
+
 	var returnValue = 0;
 	var i = 0;
-	for (index = 0; index < counts.length; ++index){
+	for (index = 0; index < counts.length; ++index) {
 		i = i + 1;
-		if(counts[index] == value){
+		if (counts[index] == value) {
 			returnValue = i;
 			break;
 		}
@@ -41,24 +41,24 @@ function getLevel(counts, value){
 	return returnValue;
 }
 
-function setClassForImage(initialclass, counts, value, userValue){
+function setClassForImage(initialclass, counts, value, userValue) {
 	var level = getLevel(counts, value);
-	if(level == 5){
+	if (level == 5) {
 		initialclass = initialclass + " opacity-one";
 	}
-	else if(level == 4){
+	else if (level == 4) {
 		initialclass = initialclass + " opacity-two";
 	}
-	else if(level == 3){
+	else if (level == 3) {
 		initialclass = initialclass + " opacity-three";
 	}
-	else if(level == 2){
+	else if (level == 2) {
 		initialclass = initialclass + " opacity-four";
 	}
-	else if(level == 1){
+	else if (level == 1) {
 		initialclass = initialclass + " opacity-five";
 	}
-	
+
 	return initialclass;
 }
 
@@ -67,27 +67,27 @@ $(document).ready(function () {
 	var url = "getQuestion";
 	var userId = 1
 	url = url + "/" + questionId + "/" + userId;
-	
+
 	var url1 = "updateViewCount";
 
-	data = {"PostId":questionId};
+	data = { "PostId": questionId };
 	$.ajax(
-	{
-		url: url1,
-		beforeSend: function (xhr) {
+		{
+			url: url1,
+			beforeSend: function (xhr) {
 
-		},
-		error: function (xhr) {
+			},
+			error: function (xhr) {
 
-		},
-		method: "POST",
-		data: JSON.stringify(data),
-		contentType: 'application/json',
-	})
-	.fail(function () {
-	//Handle the error
+			},
+			method: "POST",
+			data: JSON.stringify(data),
+			contentType: 'application/json',
+		})
+		.fail(function () {
+			//Handle the error
 
-	});
+		});
 	//Ajax call to get all the details about the question
 	$.ajax(
 		{
@@ -104,13 +104,13 @@ $(document).ready(function () {
 		})
 		.done(function (data) {
 			var json = data.data;
-			console.log(json)
+
 			var titleContent = json.question.postTitle;
-			if(json.question.isBookMarked == 1){
+			if (json.question.isBookMarked == 1) {
 				titleContent = "<i id = 'bookmarked' class='fa fa-bookmark fa-lg' aria-hidden='true'></i>" + titleContent;
 			}
-			else{
-				titleContent =  "<i id = 'bookmarked' class='fa fa-bookmark-o fa-lg' aria-hidden='true'></i>" + titleContent;
+			else {
+				titleContent = "<i id = 'bookmarked' class='fa fa-bookmark-o fa-lg' aria-hidden='true'></i>" + titleContent;
 			}
 			$("#qTitle").html(titleContent);
 			$("#userdetail").html("by <a href='" + json.question.askedUserProfile + "'>" + json.question.askedbyUserName + "</a>");
@@ -164,7 +164,7 @@ $(document).ready(function () {
 				answerobj.usefulnesscount = answeritem.answer.upvotes;
 				answerobj.upvoteid = "answerupvote-" + answeritem.answer.postId;
 				answerobj.downvoteid = "answerdownvote-" + answeritem.answer.postId;
-				
+
 				//Change later
 				var countArray = [];
 				countArray.push(answeritem.answer.excitedCount);
@@ -184,38 +184,38 @@ $(document).ready(function () {
 				isExcited = setClassForImage(isHappy, countArray, answeritem.answer.excitedCount);
 				isHappy = setClassForImage(isHappy, countArray, answeritem.answer.happyCount);
 				isPoker = setClassForImage(isPoker, countArray, answeritem.answer.neutralCount);
-				
+
 				//Change later
-				console.log(answeritem.answer.currentUserRating);
-				if(answeritem.answer.currentUserRating == 10){
+
+				if (answeritem.answer.currentUserRating == 10) {
 					isExcited = isExcited + " selected-image";
 				}
-				else if(answeritem.answer.currentUserRating == 7){
+				else if (answeritem.answer.currentUserRating == 7) {
 					isHappy = isHappy + " selected-image";
 				}
-				else if(answeritem.answer.currentUserRating == 2){
+				else if (answeritem.answer.currentUserRating == 2) {
 					isPoker = isPoker + " selected-image";
 				}
-				else if(answeritem.answer.currentUserRating == -3){
+				else if (answeritem.answer.currentUserRating == -3) {
 					isConfused = isConfused + " selected-image";
 				}
-				else if(answeritem.answer.currentUserRating == -5){
+				else if (answeritem.answer.currentUserRating == -5) {
 					isAngry = isAngry + " selected-image";
 				}
-				console.log(isExcited);
+
 				answerobj.isAngry = isAngry;
 				answerobj.isConfused = isConfused;
 				answerobj.isExcited = isExcited;
 				answerobj.isHappy = isHappy;
 				answerobj.isPoker = isPoker;
-				
+
 				answerobj.angryCount = answeritem.answer.angryCount;
 				answerobj.happyCount = answeritem.answer.happyCount;
 				answerobj.excitedCount = answeritem.answer.excitedCount;
 				answerobj.confusedCount = answeritem.answer.confusedCount;
 				answerobj.pokerCount = answeritem.answer.neutralCount;
 				//20, 17, 15, 10, 7
-				
+
 				var answercommentHtml = "";
 
 				$.each(answeritem.comments, function (ckey, comment) {
@@ -231,32 +231,60 @@ $(document).ready(function () {
 
 			});
 			$("#answercontentcontainer").loadTemplate("/static/templates/answers.html", answerArray);
-			
-			$.each(answerArray, function(key, ans){
+
+			$.each(answerArray, function (key, ans) {
 				var ansid = ans.answervoteid;
-				$("#"+ansid).find("img[alt='excited']").attr("title",ans.excitedCount);
-				$("#"+ansid).find("img[alt='happy']").attr("title",ans.happyCount);
-				$("#"+ansid).find("img[alt='poker']").attr("title",ans.pokerCount);
-				$("#"+ansid).find("img[alt='confused']").attr("title",ans.confusedCount);
-				$("#"+ansid).find("img[alt='angry']").attr("title",ans.angryCount);
-				
-				
-				
+				$("#" + ansid).find("img[alt='excited']").attr("title", ans.excitedCount);
+				$("#" + ansid).find("img[alt='happy']").attr("title", ans.happyCount);
+				$("#" + ansid).find("img[alt='poker']").attr("title", ans.pokerCount);
+				$("#" + ansid).find("img[alt='confused']").attr("title", ans.confusedCount);
+				$("#" + ansid).find("img[alt='angry']").attr("title", ans.angryCount);
+
+
+
 				/*$("#"+ansid).find("img[alt='excited']").tooltip({ content: ans.excitedCount});
 				$("#"+ansid).find("img[alt='happy']").tooltip({ content: ans.happyCount});
 				$("#"+ansid).find("img[alt='poker']").tooltip({ content: ans.pokerCount});
 				$("#"+ansid).find("img[alt='confused']").tooltip({ content: ans.confusedCount});
 				$("#"+ansid).find("img[alt='angry']").tooltip({ content: ans.angryCount});*/
-				
+
 			});
 		})
 		.fail(function () {
 			//Handle the error
 
 		});
-		
-		//Adding richtext editor
-		CKEDITOR.replace('richtext-area');
+
+	//Adding richtext editor
+	CKEDITOR.replace('richtext-area');
+	//Update the data on the browser events table
+	var browserEventData = {
+		"UserId": 1,
+		"PostId": questionId,
+		"UserName": "Jayaprakash"
+	}
+	$.ajax(
+		{
+			url: "updateTime",
+			contentType: "application/json; charset=utf-8",
+			data: JSON.stringify(browserEventData),
+			beforeSend: function (xhr) {
+
+			},
+			error: function (xhr) {
+
+			},
+			type: "POST"
+		})
+		.done(function (data) {
+			if (data.status == "successfully saved") {
+			}
+			else {
+			}
+		})
+		.fail(function () {
+
+		});
 });
 
 $(document).on("click", "p[class='add-comment-link']", function () {
@@ -271,206 +299,206 @@ $(document).on("click", "p[class='add-comment-link']", function () {
 	parent.append(newCommentHtml);
 });
 
-$(document).on("click", "button[class='cancel btn btn-primary']", function(){
+$(document).on("click", "button[class='cancel btn btn-primary']", function () {
 	$(this).parent().parent().remove();
 });
 
-$(document).on("click", "button[class='submit btn btn-primary']", function(){
+$(document).on("click", "button[class='submit btn btn-primary']", function () {
 	var parentDiv = $(this).parent().parent();
 	var textEntered = parentDiv.find(".newcomment-txtarea").val();
 	var postId = "";
 	var displayName = "Jayaprakash";
 	var currentDateTime = moment().format("YYYY-MM-DD HH:mm:ss");
 	var containerType = parentDiv.parent().attr('id');
-	if(containerType == "questioncomments"){
+	if (containerType == "questioncomments") {
 		postId = getParametersByName("qId");
 	}
-	else{
+	else {
 		var answerId = parentDiv.parent().find(".answer-comments").attr('id');
-		postId = answerId.substring(answerId.lastIndexOf("-")+1);
+		postId = answerId.substring(answerId.lastIndexOf("-") + 1);
 	}
-	if(textEntered.trim()==""){
+	if (textEntered.trim() == "") {
 		//Display a Validation message
 		return;
 	}
 	var postData = {
-		"PostId" : postId,
-		"Text" : textEntered,
-		"DisplayName" : displayName
+		"PostId": postId,
+		"Text": textEntered,
+		"DisplayName": displayName
 	};
 	$.ajax(
 		{
 			url: "saveComment",
 			contentType: "application/json; charset=utf-8",
 			data: JSON.stringify(postData),
-			beforeSend: function(xhr){
-				
+			beforeSend: function (xhr) {
+
 			},
-			error: function(xhr){
-				
+			error: function (xhr) {
+
 			},
 			type: "POST"
 		})
-		.done(function(data){
-			if(data.status == 'successfully saved'){
+		.done(function (data) {
+			if (data.status == 'successfully saved') {
 				var newComment = "<p class = 'comment-p'>";
 				newComment = newComment + textEntered;
 				newComment = newComment + " - <a href='" + '#' + "'>" + displayName + "</a> " + currentDateTime;
 				newComment = newComment + "</p>";
-				if(containerType == "questioncomments"){
+				if (containerType == "questioncomments") {
 					var addnew = parentDiv.parent().find(".add-comment-link");
 					$(newComment).insertBefore(addnew);
 					parentDiv.parent().find(".new-comment-element").remove();
 				}
-				else{
+				else {
 					var addnew = parentDiv.parent().find(".answer-comments");
 					addnew.append(newComment);
 					parentDiv.parent().find(".new-comment-element").remove();
 				}
-				
+
 			}
-			else{
+			else {
 				//Some error has occured
 			}
 		})
-		.fail(function(data){
+		.fail(function (data) {
 			//Handle the error
 		});
 });
 
-$(document).on("click", "button[class='post-answer btn btn-primary']", function(){
+$(document).on("click", "button[class='post-answer btn btn-primary']", function () {
 	var answerHtmlText = CKEDITOR.instances['richtext-area'].getData();
 	var questionId = getParametersByName("qId");
 	var currentDateTime = moment().format("YYYY-MM-DD HH:mm:ss");
-	if(answerHtmlText.trim() == ''){
+	if (answerHtmlText.trim() == '') {
 		var validationMessage = "Your answer couldn't be submitted. Answer is empty.";
 		$(this).parent().find(".validation").text(validationMessage);
 	}
-	else{
+	else {
 		var postData = {
-			"QuestionId" : questionId,
-			"Body" : answerHtmlText,
-			"DisplayName" : "Jayaprakash"		
+			"QuestionId": questionId,
+			"Body": answerHtmlText,
+			"DisplayName": "Jayaprakash"
 		};
 		$(this).parent().find(".validation").text("");
 		$.ajax({
 			url: "saveAnswer",
 			contentType: "application/json; charset=utf-8",
 			data: JSON.stringify(postData),
-			beforeSend: function(xhr){
-				
+			beforeSend: function (xhr) {
+
 			},
-			error: function(xhr){
-				
+			error: function (xhr) {
+
 			},
 			type: "POST"
 		})
-		.done(function(data){
-			if(data.status == "successfully saved"){
-				var answerobj = {
-					answerid: "",
-					answervoteid: "",
-					answercontent: "",
-					answertime: "",
-					ansusername: "",
-					answercommentdivid: "",
-					answercomments: "",
-					userUrl: "",
-					usefulnesscount: "",
-					upvoteid: "",
-					downvoteid: ""
-				};
+			.done(function (data) {
+				if (data.status == "successfully saved") {
+					var answerobj = {
+						answerid: "",
+						answervoteid: "",
+						answercontent: "",
+						answertime: "",
+						ansusername: "",
+						answercommentdivid: "",
+						answercomments: "",
+						userUrl: "",
+						usefulnesscount: "",
+						upvoteid: "",
+						downvoteid: ""
+					};
 
-				answerobj.answerid = "answer-" + data.postId;
-				answerobj.answervoteid = "answervote-" + data.postId;
-				answerobj.answercontent = answerHtmlText;
-				answerobj.answertime = currentDateTime;
-				answerobj.ansusername = "Jayaprakash";
-				answerobj.answercommentdivid = "answer-comments-" + data.postId;
-				answerobj.userUrl = "#";
-				answerobj.usefulnesscount = 0;
-				answerobj.upvoteid = "answerupvote-" + data.postId;
-				answerobj.downvoteid = "answerdownvote-" + data.postId;
-				
-				$("#answercontentcontainer").loadTemplate("/static/templates/answers.html", answerobj, { append: true});
-			}
-			else{
-				//handle error
-			}
-		})
-		.fail(function(){
-			//Handle error
-		});
+					answerobj.answerid = "answer-" + data.postId;
+					answerobj.answervoteid = "answervote-" + data.postId;
+					answerobj.answercontent = answerHtmlText;
+					answerobj.answertime = currentDateTime;
+					answerobj.ansusername = "Jayaprakash";
+					answerobj.answercommentdivid = "answer-comments-" + data.postId;
+					answerobj.userUrl = "#";
+					answerobj.usefulnesscount = 0;
+					answerobj.upvoteid = "answerupvote-" + data.postId;
+					answerobj.downvoteid = "answerdownvote-" + data.postId;
+
+					$("#answercontentcontainer").loadTemplate("/static/templates/answers.html", answerobj, { append: true });
+				}
+				else {
+					//handle error
+				}
+			})
+			.fail(function () {
+				//Handle error
+			});
 	}
 });
 
-$(document).on("click", "img[class='emoticon']", function(){
+$(document).on("click", "img[class='emoticon']", function () {
 	var parent = $(this).parent();
-	
-	parent.find("img").each(function(){
+
+	parent.find("img").each(function () {
 		$(this).removeClass("selected-image");
 	});
 	$(this).addClass("selected-image");
-	
+
 	var answerid = parent.prop("id");
-	var postId = answerid.substring(answerid.lastIndexOf("-")+1);
+	var postId = answerid.substring(answerid.lastIndexOf("-") + 1);
 	var alt = $(this).prop("alt");
 	var ratingScore = -1;
 	var userId = 1;
-	if(alt == "excited"){
+	if (alt == "excited") {
 		ratingScore = 10;
 	}
-	else if(alt == "happy"){
+	else if (alt == "happy") {
 		ratingScore = 7;
 	}
-	else if(alt == "poker"){
+	else if (alt == "poker") {
 		ratingScore = 2;
 	}
-	else if(alt == "confused"){
+	else if (alt == "confused") {
 		ratingScore = -3;
 	}
-	else if(alt == "angry"){
+	else if (alt == "angry") {
 		ratingScore = -5;
 	}
 	//Now an ajax call to store the rating score given by user
 	var url = "saveUserRating";
 	var postData = {
-			"PostId" : postId,
-			"RatingScore" : ratingScore,
-			"UserId" : 	userId
-		};
+		"PostId": postId,
+		"RatingScore": ratingScore,
+		"UserId": userId
+	};
 	$.ajax(
 		{
 			url: url,
 			contentType: "application/json; charset=utf-8",
 			data: JSON.stringify(postData),
-			beforeSend: function(xhr){
-				
+			beforeSend: function (xhr) {
+
 			},
-			error: function(xhr){
-				
+			error: function (xhr) {
+
 			},
 			type: "POST"
 		})
-		.done(function(data){
-			if(data.status == "successfully saved"){
+		.done(function (data) {
+			if (data.status == "successfully saved") {
 				//Successfully saved
 			}
-			else{
-				console.log("error")
+			else {
+
 			}
 		})
-		.fail(function(){
+		.fail(function () {
 			//Handle error
 		});
 });
 
-$(document).on("click", "i[id = 'bookmarked']", function(){
+$(document).on("click", "i[id = 'bookmarked']", function () {
 	var url = "/bookmark";
 	var questionId = getParametersByName("qId");
 	var postData = {
-		"UserId" : 1,
-		"PostId" : questionId
+		"UserId": 1,
+		"PostId": questionId
 	};
 	var classname = $(this).attr("class");
 	var element = $(this);
@@ -479,30 +507,128 @@ $(document).on("click", "i[id = 'bookmarked']", function(){
 			url: url,
 			contentType: "application/json; charset=utf-8",
 			data: JSON.stringify(postData),
-			beforeSend: function(xhr){
-				
+			beforeSend: function (xhr) {
+
 			},
-			error: function(xhr){
-				
+			error: function (xhr) {
+
+			},
+			type: "POST"
+		})
+		.done(function (data) {
+			if (data.status == "successfully saved") {
+				if (classname == "fa fa-bookmark-o fa-lg") {
+					element.removeClass("fa fa-bookmark-o fa-lg");
+					element.addClass("fa fa-bookmark fa-lg");
+				}
+				else {
+					element.removeClass("fa fa-bookmark fa-lg");
+					element.addClass("fa fa-bookmark-o fa-lg");
+				}
+			}
+			else {
+				//handle error
+			}
+		})
+		.fail(function () {
+			//Handle error
+		});
+});
+
+//Event to update the text selection action
+function getSelectionText() {
+	var text = "";
+	if (window.getSelection) {
+		text = window.getSelection().toString();
+	} else if (document.selection && document.selection.type != "Control") {
+		text = document.selection.createRange().text;
+	}
+	return text;
+}
+
+$(document).on("click", "td[class = 'answercell']", function(){
+	var selectedText = getSelectionText();
+	console.log("select");
+	console.log(selectedText);
+	if(selectedText.trim() == ""){
+		return;
+	}
+	
+	var postId = $(this).find(".voters").attr("id");
+	postId = postId.substring(postId.lastIndexOf("-") + 1);
+	console.log(postId);
+	var postData = {
+		"PostId" : postId,
+		"PostTypeId": 2,
+		"UserId": 1,
+		"UserName": "Jayaprakash"
+	};
+	$.ajax(
+		{
+			url: "updateSelectAction",
+			contentType: "application/json; charset=utf-8",
+			data: JSON.stringify(postData),
+			beforeSend: function (xhr) {
+
+			},
+			error: function (xhr) {
+
 			},
 			type: "POST"
 		})
 		.done(function(data){
 			if(data.status == "successfully saved"){
-				if(classname == "fa fa-bookmark-o fa-lg"){
-					element.removeClass("fa fa-bookmark-o fa-lg");
-					element.addClass("fa fa-bookmark fa-lg");
-				}
-				else{
-					element.removeClass("fa fa-bookmark fa-lg");
-					element.addClass("fa fa-bookmark-o fa-lg");
-				}
+				console.log("Success");
 			}
 			else{
-				//handle error
+				console.log("Error");
 			}
+			
 		})
 		.fail(function(){
-			//Handle error
+			
+		});
+});
+
+$(document).on("click", "div[id = 'questioncontainer']", function(){
+	var selectedText = getSelectionText();
+	console.log("select");
+	console.log(selectedText);
+	if(selectedText.trim() == ""){
+		return;
+	}
+	
+	var postId = getParametersByName("qId");
+	console.log(postId);
+	var postData = {
+		"PostId" : postId,
+		"PostTypeId": 1,
+		"UserId": 1,
+		"UserName": "Jayaprakash"
+	};
+	$.ajax(
+		{
+			url: "updateSelectAction",
+			contentType: "application/json; charset=utf-8",
+			data: JSON.stringify(postData),
+			beforeSend: function (xhr) {
+
+			},
+			error: function (xhr) {
+
+			},
+			type: "POST"
 		})
+		.done(function(data){
+			if(data.status == "successfully saved"){
+				console.log("Success");
+			}
+			else{
+				console.log("Error");
+			}
+			
+		})
+		.fail(function(){
+			
+		});
 });
