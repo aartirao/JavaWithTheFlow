@@ -133,7 +133,7 @@ def updateTime():
 	returnValue = updateTimeSpent(data)
 	if(returnValue == 1):
 		response.status = 201
-		return {"status:" "successfully saved"}
+		return {"status": "successfully saved"}
 	else:
 		response.status = 200
 		return {"status": "some error occured"}
@@ -143,7 +143,7 @@ def updateTime():
 def updateSelect():
 	data = request.json
 	returnValue = updateSelectAction(data)
-	if(returnValue == 1):
+	if returnValue == 1:
 		response.status = 201
 		return {"status": "successfully saved"}
 	else:

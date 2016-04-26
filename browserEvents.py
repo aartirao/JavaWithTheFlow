@@ -30,16 +30,16 @@ def updateTimeSpent(data):
 		#Check whether there is a row already present with endtime = null
 		with connection.cursor() as cursor:
 			sql = """SELECT COUNT(*) FROM `UserEventStore` WHERE `UserId` = %s 
-			AND `EventId` = %s AND `EndTime` IS NULL""";
+			AND `EventId` = %s AND `EndTime` IS NULL ORDER BY `Id` DESC""";
 			cursor.execute(sql,(userId,eventId))
 			count = cursor.fetchone()
 			count = count["COUNT(*)"]
 			#print count
 
-		if(count != 0):
+		if count != 0:
 			with connection.cursor() as cursor:
 				sql = """SELECT `Id`,`StartTime` FROM `UserEventStore` WHERE `UserId` = %s
-				AND `EventId` = %s AND `EndTime` IS NULL""";
+				AND `EventId` = %s AND `EndTime` IS NULL ORDER BY `Id` DESC""";
 				cursor.execute(sql,(userId,eventId))
 				res = cursor.fetchone()
 				#print res
@@ -53,7 +53,7 @@ def updateTimeSpent(data):
 			#print "mins"
 			#print mins
 			#print timeDiff
-			if(mins[0] <= 30):
+			if mins[0] <= 1:
 				#Time difference between last entry is less than 30 mins, so update the endtime for the previous entry
 				#print "if"
 				#duration = timeDiff[0]*60 + timeDiff[1]
@@ -63,6 +63,13 @@ def updateTimeSpent(data):
 					sql = """UPDATE `UserEventStore` SET `EndTime` = %s, `Duration` = %s
 					WHERE `Id` = %s"""
 					cursor.execute(sql, (currentTime,duration,existingrowId))
+			else:
+				newendtime = existingstarttime + datetime.timedelta(0,60)
+				#Update one minute added for end time
+				with connection.cursor() as cursor:
+					sql = """UPDATE `UserEventStore` SET `EndTime` = %s, `Duration` = %s
+					WHERE `Id` = %s"""
+					cursor.execute(sql, (newendtime,1,existingrowId))
 		#Insert new row with the sent postId
 		with connection.cursor() as cursor:
 			sql = """INSERT INTO `UserEventStore` (`UserDisplayName`,
@@ -105,8 +112,6 @@ def updateSelectAction(data):
 
 #method for capturing view count of questions
 def updateViewCount(data):
-	print "helloworld"
-	print data
 	postId = data["PostId"]
 	
 	try:
