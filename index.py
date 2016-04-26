@@ -119,7 +119,7 @@ def getViews():
 @app.route('/getQuestionList/<topic>', method='GET')
 def getQuestionList(topic):
 	#returnValue = getQuestionListByTopic(topic)
-	returnValue = searchQuery(topic)
+	returnValue = searchQuery(topic, 70)
 	if(returnValue == -1):
 		response.status = 404
 		return {"status": "not found"}
@@ -165,7 +165,7 @@ def updateSelect():
 #Method to return search results for a given query (Page 1)
 @app.route('/search/<query>', method = 'GET')
 def callSearch(query):
-	returnValue = searchQuery(query)
+	returnValue = searchQuery(query, 70)
 	if(returnValue == -1):
 		response.status = 404
 		return {"status": "not found"}
