@@ -228,7 +228,7 @@ def getQuestionList(userId):
 """
 
 
-@app.route('/userinterest', method='POST')
+@app.route('/userInterest', method='POST')
 def addUserInterest():
 	data = request.json	
 	returnValue = createUserInterest(data)
