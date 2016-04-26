@@ -598,11 +598,12 @@ def getInterestOfUser(userId):
 			if rowCount > 0:		
 				result = cursor.fetchall()						
 			else:
-				sql = "SELECT DISTINCT UI.UserId, T.Name from UserInterests as UI , Topics as T"
+				sql = "SELECT T.Name from Topics as T"
 				
 				rowCount = cursor.execute(sql)				
 				result = cursor.fetchall()
 				for row in result:
+					row['UserId'] = userId
 					row['Weight'] = 0		
 		return result
 	except Exception, e:
