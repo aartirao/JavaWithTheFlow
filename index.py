@@ -2,7 +2,8 @@ from bottle import Bottle, run, template, static_file, get, post, request, respo
 import pymysql.cursors
 
 from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, \
-		getQuestionListByTopic, saveUserRating, createBookmark, getQuestionListByBookmark, createUserInterest
+		getQuestionListByTopic, saveUserRating, createBookmark, getQuestionListByBookmark, createUserInterest, \
+		getInterestOfUser
 from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
 
 from search import searchQuery
@@ -242,6 +243,20 @@ def addUserInterest():
 @app.route('/ask', method = 'GET')
 def askQuestion():
 	return template('index/ask.html')
+		
+@app.route('/getInterest/<userId>', method='GET')
+def getInterest(userId):
+	returnValue = getInterestOfUser(userId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "successfully retrieved", "data": returnValue}
+
+@app.route('/interest', method = 'GET')
+def interest():
+	return template('index/interest.html')
 
 run(app, host='localhost', port=8100, debug=True)
 
