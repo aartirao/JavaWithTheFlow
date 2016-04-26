@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask a Question</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="/static/css/jquery-ui.css" type="text/css" />
+    <link rel="stylesheet" href="/static/css/powerange.css" type="text/css" />
+    <script src="/static/scripts/vendor/jquery.js"></script>
+    <script src="/static/scripts/vendor/bootstrap.js"></script>
+    <script src="/static/scripts/vendor/jquery-ui.js"></script>
+   
+
+    <script src="/static/scripts/vendor/jquery_loadTemplate.js"></script>
+    <script src="/static/scripts/vendor/powerange.js"></script>
+    <script src="/static/scripts/vendor/ckeditor/ckeditor.js"></script>
+    <script src="/static/scripts/vendor/moment.js"></script>
+    <link rel="stylesheet" href="/static/css/ask.css" type="text/css" />
+    <script src="/static/scripts/ask.js"></script>
+    <script src="/static/scripts/richtexteditor.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="/static/scripts/vendor/sb-admin-2.js"></script>
+
+    <!-- Custom CSS -->
+    <link href="/static/css/sb-admin-2.css" rel="stylesheet" />
+    <!-- Custom Fonts -->
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+    
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Java With the flow !</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+
+                <li>
+                    <a href="services.html">Home</a>
+                </li>
+                <li>
+                    <a href="contact.html">Profile</a>
+                </li>
+
+
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        </li>
+
+                        <li class="divider"></li>
+                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                            <li>
+                                <a href="tables.html"><i class="fa fa-table fa-fw"></i> All Activities</a>
+                            </li>
+                            <br>
+                            <li>
+                                <a href="forms.html">My Answers </a>
+                            </li>
+                            <li>
+                                <a href="forms.html">My Questions </a>
+                            </li>
+                            <li>
+                                <a href="forms.html"> Bookmarks </a>
+                            </li>
+                            <li>
+                                <a href="forms.html">Interests </a>
+                            </li>
+                            <li>
+                                <a href="forms.html">Followers </a>
+                            </li>
+                            <li>
+                                <a href="forms.html"> Following </a>
+                            </li>
+
+
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="page-header">Welcome name !!!</h3>
+                </div>
+                <!-- /.col-lg-12 -->
+                <div class="row">
+                    <div class="col-lg-12 col-md-6">
+
+
+                    </div>
+
+                </div>
+
+                <!-- /.row -->
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3>Ask a Question </h3>
+                                <div class="pull-right">
+
+                                </div>
+                            </div>
+                            <!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div id="container">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group inputFields">
+                                                <label for="question-title" class="margin-class">Title</label>
+                                                <textarea class="form-control margin-class" rows="3" id="question-title"></textarea>
+                                                <span class="validation" id="title-validate"></span>
+                                                <label for="question-tags" class="margin-class">Tags</label>
+                                                <input type="text" class="form-control margin-class" id="question-tags" placeholder="Tags as Comma separated">
+                                                <label for="richtext-area" class="margin-class">Body</label>
+                                                <div id="question-richtext-container">
+                                                    <textarea id="richtext-area" class="margin-class" name="richtext-area" rows="10" cols="80"></textarea>
+                                                    <p>
+                                                        <span class="validation" id="body-validate"></span>
+                                                        <button class='post-question btn btn-primary'>Post Your Question</button>
+                                                    </p>
+
+                                                </div>
+
+                                            </div>
+                                            <div id="dialog" title="Ask a question">
+                                                <p>
+                                                    
+                                                    <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>                                                    Your files have downloaded successfully into the My Downloads folder.
+                                                </p>
+                                                <p>
+                                                    Question saved successfully.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                        <!-- /.panel -->
+
+                        <!-- /.panel -->
+
+                        <!-- /.panel -->
+                    </div>
+                    <!-- /.col-lg-8 -->
+                    <div class="col-lg-4">
+
+                        <!-- /.panel -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-bar-chart-o fa-fw"></i> Donut Chart Example
+                            </div>
+                            <div class="panel-body">
+                                <div id="morris-donut-chart"></div>
+                                <a href="#" class="btn btn-default btn-block">View Details</a>
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+
+
+
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Tracking your position
+                            </div>
+                            <!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="list-group">
+
+                                </div>
+                                <!-- /.list-group -->
+
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /#page-wrapper -->
+
+        </div>
+        <!-- /#wrapper -->
+
+</body>
+
+</html>
+
+<!--<i class="fa fa-question fa-lg" aria-hidden="true"></i> -->

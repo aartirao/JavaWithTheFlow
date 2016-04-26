@@ -238,6 +238,11 @@ def addUserInterest():
 	else:
 		response.status = 200
 		return {"status": "some error occured"}
+			
+#Route for ask question page
+@app.route('/ask', method = 'GET')
+def askQuestion():
+	return template('index/ask.html')
 		
 @app.route('/getInterest/<userId>', method='GET')
 def getInterest(userId):

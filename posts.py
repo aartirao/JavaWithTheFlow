@@ -152,7 +152,12 @@ def addQuestion(data):
 	answerCount = 0
 	commentCount = 0
 	favouriteCount = 0
-
+	tagstobeEntered = ""
+	if tags != "":
+		temp = tags.split(",")
+		for item in temp:
+			tagstobeEntered = tagstobeEntered + "<" + item + ">"
+		
 	try:
 		#Get user id for the diplayname
 		with connection.cursor() as cursor:
@@ -189,7 +194,7 @@ def addQuestion(data):
 				parentId, creationDate, None, 
 				score, viewcount, body, userId["Id"], 
 				displayname, None, None, None, None, title, 
-				tags, answerCount, 0, 0, None))
+				tagstobeEntered, answerCount, 0, 0, None))
 
 		connection.commit()
 		return 1
