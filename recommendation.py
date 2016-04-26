@@ -6,6 +6,7 @@ import traceback
 import json
 import operator
 import ConfigParser
+from search import searchQuery
 
 config = ConfigParser.ConfigParser()
 config.read('db.cfg')
@@ -82,7 +83,6 @@ def getRatings(user):
 		print traceback.print_exc()
 		return -1
 
-
 def pearson_correlation(user1, user2):
 	user1RatingsDict = getRatings[user1]
 	user1Ratings = [row[topic] for topic in user1RatingsDict[user1]]
@@ -126,13 +126,13 @@ def getTopicsToRecommend(user):
 		topics.append(ratingsData[userID].items())
 
 	interestedTopics = sorted(topics, key=operator.itemgetter(1))[::-1]
-	return interestedTopics
+	return interestedTopics[0:3]
 
 def recommendQuestions(user):
 	topics = getTopicsToRecommend(user)
 	questions = {}
 	for topic in topics:
-		questions.update(getQuestionListByTopic(topic))
+		questions.update(searchQuery(topic, 2))
 	return questions
 
 if __name__ == "__main__":

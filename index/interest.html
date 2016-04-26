@@ -49,7 +49,7 @@
         function updateTextInput(id, val) {
             document.getElementById(id+'Input').value=val; 
         }
-        
+
         $(function() {
             $.ajax({url: '/getInterest/'+getUrlParameter('userId'), success: function(result){
                 console.log("starts..");
@@ -58,7 +58,8 @@
                     var template = document.getElementById('topictemplate').innerHTML;
                     qList = result["data"];
                     for(var i=0; i<qList.length; i++) {
-                        console.log("loop");
+                        var topic = qList[i].Name.replace(/ /g,'');
+                        qList[i]["Topic"] = topic;
                         var output = Mustache.render(template, qList[i]);
                         $("#interestform").append(output);
                         console.log(qList[i]);
@@ -66,6 +67,32 @@
                 });            
             }});     
         });
+
+        $( document ).ready(function() {
+            $("#submitinterest").click(function(){
+            console.log("submit interest");
+            var userid = getUrlParameter("userId");
+            var data = [];
+            $('.ranger').each(function () {
+                str = this.name;
+                str = str.substring(0,str.indexOf("Topic"));
+                json = { "UserId": userid, "TopicId": str, "Weight": this.value};
+                data.push(json);
+            }); 
+            setInterests(data);
+            });
+        });
+
+        function setInterests(data){
+            $.ajax({
+              url: "/userInterest",
+              method: "POST",
+              data: JSON.stringify(data),
+              contentType: 'application/json'
+            });
+        }
+        
+
     </script>
 
 </head>
@@ -233,7 +260,7 @@
 
                             </div>
                             <!-- /.panel-body -->
-                        </div>
+                        </div>
                     </div>
 
 

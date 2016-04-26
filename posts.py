@@ -592,13 +592,13 @@ def getInterestOfUser(userId):
 	try:
 		result = []
 		with connection.cursor() as cursor:			
-			sql = "SELECT UI.UserId, T.Name, UI.Weight From UserInterests as UI right join Topics as T on T.id = UI.TopicId \
+			sql = "SELECT UI.UserId, T.Id, T.Name, UI.Weight From UserInterests as UI right join Topics as T on T.id = UI.TopicId \
 					where UserId = %s"
 			rowCount = cursor.execute(sql, (userId))
 			if rowCount > 0:		
 				result = cursor.fetchall()						
 			else:
-				sql = "SELECT T.Name from Topics as T"
+				sql = "SELECT T.Id, T.Name from Topics as T"
 				
 				rowCount = cursor.execute(sql)				
 				result = cursor.fetchall()

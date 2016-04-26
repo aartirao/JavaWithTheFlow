@@ -8,6 +8,7 @@ from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
 
 from search import searchQuery
 from users import follow, unFollow
+from search import searchQuery, fetchResults
 '''
 POST - 201 - Created, 200 - OK {error message}
 GET - 200 - OK, 404 - Not Found
@@ -116,10 +117,22 @@ def getViews():
  		response.status = 200
  		return {"status": "successfully retrieved", "data": returnValue}
 
-#Method to get the list of questions for a topic
+#Method to get the list of questions for a topic (First page of results)
 @app.route('/getQuestionList/<topic>', method='GET')
 def getQuestionList(topic):
-	returnValue = getQuestionListByTopic(topic)
+	#returnValue = getQuestionListByTopic(topic)
+	returnValue = searchQuery(topic, 70)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "successfully retrieved", "data": returnValue}
+
+#Method to get the list of questions for a topic (Pages 2 to 5)
+@app.route('/getQuestionList/<topic>/<pageId>', method='GET')
+def getQuestionListResults(topic, pageId):
+	returnValue = fetchResults(pageId)
 	if(returnValue == -1):
 		response.status = 404
 		return {"status": "not found"}
@@ -151,17 +164,28 @@ def updateSelect():
 		response.status = 200
 		return {"status": "some error occured"}
 
-#Method to return search results for a given query
+#Method to return search results for a given query (Page 1)
 @app.route('/search/<query>', method = 'GET')
 def callSearch(query):
-	returnValue = searchQuery(query)
+	returnValue = searchQuery(query, 70)
 	if(returnValue == -1):
 		response.status = 404
 		return {"status": "not found"}
 	else:
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
-		
+	
+#Method to return search results for a given query (Pages 2 to 5)
+@app.route('/search/<query>/<pageId>', method = 'GET')	
+def callSearchResults(query, pageId):
+	returnValue = fetchResults(pageId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "successfully retrieved", "data": returnValue}
+
 #Method to save the user ratings
 @app.route('/saveUserRating', method = 'POST')
 def saveUserRatingScore():
@@ -229,7 +253,7 @@ def getQuestionList(userId):
 """
 
 
-@app.route('/userinterest', method='POST')
+@app.route('/userInterest', method='POST')
 def addUserInterest():
 	data = request.json	
 	returnValue = createUserInterest(data)

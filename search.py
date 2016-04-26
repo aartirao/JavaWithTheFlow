@@ -23,6 +23,8 @@ connection = pymysql.connect(host=config.get('database','host'),
 							 charset = 'utf8mb4',
 							 cursorclass=pymysql.cursors.DictCursor)
 
+postIds = []
+
 javaKeywords = """abstract  continue  for  new  switch
 assert  default  goto  package  synchronized
 boolean  do  if  private  this
@@ -70,25 +72,17 @@ def indexPosts():
 	except Exception, e:
 		print traceback.print_exc()
 
-def searchQuery(query):
-	postIds = []
+def fetchResults(pageId):
 	questionIds = []
 	data = []
-
-	# Remove stopwords from query and lemmatize the words
-	query = stopWordsAndLemmatize(query)
-
-	# Return "size" hits for the given query. Size arbitrarily set to 50 
-	matches = es.search(index = "posts_index", q = query, size = 10)
-	hits = matches['hits']['hits']
-	for hit in hits:
-		postIds.append(hit['_id'])
-
+	print pageId
+	endIndex = int(pageId) * 10
+	startIndex = endIndex - 10
 	try:
 		with connection.cursor() as cursor:
 			# If the ID belongs to a question, add to the result as is. If it 
 			# belongs to an answer, find its question ID and add to the result.
-			for postId in postIds: 
+			for postId in postIds[startIndex:endIndex]: 
 				sqlPostId = "SELECT P.Id, P.Title, P.ViewCount, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
 			P.AnswerCount, P.CreationDate, P.PostTypeId from Posts as P where P.Id = %s"
 				rowCount = cursor.execute(sqlPostId, postId)
@@ -134,6 +128,24 @@ def searchQuery(query):
 				row[u'ViewCountRank'] = getRange(v1, v2, v3, row[u'ViewCount'])
 			data = questionIds
 				
+		return data
+	except:
+		print traceback.print_exc()
+		return -1
+
+def searchQuery(query, resultCount):
+	try:
+		data = []
+		# Remove stopwords from query and lemmatize the words
+		query = stopWordsAndLemmatize(query)
+
+		# Return "size" hits for the given query. Size arbitrarily set to 50 
+		matches = es.search(index = "posts_index", q = query, size = resultCount)
+		hits = matches['hits']['hits']
+		for hit in hits:
+			postIds.append(str(hit['_id']))
+
+		data = fetchResults(1)
 		return data
 	except:
 		print traceback.print_exc()
