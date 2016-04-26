@@ -582,5 +582,24 @@ def createUserInterest(data):
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
-			
+		
+def getInterestOfUser(userId):
+	try:
+		result = []
+		with connection.cursor() as cursor:			
+			sql = "SELECT UI.UserId, T.Name, UI.Weight From UserInterests as UI right join Topics as T on T.id = UI.TopicId \
+					where UserId = %s"
+			rowCount = cursor.execute(sql, (userId))
+			if rowCount > 0:		
+				result = cursor.fetchall()						
+			else:
+				sql = "SELECT DISTINCT UI.UserId, T.Name from UserInterests as UI , Topics as T"
 				
+				rowCount = cursor.execute(sql)				
+				result = cursor.fetchall()
+				for row in result:
+					row['Weight'] = 0		
+		return result
+	except Exception, e:
+		print traceback.print_exc()
+		return -1

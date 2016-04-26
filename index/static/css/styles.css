@@ -130,3 +130,16 @@ th, td {
     text-decoration: none;
     vertical-align: center;
 }
+
+input[type="range"] {
+    width: 200px; 
+    
+}
+
+.rangeroutput{
+    display: inline;
+}
+
+.initial {
+    text-transform: capitalize;
+}
