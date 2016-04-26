@@ -7,6 +7,7 @@ from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCoun
 from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
 
 from search import searchQuery
+from users import follow, unFollow
 '''
 POST - 201 - Created, 200 - OK {error message}
 GET - 200 - OK, 404 - Not Found
@@ -257,6 +258,28 @@ def getInterest(userId):
 @app.route('/interest', method = 'GET')
 def interest():
 	return template('index/interest.html')
+	
+@app.route('/follow', method = "POST")
+def followUser():
+	data = request.json
+	returnValue = follow(data)
+	if returnValue == 1:
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+		
+@app.route('/unfollow', method = "POST")
+def unFollowUser():
+	data = request.json
+	returnValue = unFollow(data)
+	if returnValue == 1:
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
 
 run(app, host='localhost', port=8100, debug=True)
 

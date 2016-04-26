@@ -17,27 +17,50 @@ connection = pymysql.connect(host=config.get('database','host'),
 
 #Method to follow a user
 def follow(data):
-    currentUserId = data["UserId"];
-    followUserId = data["Follow"];
+    currentUserId = data["UserId"]
+    followUserId = data["Follow"]
     count = -1
     try:
         with connection.cursor() as cursor:
             sql = "SELECT COUNT(*) FROM `FollowDetails` WHERE `UserId` = %s AND `FollowingUserId` = %s"
             cursor.execute(sql, (currentUserId, followUserId))
             count = cursor.fetchone()
+            count = count["COUNT(*)"]
         if count > 0:
             #Update the row
             with connection.cursor() as cursor:
                 sql = "UPDATE `FollowDetails` SET `isDeleted` = %s WHERE `UserId` = %s AND `FollowingUserId` = %s"
                 cursor.execute(sql, (0, currentUserId, followUserId))
         else:
-        
-		    with connection.cursor() as cursor:
+            with connection.cursor() as cursor:
 			    sql = "INSERT INTO `FollowDetails` (`UserId`, `FollowingUserId`, `IsDeleted`) VALUES (%s, %s, %s)"
 			    cursor.execute(sql, (currentUserId, followUserId, 0))
-            connection.commit()
-    return 1;
+        connection.commit()
+        return 1;
     except Exception, e:
 		print traceback.print_exc()
 		return -1
-			
+        
+#Unfollow method
+def unFollow(data):
+    currentUserId = data["UserId"]
+    followUserId = data["Follow"]
+    count = -1
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT COUNT(*) FROM `FollowDetails` WHERE `UserId` = %s AND `FollowingUserId` = %s"
+            cursor.execute(sql, (currentUserId, followUserId))
+            count = cursor.fetchone()
+            count = count["COUNT(*)"]
+        if count > 0:
+            #unfollow by updating the row
+            with connection.cursor() as cursor:
+                sql = "UPDATE `FollowDetails` SET `isDeleted` = %s WHERE `UserId` = %s AND `FollowingUserId` = %s"
+                cursor.execute(sql, (1, currentUserId, followUserId))
+        else:
+            return -1;
+        connection.commit()
+        return 1
+    except Exception, e:
+        print traceback.print_exc()
+        return -1        			
