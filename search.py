@@ -112,11 +112,10 @@ def searchQuery(query):
 			
 			sumViewCount = 0
 			viewCounts = []
-			for row in questionIds:
-				print row[u'Id']
+			for row in questionIds:				
 				viewCounts.append(int(row[u'ViewCount']))
-			viewCounts.sort()
-			splitAt = rowCount / 3
+			viewCounts.sort()			
+			splitAt = len(questionIds) / 3
 			v1 = viewCounts[:splitAt]
 			v2 = viewCounts[splitAt:splitAt*2]
 			v3 = viewCounts[splitAt*2:]
