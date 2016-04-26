@@ -133,14 +133,14 @@ def fetchResults(pageId):
 		print traceback.print_exc()
 		return -1
 
-def searchQuery(query):
+def searchQuery(query, resultCount):
 	try:
 		data = []
 		# Remove stopwords from query and lemmatize the words
 		query = stopWordsAndLemmatize(query)
 
 		# Return "size" hits for the given query. Size arbitrarily set to 50 
-		matches = es.search(index = "posts_index", q = query, size = 70)
+		matches = es.search(index = "posts_index", q = query, size = resultCount)
 		hits = matches['hits']['hits']
 		for hit in hits:
 			postIds.append(str(hit['_id']))
