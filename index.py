@@ -7,7 +7,7 @@ from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCoun
 from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
 
 from search import searchQuery
-from users import follow, unFollow
+from users import follow, unFollow, getUserDetails, getAllDetailsOfUser
 from search import searchQuery, fetchResults
 '''
 POST - 201 - Created, 200 - OK {error message}
@@ -305,5 +305,20 @@ def unFollowUser():
 		response.status = 200
 		return {"status": "some error occured"}
 
-run(app, host='localhost', port=8100, debug=True)
+@app.route('/getUserDetails/<uId>', method = "GET")
+def userDetails(uId):
+	print("inside")
+	returnValue = getAllDetailsOfUser(uId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "successfully retrieved", "data": returnValue}
+
+@app.route('/profile', method = 'GET')
+def interest():
+	return template('index/profile.html')
+	
+run(app, host='localhost', port=8200, debug=True)
 
