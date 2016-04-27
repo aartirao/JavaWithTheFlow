@@ -33,7 +33,8 @@ Tags VARCHAR(200),
 AnswerCount INT,
 CommentCount INT,
 FavouriteCount INT,
-ClosedDate DATETIME
+ClosedDate DATETIME,
+Usefulness INT
 );
 
 CREATE TABLE Users(
@@ -48,7 +49,8 @@ Views INT,
 UpVotes INT,
 DownVotes INT,
 AccountId INT,
-Age INT
+Age INT,
+Password VARCHAR(20)
 );
 
 CREATE TABLE Badges(
