@@ -64,22 +64,5 @@ def generateUserData():
 		print traceback.print_exc()
 		return -1
 
-def insertUserData():
-	sql = """insert into `Users` (`Id`, `DisplayName`) values (%s, %s)"""
-	try:
-		with connection.cursor() as cursor:
-			count = 0
-			for userId, userName in userIdNameMap.iteritems():
-				count += 1
-				print "Inserting: ", count
-				cursor.execute(sql, [userId, userName])
-		connection.commit()
-		connection.close()
-	except Exception, e:
-		print traceback.print_exc()
-		return -1
-
-
 if __name__ == "__main__":
 	generateUserData()
-	#insertUserData()
