@@ -5,6 +5,7 @@ from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCoun
 		getQuestionListByTopic, saveUserRating, createBookmark, getQuestionListByBookmark, createUserInterest, \
 		getInterestOfUser
 from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
+from recommendation import recommendQuestions
 
 from search import searchQuery, fetchResults
 '''
@@ -239,6 +240,17 @@ def getQuestionList(userId):
 	else:
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
+
+@app.route('/getRecommendations/<userId>', method='GET')
+def getQuestionList(userId):
+	returnValue = recommendQuestions(userId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "successfully retrieved", "data": returnValue}
+
 
 """ Sample
 [
