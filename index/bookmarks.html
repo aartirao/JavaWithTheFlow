@@ -33,6 +33,7 @@
     <![endif]-->
     
     <script type="text/javascript">
+        var username;
         var getUrlParameter = function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
             sURLVariables = sPageURL.split('&'),
@@ -46,10 +47,9 @@
                 return sParameterName[1] === undefined ? true : sParameterName[1];
             }
         }
-      };       
-        
+      };   
 
-            jQuery.ajaxSetup({
+      jQuery.ajaxSetup({
           beforeSend: function() {
              $('#loader').show();
           },
@@ -58,52 +58,43 @@
           },
           success: function() {}
         });
+
+        
     $(function() {
         $("#usefulposts").hide();
 
         username = getUrlParameter('username');
         console.log("Username" + username);
-        user = {"username" : username};
         
-        $.ajax({url: '/getQuestionList/'+getUrlParameter('topic'), success: function(result){
+
+        getUserId(username);
+        
+    });
+
+
+    function getUserId(username) {
+        $.ajax({url: '/getUserId/'+username, success: function(result){
+            displayBookmarks(result.result);
+        } 
+        });
+
+        
+    }
+
+    function displayBookmarks(userId) {
+        var user = {"username" : username};
+        $.ajax({url: '/getBookmarks/'+userId, success: function(result){
             $("#templates").load("/static/templates/question.html", function() {
                 var template = document.getElementById('qTemplate').innerHTML;
                 qList = result["data"];
                 for(var i=0; i<qList.length; i++) {
                     qList[i]["username"] = username;
-                    var output = Mustache.render(template, qList[i]);
+                    var output = Mustache.render(template, qList[i], user);
                     $("#grouptraffic").append(output);
-                    $(".paginationHolder").show();
                 }    
             });            
         }}); 
-    });
-
-    $( document ).ready(function() {
-        $(".pagination a").click(function(){
-            var page = this.name;
-            $(".pagination a").removeClass("active");
-            $(this).addClass("active");
-
-            $.ajax({url: '/getQuestionList/'+getUrlParameter('topic')+'/'+page, success: function(result){
-            $("#templates").load("/static/templates/question.html", function() {
-                var template = document.getElementById('qTemplate').innerHTML;
-                qList = result["data"];
-                for(var i=0; i<qList.length; i++) {
-                    var output = Mustache.render(template, qList[i]);
-                    $("#grouptraffic").append(output);
-                    $(".paginationHolder").show();
-                }    
-            });            
-        }}); 
-        });
-
-        $("#bookmarks").click(function(){
-            window.location.href = '/bookmarkList?username='+getUrlParameter("username");
-        });
-    });
-
-
+    }
 
     </script>
 
@@ -128,7 +119,7 @@
 
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{username   }} <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{username}} <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="portfolio-1-col.html">Question</a>
@@ -136,13 +127,6 @@
                             <li>
                                 <a href="portfolio-2-col.html">Answer</a>
                             </li>
-                            <li>
-                                <a href="portfolio-3-col.html">Comments</a>
-                            </li>
-                            <li>
-                                <a href="portfolio-4-col.html">Likes</a>
-                            </li>
-                            
                         </ul>
                     </li>
                     
@@ -206,7 +190,7 @@
                             <a href="forms.html"> Questions </a>
                         </li>
                         <li>
-                            <a id="bookmarks" href="#"> Bookmarks </a>
+                            <a href="forms.html"> Bookmarks </a>
                         </li>
                         <li>
                             <a href="forms.html">Interests </a>
@@ -232,7 +216,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Questions</h1>
+                    <h1 class="page-header">Bookmarks</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -253,7 +237,6 @@
                         <div id="loader">
                             <img class="coffee" src="/static/img/coffee.gif">
                         </div>
-
                         <div id="usefulposts">
 
                            
@@ -261,19 +244,7 @@
                         <div id="grouptraffic">
                             
                         </div>
-                        <div class="paginationHolder">
-                            <ul class="pagination">
-                            <li><a name="1" class="active" href="#">1</a></li>
-                            <li><a name="2" href="#">2</a></li>
-                            <li><a name="3" href="#">3</a></li>
-                            <li><a name="4" href="#">4</a></li>
-                            <li><a name="5" href="#">5</a></li>
-                            <li><a name="6" href="#">6</a></li>
-                            <li><a name="7" href="#">7</a></li>
-                            </ul>
-                            
-                        </div>
-
+                        
                     </div>
                     <div id ="templates" style="display:none;" > </div>
             </div>

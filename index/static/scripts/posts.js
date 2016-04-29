@@ -64,10 +64,10 @@ function setClassForImage(initialclass, counts, value, userValue) {
 
 $(document).ready(function () {
 	var questionId = getParametersByName("qId");
+	var username = getParametersByName("username");
 	var url = "getQuestion";
 	var userId = 1
 	url = url + "/" + questionId + "/" + userId;
-
 	var url1 = "updateViewCount";
 
 	data = { "PostId": questionId };
@@ -285,6 +285,16 @@ $(document).ready(function () {
 		.fail(function () {
 
 		});
+
+		jQuery.ajaxSetup({
+          beforeSend: function() {
+             $('#loader').show();
+          },
+          complete: function(){
+             $('#loader').hide();
+          },
+          success: function() {}
+        });
 });
 
 $(document).on("click", "p[class='add-comment-link']", function () {

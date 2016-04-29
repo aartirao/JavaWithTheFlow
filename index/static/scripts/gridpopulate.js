@@ -12,8 +12,28 @@ defaults = {
 	, vertical: false
 };
 
+function getParametersByName(name, url) {
+	if (!url) url = window.location.href;
+	name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)", "i"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    console.log(results[2].replace(/\+/g, " "));
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+
+}
 
 $(document).ready(function () {
+	jQuery.ajaxSetup({
+          beforeSend: function() {
+             $('#loader').show();
+          },
+          complete: function(){
+             $('#loader').hide();
+          },
+          success: function() {}
+        });
 	
 	var url = "getViewCount";
 	//Ajax call to get all the details about the question
@@ -41,7 +61,7 @@ $(document).ready(function () {
 
 			$(".cell-"+i).click(function() {
 				console.log(this.id);
-			    window.location.href = '/questionList/?topic='+this.id;
+			    window.location.href = '/questionList/?topic='+this.id+'&username='+getParametersByName("username");
 			});  
 
 			if(dataList.viewCount < 200000){

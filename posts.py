@@ -537,7 +537,7 @@ def getQuestionListByBookmark(user):
 		with connection.cursor() as cursor:
 			sql = "SELECT P.Id, P.Title, P.ViewCount, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
 				P.AnswerCount, P.CreationDate from Posts as P where P.PostTypeId = 1 and P.Id in \
-				(SELECT PostId from Bookmarks where UserId = %s and IsDeleted == 0) LIMIT 10;"
+				(SELECT PostId from Bookmarks where UserId = %s and IsDeleted = 0) LIMIT 10;"
 			rowCount = cursor.execute(sql, (user))	
 			if rowCount > 0:
 				results = cursor.fetchall()

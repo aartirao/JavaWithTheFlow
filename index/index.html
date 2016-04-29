@@ -17,6 +17,8 @@
     <link href="/static/css/sb-admin-2.css" rel="stylesheet">
     <!-- Custom Fonts -->
     <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+    <!-- Custom CSS -->
+    <link href="/static/css/style.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -45,7 +47,24 @@
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
-               
+                <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{username}} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="portfolio-1-col.html">Question</a>
+                            </li>
+                            <li>
+                                <a href="portfolio-2-col.html">Answer</a>
+                            </li>
+                            <li>
+                                <a href="portfolio-3-col.html">Comments</a>
+                            </li>
+                            <li>
+                                <a href="portfolio-4-col.html">Likes</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
                     <li>
                         <a href="services.html">Home</a>
                     </li>
@@ -64,7 +83,7 @@
                         </li>
                         
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="/loginPage"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -137,13 +156,18 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <i class="fa fa-bar-chart-o fa-fw"></i> JAVA GRID
+
                             <div class="pull-right">
                               
                             </div>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                              <div class="tableHolder">
+                            <div class="tableHolder">
+                        <div id="loader">
+                                <img class="coffee" src="/static/img/coffee.gif">
+                        </div>
+                            
         <table class="gridTable">
             
             <tr>

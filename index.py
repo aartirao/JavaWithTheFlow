@@ -1,9 +1,11 @@
 from bottle import Bottle, run, template, static_file, get, post, request, response, abort
 import pymysql.cursors
 
+
 from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, \
 		getQuestionListByTopic, saveUserRating, createBookmark, getQuestionListByBookmark, createUserInterest, \
 		getInterestOfUser
+from users import checkPassword, createUser, getUserId
 from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
 
 from search import searchQuery, fetchResults
@@ -20,9 +22,13 @@ def hello():
     return "Hello World!"
 
 @app.route('/mainPage')
-@app.route('/mainPage/')
 def index():
-    return template('index/index.html')
+	username = request.GET.get('username')
+	return template('index/index.html', username=username)
+
+@app.route('/loginPage')
+def index():
+    return template('index/login.html')
 
 @app.route('/awww')
 @app.route('/awww/')
@@ -37,8 +43,9 @@ def stylesheets(path):
 # Route for posts page
 @app.route('/posts')
 @app.route('/posts/')
-def index():
-    return template('index/posts.html')
+def index(): 
+	username = request.GET.get('username')
+	return template('index/posts.html', username=username)
 
 @app.route('/login', method='POST')
 def login():
@@ -118,8 +125,8 @@ def getViews():
 #Method to get the list of questions for a topic (First page of results)
 @app.route('/getQuestionList/<topic>', method='GET')
 def getQuestionList(topic):
-	#returnValue = getQuestionListByTopic(topic)
-	returnValue = searchQuery(topic, 70)
+	returnValue = getQuestionListByTopic(topic)
+	#returnValue = searchQuery(topic, 70)
 	if(returnValue == -1):
 		response.status = 404
 		return {"status": "not found"}
@@ -210,7 +217,9 @@ def updateViewCountForQuestions():
 
 @app.route('/questionList/', method='GET')
 def questionList():
-	return template('index/questions.html')
+	username = request.GET.get('username')
+	return template('index/questions.html',username=username)
+
 
 """ Sample
 {
@@ -281,5 +290,49 @@ def getInterest(userId):
 def interest():
 	return template('index/interest.html')
 
+#Method to verify password
+@app.route('/checkPassword', method = 'POST')
+def verifyPassword():
+	data = request.json
+	returnValue = checkPassword(data)
+	if(returnValue == 1):
+		response.status = 201
+		return {"status": "successfully saved", "result" : returnValue}
+	else:
+		response.status = 200
+		return {"status": "some error occured", "result" : returnValue}
+
+#Method to add a user
+@app.route('/createUser', method = 'POST')
+def addUser():
+	data = request.json
+	returnValue = createUser(data)
+	if(returnValue == 1):
+		response.status = 201
+		return {"status": "successfully saved", "result" : returnValue}
+	else:
+		response.status = 200
+		return {"status": "some error occured", "result" : returnValue}
+
+#Method to get user id
+@app.route('/getUserId/<userName>', method = 'GET')
+def userId(userName):
+	data = request.json
+	returnValue = getUserId(userName)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "success", "result" : returnValue}
+
+@app.route('/bookmarkList', method='GET')
+def bookmarkList():
+	print "bookmark"
+	username = request.GET.get('username')
+	return template('index/bookmarks.html',username=username)
+
+
 run(app, host='localhost', port=8100, debug=True)
+
 

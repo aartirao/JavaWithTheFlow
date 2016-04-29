@@ -366,40 +366,6 @@ table.dataTable thead .sorting:after {
     border-radius: 6px   !important;
 }
 
-.cell-1 {
-    background-color: #5E4FA2;
-}
-.cell-2 {
-    background-color: #3288BD;
-}
-.cell-3 {
-    background-color: #66C2A5;
-}
-.cell-4 {
-    background-color: #ABDDA4;
-}
-.cell-5 {
-    background-color: #E6F598;
-}
-.cell-6 {
-    background-color: #f6faaa;
-}
-.cell-7 {
-    background-color: #FEE08B;
-}
-.cell-8 {
-    background-color: #FDAE61;
-}
-.cell-9 {
-    background-color: #F46D43;
-}
-.cell-10 {
-    background-color: #D53E4F;
-}
-.cell-11 {
-    background-color: #9E0142;
-}
-
 .highlight-1 {
     color: white    !important;
 }

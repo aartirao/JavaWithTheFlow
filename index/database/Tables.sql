@@ -48,7 +48,8 @@ Views INT,
 UpVotes INT,
 DownVotes INT,
 AccountId INT,
-Age INT
+Age INT,
+Password VARCHAR(20)
 );
 
 CREATE TABLE Badges(
