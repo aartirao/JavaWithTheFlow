@@ -35,7 +35,7 @@ def getRatings(user):
 					if rowCountTopic > 0:
 						result = cursor.fetchall()[0]
 						topic = str(result[u'Name'])
-						weight = result[u'Weight']
+						weight = row[u'Weight']
 						ratingsData[user][topic] = weight
 			return ratingsData[user]
 
@@ -45,21 +45,24 @@ def getRatings(user):
 
 def pearson_correlation(user1, user2):
 	user1RatingsDict = getRatings(user1)
-	user1Ratings = [row[topic] for topic in user1RatingsDict]
+	#print user1RatingsDict
+	user1Ratings = [user1RatingsDict[topic] for topic in user1RatingsDict]
 	user2RatingsDict = getRatings(user2)
-	user2Ratings = [row[topic] for topic in user2RatingsDict]
+	user2Ratings = [user2RatingsDict[topic] for topic in user2RatingsDict]
 	return pearsonr(user1Ratings, user2Ratings)[0]
 
 def getAllUsers():
 	allUsers = []
+	print "In allUsers"
 	try:
 		with connection.cursor() as cursor:
-			sql = """select `Id` from `Users`"""
+			sql = """select `Id` from `Users` LIMIT 10"""
 			rowCount = cursor.execute(sql)
 			if rowCount > 0:
 				result = cursor.fetchall()
 			for row in result:
 				allUsers.append(row[u'Id'])
+		#print allUsers
 		return allUsers
 
 	except Exception, e:
@@ -68,6 +71,7 @@ def getAllUsers():
 
 def getSimilarUsers(user):
     # returns the top 5 similar users for a given user.
+    print "In getSimilarUsers"
     allUsers = getAllUsers()
     scores = [(pearson_correlation(user, otherUser), otherUser) 
     			for otherUser in allUsers if otherUser != user]
@@ -75,6 +79,7 @@ def getSimilarUsers(user):
     # Sort the similar users so that highest scored user will appear at the first
     scores.sort()
     scores.reverse()
+    print scores[0:5]
     return scores[0:5]
 
 def getTopicsToRecommend(user):
@@ -83,17 +88,18 @@ def getTopicsToRecommend(user):
 	similarUsers = getSimilarUsers(user)
 	userIDs = [record[1] for record in similarUsers]
 	for userID in userIDs:
-		topics.append(ratingsData[userID].items())
+		topics.extend(ratingsData[userID].items())
 
 	interestedTopics = sorted(topics, key=operator.itemgetter(1))[::-1]
 	return interestedTopics[0:3]
 
 def recommendQuestions(user):
 	topics = getTopicsToRecommend(user)
-	questions = {}
+	questions = []
 	for topic in topics:
-		questions.update(searchQuery(topic, 2))
+		questions.append(searchQuery(topic[0], 2))
+	print questions
 	return questions
 
 if __name__ == "__main__":
-	print recommendQuestions('1')
+	print recommendQuestions('821742')
