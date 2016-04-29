@@ -153,10 +153,10 @@ def searchQuery(query, resultCount):
 
 if __name__ == "__main__":
 	# Run this file initially to create index for Posts table.
-	#indexPosts()
+	indexPosts()
 	# Sample query
-	qIdList = searchQuery("abstract class create object")
-	print qIdList
+	#qIdList = searchQuery("abstract class create object")
+	#print qIdList
 
 
 

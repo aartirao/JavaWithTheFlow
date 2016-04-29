@@ -17,6 +17,7 @@
         <script src="/static/scripts/vendor/powerange.js"></script>
         <script src="/static/scripts/vendor/ckeditor.js"></script>
         <script src="/static/scripts/vendor/mustache.min.js"></script>
+        <script src="/static/scripts/gridpopulate.js"> </script>
         <script src="/static/scripts/vendor/sb-admin-2.js"></script>
         <!-- <script src="/static/scripts/richtexteditor.js"></script> -->
        
@@ -52,9 +53,11 @@
             jQuery.ajaxSetup({
           beforeSend: function() {
              $('#loader').show();
+             $('.topics-list').hide();
           },
           complete: function(){
              $('#loader').hide();
+             $('.topics-list').show();
           },
           success: function() {}
         });
@@ -225,17 +228,9 @@
 
         <div id="page-wrapper">
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-8">
                     <h1 class="page-header">Questions</h1>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-            <div class="row">
-                <br/>
-                    <div id="qList" class="questionsList">
-
-                        <div class="sortbyBox">
+                    <div class="sortbyBox">
                             <select id="sorter">
                                 <option value="sortby" disabled="disabled"> Sort By </option>
                                 <option value="useful"> Usefulness </option>
@@ -255,6 +250,73 @@
                         <div id="grouptraffic">
                             
                         </div>
+                </div>
+                <div class="col-lg-4">
+                     <div class="panel panel-default topics-list">
+                        <div class="panel-heading">
+                             Topics
+            
+        
+ <ul class="list-group">
+  <li class="cell cell-1">
+    
+  </li>
+  <li class="cell cell-2">
+    
+  </li>
+  <li class="cell cell-3">
+   </li>
+    <li class="cell cell-4">
+    
+  </li>
+  <li class="cell cell-5">
+    
+  </li>
+  <li class="cell cell-6">
+   </li>
+    <li class="cell cell-7">
+    
+  </li>
+  <li class="cell cell-8">
+    
+  </li>
+  <li class="cell cell-9">
+   </li>
+    <li class="cell cell-10">
+    
+  </li>
+  <li class="cell cell-11">
+    
+  </li>
+  <li class="cell cell-12">
+   </li>
+    <li class="cell cell-13">
+    
+  </li>
+  <li class="cell cell-14">
+    
+  </li>
+  <li class="cell cell-15">
+   </li>
+   <li class="cell cell-16">
+   </li>
+</ul>
+                 
+       
+        
+            
+                        </div>
+                       
+                    </div>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <br/>
+                    <div id="qList" class="questionsList">
+
+                        
                         <div class="paginationHolder">
                             <ul class="pagination">
                             <li><a name="1" class="active" href="#">1</a></li>
@@ -274,6 +336,7 @@
         <!-- /#page-wrapper -->
 
     </div>
+    
     <!-- /#wrapper -->    
 
 </body>

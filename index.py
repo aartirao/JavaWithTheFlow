@@ -7,7 +7,10 @@ from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCoun
 		getInterestOfUser
 from users import checkPassword, createUser, getUserId
 from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
+from recommendation import recommendQuestions
 
+from search import searchQuery
+from users import follow, unFollow, getUserDetails, getAllDetailsOfUser
 from search import searchQuery, fetchResults
 '''
 POST - 201 - Created, 200 - OK {error message}
@@ -215,7 +218,7 @@ def updateViewCountForQuestions():
 		response.status = 200
 		return {"status": "some error occured"}
 
-@app.route('/questionList/', method='GET')
+@app.route('/questionList', method='GET')
 def questionList():
 	username = request.GET.get('username')
 	return template('index/questions.html',username=username)
@@ -248,6 +251,17 @@ def getQuestionList(userId):
 	else:
 		response.status = 200
 		return {"status": "successfully retrieved", "data": returnValue}
+
+@app.route('/getRecommendations/<userId>', method='GET')
+def getQuestionList(userId):
+	returnValue = recommendQuestions(userId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "successfully retrieved", "data": returnValue}
+
 
 """ Sample
 [
@@ -289,6 +303,29 @@ def getInterest(userId):
 @app.route('/interest', method = 'GET')
 def interest():
 	return template('index/interest.html')
+	
+@app.route('/follow', method = "POST")
+def followUser():
+	data = request.json
+	returnValue = follow(data)
+	if returnValue == 1:
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+		
+@app.route('/unfollow', method = "POST")
+def unFollowUser():
+	data = request.json
+	returnValue = unFollow(data)
+	if returnValue == 1:
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+
 
 #Method to verify password
 @app.route('/checkPassword', method = 'POST')
@@ -296,10 +333,10 @@ def verifyPassword():
 	data = request.json
 	returnValue = checkPassword(data)
 	if(returnValue == 1):
-		response.status = 201
+		response.status = 200
 		return {"status": "successfully saved", "result" : returnValue}
 	else:
-		response.status = 200
+		response.status = 404
 		return {"status": "some error occured", "result" : returnValue}
 
 #Method to add a user
@@ -326,13 +363,28 @@ def userId(userName):
 		response.status = 200
 		return {"status": "success", "result" : returnValue}
 
+@app.route('/getUserDetails/<uId>', method = "GET")
+def userDetails(uId):
+	print("inside")
+	returnValue = getAllDetailsOfUser(uId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "success", "result" : returnValue}
+
 @app.route('/bookmarkList', method='GET')
 def bookmarkList():
 	print "bookmark"
 	username = request.GET.get('username')
 	return template('index/bookmarks.html',username=username)
 
+@app.route('/profile', method = 'GET')
+def interest():
+	return template('index/profile.html')
+	
+run(app, host='localhost', port=8200, debug=True)
 
-run(app, host='localhost', port=8100, debug=True)
 
 

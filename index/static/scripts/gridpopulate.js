@@ -61,7 +61,7 @@ $(document).ready(function () {
 
 			$(".cell-"+i).click(function() {
 				console.log(this.id);
-			    window.location.href = '/questionList/?topic='+this.id+'&username='+getParametersByName("username");
+			    window.location.href = '/questionList?topic='+this.id+'&username='+getParametersByName("username");
 			});  
 
 			if(dataList.viewCount < 200000){

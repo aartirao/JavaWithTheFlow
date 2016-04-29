@@ -4,6 +4,11 @@
         <span class="groupholder"><a href="#"><img class="group" src="/static/img/group{{ViewCountRank}}.png"> </img> </a> </span>        
         <div class="setwidth"> 
             <a class="questionText" href="/posts?qId={{Id}}&username={{username}}"> <span> {{Title}} </span> </a>
+            <ul>
+            {{#Tags1}}
+		    <li>{{.}}</li>
+		    {{/Tags1}}
+		    </ul>
         </div>
     </div>
 </div>

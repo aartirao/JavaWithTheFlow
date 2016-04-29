@@ -149,3 +149,16 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
     width: 100px;
     height: 100px;
 }
+
+.topics-list {
+    margin-top: 40px;
+}
+
+.topics-list ul li {
+    cursor: pointer;
+    padding: 20px;
+}
+
+.grid-table tr td {
+    cursor: pointer;
+}
