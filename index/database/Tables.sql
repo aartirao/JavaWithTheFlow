@@ -33,7 +33,8 @@ Tags VARCHAR(200),
 AnswerCount INT,
 CommentCount INT,
 FavouriteCount INT,
-ClosedDate DATETIME
+ClosedDate DATETIME,
+Usefulness INT
 );
 
 CREATE TABLE Users(

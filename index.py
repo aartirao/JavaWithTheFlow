@@ -7,6 +7,8 @@ from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCoun
 from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
 from recommendation import recommendQuestions
 
+from search import searchQuery
+from users import follow, unFollow, getUserDetails, getAllDetailsOfUser
 from search import searchQuery, fetchResults
 '''
 POST - 201 - Created, 200 - OK {error message}
@@ -292,6 +294,43 @@ def getInterest(userId):
 @app.route('/interest', method = 'GET')
 def interest():
 	return template('index/interest.html')
+	
+@app.route('/follow', method = "POST")
+def followUser():
+	data = request.json
+	returnValue = follow(data)
+	if returnValue == 1:
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
+		
+@app.route('/unfollow', method = "POST")
+def unFollowUser():
+	data = request.json
+	returnValue = unFollow(data)
+	if returnValue == 1:
+		response.status = 201
+		return {"status": "successfully saved"}
+	else:
+		response.status = 200
+		return {"status": "some error occured"}
 
-run(app, host='localhost', port=8100, debug=True)
+@app.route('/getUserDetails/<uId>', method = "GET")
+def userDetails(uId):
+	print("inside")
+	returnValue = getAllDetailsOfUser(uId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "successfully retrieved", "data": returnValue}
+
+@app.route('/profile', method = 'GET')
+def interest():
+	return template('index/profile.html')
+	
+run(app, host='localhost', port=8200, debug=True)
 

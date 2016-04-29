@@ -1,0 +1,20 @@
+#clickable{
+    cursor: pointer;
+    color: #ffd700;
+    border-bottom: solid #ffd700;
+}
+#name{
+    font-weight: bold;
+}
+#aboutme, #date, .date-class{
+    color: #d3d3d3;
+}
+.followlink{
+    font-size: 14px;
+    color: #87ceeb;
+    text-transform: capitalize;
+}
+.unfollow{
+    padding-left: 5px;
+    cursor: pointer;
+}
