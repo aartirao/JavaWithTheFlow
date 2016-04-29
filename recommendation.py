@@ -45,7 +45,6 @@ def getRatings(user):
 
 def pearson_correlation(user1, user2):
 	user1RatingsDict = getRatings(user1)
-	#print user1RatingsDict
 	user1Ratings = [user1RatingsDict[topic] for topic in user1RatingsDict]
 	user2RatingsDict = getRatings(user2)
 	user2Ratings = [user2RatingsDict[topic] for topic in user2RatingsDict]
@@ -67,39 +66,49 @@ def getAllUsers():
 
 	except Exception, e:
 		print traceback.print_exc()
-	return -1
+		return -1
 
 def getSimilarUsers(user):
-    # returns the top 5 similar users for a given user.
-    print "In getSimilarUsers"
-    allUsers = getAllUsers()
-    scores = [(pearson_correlation(user, otherUser), otherUser) 
-    			for otherUser in allUsers if otherUser != user]
- 
-    # Sort the similar users so that highest scored user will appear at the first
-    scores.sort()
-    scores.reverse()
-    print scores[0:5]
-    return scores[0:5]
+	try:
+		print "In getSimilarUsers"
+		allUsers = getAllUsers()
+		scores = [(pearson_correlation(user, otherUser), otherUser)
+		 			for otherUser in allUsers if otherUser != user]
+
+		scores.sort()
+		scores.reverse()
+		similarUsers = [row[1] for row in scores]
+		return similarUsers[0:5]
+	except Exception, e:
+		print traceback.print_exc()
+		return -1
+
 
 def getTopicsToRecommend(user):
 	topics = []
 	interestedTopics = []
 	similarUsers = getSimilarUsers(user)
-	userIDs = [record[1] for record in similarUsers]
-	for userID in userIDs:
+	#userIDs = [record[1] for record in similarUsers]
+	for userID in similarUsers:
 		topics.extend(ratingsData[userID].items())
 
 	interestedTopics = sorted(topics, key=operator.itemgetter(1))[::-1]
 	return interestedTopics[0:3]
 
 def recommendQuestions(user):
-	topics = getTopicsToRecommend(user)
-	questions = []
-	for topic in topics:
-		questions.append(searchQuery(topic[0], 2))
-	print questions
-	return questions
+	try:
+		topics = getTopicsToRecommend(user)
+		questions = []
+		for topic in topics:
+			questions.append(searchQuery(topic[0], 2))
+		#print questions
+		return questions
+	except Exception, e:
+		print traceback.print_exc()
+		return -1
+
+
 
 if __name__ == "__main__":
 	print recommendQuestions('821742')
+	print getSimilarUsers('821742')
