@@ -100,9 +100,9 @@ def recommendQuestions(user):
 		topics = getTopicsToRecommend(user)
 		questions = []
 		for topic in topics:
-			questions.append(searchQuery(topic[0], 2))
+			questions = questions + searchQuery(topic[0], 2)
 		#print questions
-		return questions
+		return questions[:7]
 	except Exception, e:
 		print traceback.print_exc()
 		return -1

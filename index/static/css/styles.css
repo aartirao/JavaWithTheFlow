@@ -162,3 +162,7 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 .grid-table tr td {
     cursor: pointer;
 }
+
+.recco {
+    margin-bottom: 10px;
+}
