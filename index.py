@@ -12,10 +12,14 @@ from recommendation import recommendQuestions
 from search import searchQuery
 from users import follow, unFollow, getUserDetails, getAllDetailsOfUser
 from search import searchQuery, fetchResults
+
+from vis import getDataForPie
+
 import ConfigParser
 
 config = ConfigParser.ConfigParser()
 config.read('db.cfg')
+
 '''
 POST - 201 - Created, 200 - OK {error message}
 GET - 200 - OK, 404 - Not Found
@@ -369,7 +373,6 @@ def userId(userName):
 
 @app.route('/getUserDetails/<uId>', method = "GET")
 def userDetails(uId):
-	print("inside")
 	returnValue = getAllDetailsOfUser(uId)
 	if(returnValue == -1):
 		response.status = 404
@@ -387,6 +390,11 @@ def bookmarkList():
 def interest():
 	return template('index/profile.html')
 
+@app.route('/piechartdata/<userName>', method = "GET")
+def getpiechartdata(userName):
+	userId = getUserId(userName)
+	returnValue = getDataForPie(userId)
+
 @app.route('/searchQuery', method='GET')
 def callSearch():
 	username = request.GET.get('username')
@@ -403,6 +411,8 @@ def getQuestionList(topic, parameter, page=1):
 		return {"status": "not found"}
 	else:
 		response.status = 200
+		return {"status": "success", "result" : returnValue}
+	
 		return {"status": "successfully retrieved", "data": returnValue}
 	
 run(app, host=config.get('database','host'), port=config.get('database','port'), debug=True)
