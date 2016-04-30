@@ -393,8 +393,10 @@ def callSearch():
 	return template('index/search.html',username=username)
 
 #Method to get sorted list of questions for a topic 
+@app.route('/getSortedQuestionList/<topic>/<parameter>', method='GET')
 @app.route('/getSortedQuestionList/<topic>/<parameter>/<page>', method='GET')
 def getQuestionList(topic, parameter, page=1):
+	print "called"
 	returnValue = getSortedQuestionListByTopic(topic,parameter,page)
 	if(returnValue == -1):
 		response.status = 404

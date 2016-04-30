@@ -463,7 +463,7 @@ def getRange(v1, v2, v3, x):
 	
 	
 def getSortedQuestionListByTopic(topic, parameter, page):
-	pageNum = (page-1) * 10;
+	pageNum = (int(page)-1) * 10;
 	data = {}
 	try:
 		# Get all questions by topic
