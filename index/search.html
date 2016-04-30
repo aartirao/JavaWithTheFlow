@@ -67,12 +67,8 @@
         username = getUrlParameter('username');
         console.log("Username" + username);
         user = {"username" : username};
-        postsByRelevance(username);
         
-    });
-
-    function postsByRelevance(username) {
-        $.ajax({url: '/getQuestionList/'+getUrlParameter('topic'), success: function(result){
+        $.ajax({url: '/search/'+getUrlParameter('query'), success: function(result){
             $("#templates").load("/static/templates/question.html", function() {
                 var template = document.getElementById('qTemplate').innerHTML;
                 qList = result["data"];
@@ -93,7 +89,7 @@
                 }    
             });            
         }}); 
-    }
+    });
 
     $( document ).ready(function() {
         $(".pagination a").click(function(){
@@ -101,11 +97,9 @@
             $(".pagination a").removeClass("active");
             $(this).addClass("active");
 
-            var criteria = $("#sorter").val();
-            if(criteria == "Relevance") {
-                $.ajax({url: '/getQuestionList/'+getUrlParameter('topic')+'/'+page, success: function(result){
-            $("#templates").load("/static/templates/question.html", function() {
-                var template = document.getElementById('qTemplate').innerHTML;
+            $.ajax({url: '/search/'+getUrlParameter('query')+'/'+page, success: function(result){
+            $("#templates").load("/static/templates/search.html", function() {
+                var template = document.getElementById('searchTemplate').innerHTML;
                 qList = result["data"];
                 for(var i=0; i<qList.length; i++) {
                     var output = Mustache.render(template, qList[i]);
@@ -114,59 +108,11 @@
                 }    
             });            
         }}); 
-            } else {
-                $.ajax({url: '/getSortedQuestionList/'+getUrlParameter('topic')+'/'+parameter+'/'+page, success: function(result){
-            $("#templates").load("/static/templates/question.html", function() {
-                var template = document.getElementById('qTemplate').innerHTML;
-                qList = result["data"];
-                for(var i=0; i<qList.length; i++) {
-                    var output = Mustache.render(template, qList[i]);
-                    $("#grouptraffic").append(output);
-                    $(".paginationHolder").show();
-                }    
-                });            
-            }}); 
-            }
-
-            
         });
 
         $("#bookmarks").click(function(){
             window.location.href = '/bookmarkList?username='+getUrlParameter("username");
         });
-
-        $("#sorter" ).change(function() {
-          var current = $("#sorter").val();
-          if(current == "Usefulness" || current == "ViewCount") {
-            getSortedList(current);
-          } else if(current == "Relevance") {
-            postsByRelevance();
-          }
-        });
-
-        $(".dropdown-content a").click(function () {
-            var param = $(this).attr("value");
-            if(current == "Usefulness" || current == "ViewCount") {
-            getSortedList(current);
-          } else if(current == "Relevance") {
-            postsByRelevance();
-          }
-        });
-
-        function getSortedList(parameter) {
-            var topic = getUrlParameter('topic');
-            $.ajax({url: '/getSortedQuestionList/'+getUrlParameter('topic')+'/'+parameter, success: function(result){
-            $("#templates").load("/static/templates/question.html", function() {
-                var template = document.getElementById('qTemplate').innerHTML;
-                qList = result["data"];
-                for(var i=0; i<qList.length; i++) {
-                    var output = Mustache.render(template, qList[i]);
-                    $("#grouptraffic").append(output);
-                    $(".paginationHolder").show();
-                }    
-                });            
-            }}); 
-        }
     });
 
 
@@ -292,16 +238,13 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-8">
-                    <h1 class="page-header">Questions</h1>
-                    
-
-                        <div class="dropdown">
-                          <button class="dropbtn">Sort By</button>
-                          <div class="dropdown-content">
-                            <a value="Usefulness" href="#">Usefulness</a>
-                            <a value="ViewCount" href="#">Group Traffic</a>
-                            <a value="Relevance" href="#">Relevance</a>
-                          </div>
+                    <h1 class="page-header">Search Results</h1>
+                    <div class="sortbyBox">
+                            <select id="sorter">
+                                <option value="sortby" disabled="disabled"> Sort By </option>
+                                <option value="useful"> Usefulness </option>
+                                <option value="group"> Group Traffic </option>
+                            </select>
                         </div>
                         <br/>
 
@@ -334,7 +277,7 @@
    </li>
     <li class="cell cell-4">
     
-  </li
+  </li>
   <li class="cell cell-5">
     
   </li>
