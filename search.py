@@ -82,7 +82,7 @@ def fetchResults(pageId):
 			# If the ID belongs to a question, add to the result as is. If it 
 			# belongs to an answer, find its question ID and add to the result.
 			for postId in postIds[startIndex:endIndex]: 
-				sqlPostId = "SELECT P.Id, P.Title, P.ViewCount, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
+				sqlPostId = "SELECT P.Id, P.Title, P.ViewCount, P.Usefulness, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
 			P.AnswerCount, P.CreationDate, P.PostTypeId from Posts as P where P.Id = %s"
 				rowCount = cursor.execute(sqlPostId, postId)
 				if rowCount > 0:
@@ -91,7 +91,7 @@ def fetchResults(pageId):
 						if row['PostTypeId'] == 1:
 							questionIds.append(row)
 						elif row['PostTypeId'] == 2:
-							sqlParent = "SELECT P.Id, P.Title, P.ViewCount, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
+							sqlParent = "SELECT P.Id, P.Title, P.ViewCount, P.Usefulness, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
 			P.AnswerCount, P.CreationDate, P.PostTypeId from Posts as P where P.Id in (SELECT `ParentId` from `Posts` where `Id` = %s) LIMIT 1"
 							parentRowCount = cursor.execute(sqlParent, postId)
 							if parentRowCount > 0:

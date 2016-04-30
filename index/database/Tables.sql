@@ -173,3 +173,5 @@ TopicIdFrom INT,
 TopicIdTo INT);
 
 ALTER TABLE TopicConceptMap ADD CONSTRAINT UK_ID UNIQUE KEY (TopicIdFrom, TopicIdTo);
+
+ALTER TABLE Tags AUTO_INCREMENT = 1;

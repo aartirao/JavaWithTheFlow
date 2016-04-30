@@ -34,6 +34,11 @@
     <![endif]-->
     
     <script type="text/javascript">
+
+        var relevance = true;
+        var usefulness = false;
+        var viewcount = false;
+
         var getUrlParameter = function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
             sURLVariables = sPageURL.split('&'),
@@ -100,32 +105,13 @@
             var page = this.name;
             $(".pagination a").removeClass("active");
             $(this).addClass("active");
-
-            var criteria = $("#sorter").val();
+            $(".post").empty();
+            $("#grouptraffic").empty();
+            var criteria = getTrueValue();
             if(criteria == "Relevance") {
-                $.ajax({url: '/getQuestionList/'+getUrlParameter('topic')+'/'+page, success: function(result){
-            $("#templates").load("/static/templates/question.html", function() {
-                var template = document.getElementById('qTemplate').innerHTML;
-                qList = result["data"];
-                for(var i=0; i<qList.length; i++) {
-                    var output = Mustache.render(template, qList[i]);
-                    $("#grouptraffic").append(output);
-                    $(".paginationHolder").show();
-                }    
-            });            
-        }}); 
+                getPostsPaginate(page);
             } else {
-                $.ajax({url: '/getSortedQuestionList/'+getUrlParameter('topic')+'/'+parameter+'/'+page, success: function(result){
-            $("#templates").load("/static/templates/question.html", function() {
-                var template = document.getElementById('qTemplate').innerHTML;
-                qList = result["data"];
-                for(var i=0; i<qList.length; i++) {
-                    var output = Mustache.render(template, qList[i]);
-                    $("#grouptraffic").append(output);
-                    $(".paginationHolder").show();
-                }    
-                });            
-            }}); 
+                getPostsPaginateOrder(criteria,page);
             }
 
             
@@ -145,13 +131,59 @@
         });
 
         $(".dropdown-content a").click(function () {
-            var param = $(this).attr("value");
+            $("#grouptraffic").empty();
+            var current = $(this).attr("value");
+            changeValues(current);
             if(current == "Usefulness" || current == "ViewCount") {
             getSortedList(current);
           } else if(current == "Relevance") {
             postsByRelevance();
           }
         });
+
+        function getPostsPaginate(page) {
+            $.ajax({url: '/getQuestionList/'+getUrlParameter('topic')+'/'+page, success: function(result){
+            $("#templates").load("/static/templates/question.html", function() {
+                var template = document.getElementById('qTemplate').innerHTML;
+                qList = result["data"];
+                for(var i=0; i<qList.length; i++) {
+                    a = qList[i]["Tags"]
+                    words = []
+                    a.replace(/\<(.+?)\>/g, function($0, $1) { 
+                        if($1 != 'java') {
+                             words.push($1)   
+                        }
+                    })
+                    qList[i]["Tags1"] = words;
+                    var output = Mustache.render(template, qList[i]);
+                    $("#grouptraffic").append(output);
+                    $(".paginationHolder").show();
+                }    
+            });            
+        }}); 
+        }
+
+        function getPostsPaginateOrder(parameter,page) {
+            $.ajax({url: '/getSortedQuestionList/'+getUrlParameter('topic')+'/'+parameter+'/'+page, success: function(result){
+            $("#templates").load("/static/templates/question.html", function() {
+                var template = document.getElementById('qTemplate').innerHTML;
+                qList = result["data"];
+                for(var i=0; i<qList.length; i++) {
+                    a = qList[i]["Tags"]
+                    words = []
+                    a.replace(/\<(.+?)\>/g, function($0, $1) { 
+                        if($1 != 'java') {
+                             words.push($1)   
+                        }
+                    })
+                    qList[i]["Tags1"] = words;
+                    var output = Mustache.render(template, qList[i]);
+                    $("#grouptraffic").append(output);
+                    $(".paginationHolder").show();
+                }    
+                });            
+            }}); 
+        }
 
         function getSortedList(parameter) {
             var topic = getUrlParameter('topic');
@@ -160,12 +192,46 @@
                 var template = document.getElementById('qTemplate').innerHTML;
                 qList = result["data"];
                 for(var i=0; i<qList.length; i++) {
+                    a = qList[i]["Tags"]
+                    words = []
+                    a.replace(/\<(.+?)\>/g, function($0, $1) { 
+                        if($1 != 'java') {
+                             words.push($1)   
+                        }
+                    })
+                    qList[i]["Tags1"] = words;
                     var output = Mustache.render(template, qList[i]);
                     $("#grouptraffic").append(output);
                     $(".paginationHolder").show();
                 }    
                 });            
             }}); 
+        }
+
+        function changeValues(value) {
+            if(value == "relevance") {
+                relevance = true;
+                usefulness = false;
+                viewcount = false;
+            } else if(value == "usefulness") {
+                relevance = false;
+                usefulness = true;
+                viewcount = false;
+            } else {
+                relevance = false;
+                usefulness = false;
+                viewcount = true;
+            }
+        }
+
+        function getTrueValue() {
+            if(relevance == true) {
+                return "Relevance";
+            } else if(usefulness == true) {
+                return "Usefulness";
+            } else {
+                return "ViewCount";
+            }
         }
     });
 
@@ -197,10 +263,10 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{username   }} <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="portfolio-1-col.html">Question</a>
+                                <a href="portfolio-1-col.html">My Questions</a>
                             </li>
                             <li>
-                                <a href="portfolio-2-col.html">Answer</a>
+                                <a href="portfolio-2-col.html">My Answers</a>
                             </li>
                             
                         </ul>
@@ -255,15 +321,12 @@
                             </span>
                             </div>
                             <!-- /input-group -->
-                             <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> All Activities</a>
-                        </li>
                         <br>
                         <li>
-                            <a href="forms.html"> Answers </a>
+                            <a href="forms.html"> My Answers </a>
                         </li>
                         <li>
-                            <a href="forms.html"> Questions </a>
+                            <a href="forms.html"> My Questions </a>
                         </li>
                         <li>
                             <a id="bookmarks" href="#"> Bookmarks </a>
@@ -271,17 +334,7 @@
                         <li>
                             <a href="forms.html">Interests </a>
                         </li>
-                        <li>
-                            <a href="forms.html">Followers </a>
-                        </li>
-                        <li>
-                            <a href="forms.html"> Following </a>
-                        </li>
-                        <li>
-                            <a href="forms.html"> Account </a>
-                        </li>
-                            
-                       
+                        
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->

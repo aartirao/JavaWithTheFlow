@@ -12,6 +12,7 @@ from recommendation import recommendQuestions
 from search import searchQuery
 from users import follow, unFollow, getUserDetails, getAllDetailsOfUser
 from search import searchQuery, fetchResults
+from tagger import getTagFrequency
 
 from vis import getDataForPie
 
@@ -407,8 +408,10 @@ def callSearch():
 	return template('index/search.html',username=username)
 
 #Method to get sorted list of questions for a topic 
+@app.route('/getSortedQuestionList/<topic>/<parameter>', method='GET')
 @app.route('/getSortedQuestionList/<topic>/<parameter>/<page>', method='GET')
 def getQuestionList(topic, parameter, page=1):
+	print "called"
 	returnValue = getSortedQuestionListByTopic(topic,parameter,page)
 	if(returnValue == -1):
 		response.status = 404
@@ -416,18 +419,26 @@ def getQuestionList(topic, parameter, page=1):
 	else:
 		response.status = 200
 		return {"status": "success", "result" : returnValue}
-	
-		return {"status": "successfully retrieved", "data": returnValue}
+
 		
 		
 @app.route('/topicvis')
 def topicvisualization(): 
 	username = request.GET.get('username')
 	return template('index/topicvis.html', username=username)
+
+@app.route('/getTagCloudList/<userId>', method = 'GET')
+def getTagCloudList(userId):
+	returnValue = getTagFrequency(userId)
+	if returnValue == -1:
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return returnValue
+	
+
 	
 run(app, host=config.get('database','host'), port=config.get('database','port'), debug=True)
-
-
-
 
 
