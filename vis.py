@@ -42,11 +42,14 @@ def getDataForPie(userId):
         for item in timeData:
             topicname = item["Name"]
             #percentageSpent = ((item["SUM(Duration)"]/overalltimespent["SUM(Res.TimeDuration)"])*100)
+            #topicData[topicname] = str(item["SUM(Duration)"])
+            
             topicData = {
                          "Name" : topicname,
                          "Duration" : str(item["SUM(Duration)"])
                          }
             returnData.append(topicData)
+            
             #sum = sum + percentageSpent
         
         return returnData
