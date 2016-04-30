@@ -12,6 +12,7 @@ from recommendation import recommendQuestions
 from search import searchQuery
 from users import follow, unFollow, getUserDetails, getAllDetailsOfUser
 from search import searchQuery, fetchResults
+from tagger import getTagFrequency
 '''
 POST - 201 - Created, 200 - OK {error message}
 GET - 200 - OK, 404 - Not Found
@@ -383,6 +384,16 @@ def bookmarkList():
 @app.route('/profile', method = 'GET')
 def interest():
 	return template('index/profile.html')
+	
+@app.route('/getTagCloudList/<userId>', method = 'GET')
+def getTagCloudList(userId):
+	returnValue = getTagFrequency(userId)
+	if returnValue == -1:
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return returnValue
 	
 run(app, host='localhost', port=8200, debug=True)
 
