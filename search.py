@@ -75,7 +75,6 @@ def indexPosts():
 def fetchResults(pageId):
     questionIds = []
     data = []
-    print pageId
     endIndex = int(pageId) * 10
     startIndex = endIndex - 10
     try:
@@ -127,7 +126,6 @@ def fetchResults(pageId):
                 row[u'DownVotes'] = down[u'count']  
                 row[u'ViewCountRank'] = getRange(v1, v2, v3, row[u'ViewCount'])
             data = questionIds
-                
         return data
     except:
         print traceback.print_exc()
@@ -137,6 +135,8 @@ def searchQuery(query, resultCount):
     try:
         data = []
         # Remove stopwords from query and lemmatize the words
+        global postIds;
+        postIds = []
         query = stopWordsAndLemmatize(query)
 
         # Return "size" hits for the given query. Size arbitrarily set to 50 
@@ -144,7 +144,6 @@ def searchQuery(query, resultCount):
         hits = matches['hits']['hits']
         for hit in hits:
             postIds.append(str(hit['_id']))
-
         data = fetchResults(1)
         return data
     except:
@@ -153,10 +152,12 @@ def searchQuery(query, resultCount):
 
 if __name__ == "__main__":
     # Run this file initially to create index for Posts table.
-    indexPosts()
+    #indexPosts()
     # Sample query
-    #qIdList = searchQuery("abstract class create object")
-    #print qIdList
+    qIdList = searchQuery("constructors", 2)
+    print qIdList
+    qIdList = searchQuery("abstract class", 2)
+    print qIdList
 
 
 
