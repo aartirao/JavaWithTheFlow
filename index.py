@@ -128,8 +128,8 @@ def getViews():
 #Method to get the list of questions for a topic (First page of results)
 @app.route('/getQuestionList/<topic>', method='GET')
 def getQuestionList(topic):
-	returnValue = getQuestionListByTopic(topic)
-	#returnValue = searchQuery(topic, 70)
+	#returnValue = getQuestionListByTopic(topic)
+	returnValue = searchQuery(topic, 70)
 	if(returnValue == -1):
 		response.status = 404
 		return {"status": "not found"}
