@@ -31,7 +31,7 @@ app = Bottle()
 
 @app.route('/hello')
 def hello():
-    return "Hello World!"
+    return template('index/viz1.html')
 
 @app.route('/mainPage')
 def index():
