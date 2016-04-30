@@ -3,7 +3,7 @@ import pymysql.cursors
 
 
 from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, \
-		getQuestionListByTopic, saveUserRating, createBookmark, getQuestionListByBookmark, createUserInterest, \
+		getSortedQuestionListByTopic, saveUserRating, createBookmark, getQuestionListByBookmark, createUserInterest, \
 		getInterestOfUser
 from users import checkPassword, createUser, getUserId
 from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
@@ -13,6 +13,14 @@ from search import searchQuery
 from users import follow, unFollow, getUserDetails, getAllDetailsOfUser
 from search import searchQuery, fetchResults
 from tagger import getTagFrequency
+
+from vis import getDataForPie
+
+import ConfigParser
+
+config = ConfigParser.ConfigParser()
+config.read('db.cfg')
+
 '''
 POST - 201 - Created, 200 - OK {error message}
 GET - 200 - OK, 404 - Not Found
@@ -366,7 +374,6 @@ def userId(userName):
 
 @app.route('/getUserDetails/<uId>', method = "GET")
 def userDetails(uId):
-	print("inside")
 	returnValue = getAllDetailsOfUser(uId)
 	if(returnValue == -1):
 		response.status = 404
@@ -377,13 +384,35 @@ def userDetails(uId):
 
 @app.route('/bookmarkList', method='GET')
 def bookmarkList():
-	print "bookmark"
 	username = request.GET.get('username')
 	return template('index/bookmarks.html',username=username)
 
 @app.route('/profile', method = 'GET')
 def interest():
 	return template('index/profile.html')
+
+@app.route('/piechartdata/<userName>', method = "GET")
+def getpiechartdata(userName):
+	userId = getUserId(userName)
+	returnValue = getDataForPie(userId)
+
+@app.route('/searchQuery', method='GET')
+def callSearch():
+	username = request.GET.get('username')
+	return template('index/search.html',username=username)
+
+#Method to get sorted list of questions for a topic 
+@app.route('/getSortedQuestionList/<topic>/<parameter>', method='GET')
+@app.route('/getSortedQuestionList/<topic>/<parameter>/<page>', method='GET')
+def getQuestionList(topic, parameter, page=1):
+	print "called"
+	returnValue = getSortedQuestionListByTopic(topic,parameter,page)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "success", "result" : returnValue}
 	
 @app.route('/getTagCloudList/<userId>', method = 'GET')
 def getTagCloudList(userId):
@@ -395,7 +424,7 @@ def getTagCloudList(userId):
 		response.status = 200
 		return returnValue
 	
-run(app, host='localhost', port=8200, debug=True)
-
+	
+run(app, host=config.get('database','host'), port=config.get('database','port'), debug=True)
 
 

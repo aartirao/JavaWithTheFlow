@@ -73,63 +73,70 @@ def indexPosts():
         print traceback.print_exc()
 
 def fetchResults(pageId):
-    questionIds = []
-    data = []
-    endIndex = int(pageId) * 10
-    startIndex = endIndex - 10
-    try:
-        with connection.cursor() as cursor:
-            # If the ID belongs to a question, add to the result as is. If it 
-            # belongs to an answer, find its question ID and add to the result.
-            for postId in postIds[startIndex:endIndex]: 
-                sqlPostId = "SELECT P.Id, P.Title, P.ViewCount, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
-            P.AnswerCount, P.CreationDate, P.PostTypeId from Posts as P where P.Id = %s"
-                rowCount = cursor.execute(sqlPostId, postId)
-                if rowCount > 0:
-                    postTypes = cursor.fetchall()
-                    for row in postTypes:
-                        if row['PostTypeId'] == 1:
-                            questionIds.append(row)
-                        elif row['PostTypeId'] == 2:
-                            sqlParent = "SELECT P.Id, P.Title, P.ViewCount, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
-            P.AnswerCount, P.CreationDate, P.PostTypeId from Posts as P where P.Id in (SELECT `ParentId` from `Posts` where `Id` = %s) LIMIT 1"
-                            parentRowCount = cursor.execute(sqlParent, postId)
-                            if parentRowCount > 0:
-                                parents = cursor.fetchall()
-                                for record in parents:
-                                    # The parent ID of this answer could already be in
-                                    # the list of hits, if the question itself was 
-                                    # a hit for this query. So skip if present in list.
-                                    if record not in questionIds:
-                                        questionIds.append(record)
-            
-            sumViewCount = 0
-            viewCounts = []
-            for row in questionIds:             
-                viewCounts.append(int(row[u'ViewCount']))
-            viewCounts.sort()           
-            splitAt = len(questionIds) / 3
-            v1 = viewCounts[:splitAt]
-            v2 = viewCounts[splitAt:splitAt*2]
-            v3 = viewCounts[splitAt*2:]
-        
-            for row in questionIds:
-                id = row[u'Id']
-                sqlVup = "SELECT count(Id) as count from Votes where VoteTypeId = 2 and PostId = %s"
-                sqlVdown = "SELECT count(Id) as count from Votes where VoteTypeId = 3 and PostId = %s"
-                upCount = cursor.execute(sqlVup, (id))
-                up = cursor.fetchone()
-                downCount = cursor.execute(sqlVdown, (id))
-                down = cursor.fetchone()
-                row[u'CreationDate'] = str(row[u'CreationDate'])
-                row[u'UpVotes'] = up[u'count']
-                row[u'DownVotes'] = down[u'count']  
-                row[u'ViewCountRank'] = getRange(v1, v2, v3, row[u'ViewCount'])
-            data = questionIds
-        return data
-    except:
-        print traceback.print_exc()
-        return -1
+	questionIds = []
+	data = []
+	endIndex = int(pageId) * 10
+	startIndex = endIndex - 10
+	try:
+		with connection.cursor() as cursor:
+			# If the ID belongs to a question, add to the result as is. If it 
+			# belongs to an answer, find its question ID and add to the result.
+			for postId in postIds[startIndex:endIndex]: 
+				sqlPostId = "SELECT P.Id, P.Title, P.ViewCount, P.Usefulness, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
+			P.AnswerCount, P.CreationDate, P.PostTypeId from Posts as P where P.Id = %s"
+				rowCount = cursor.execute(sqlPostId, postId)
+				if rowCount > 0:
+					postTypes = cursor.fetchall()
+					for row in postTypes:
+						if row['PostTypeId'] == 1:
+							questionIds.append(row)
+						elif row['PostTypeId'] == 2:
+							sqlParent = "SELECT P.Id, P.Title, P.ViewCount, P.Usefulness, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
+			P.AnswerCount, P.CreationDate, P.PostTypeId from Posts as P where P.Id in (SELECT `ParentId` from `Posts` where `Id` = %s) LIMIT 1"
+							parentRowCount = cursor.execute(sqlParent, postId)
+							if parentRowCount > 0:
+								parents = cursor.fetchall()
+								for record in parents:
+									# The parent ID of this answer could already be in
+									# the list of hits, if the question itself was 
+									# a hit for this query. So skip if present in list.
+									if record not in questionIds:
+										questionIds.append(record)
+		
+			viewCounts = []
+			usefulnessCounts = []
+			for row in questionIds:				
+				viewCounts.append(int(row[u'ViewCount']))
+				usefulnessCounts.append(int(row[u'Usefulness']))
+			viewCounts.sort()
+			usefulnessCounts.sort()			
+			splitAt = len(questionIds) / 3
+			v1 = viewCounts[:splitAt]
+			v2 = viewCounts[splitAt:splitAt*2]
+			v3 = viewCounts[splitAt*2:]
+			u1 = usefulnessCounts[:splitAt]
+			u2 = usefulnessCounts[splitAt:splitAt*2]
+			u3 = usefulnessCounts[splitAt*2:]
+		
+			for row in questionIds:
+				id = row[u'Id']
+				sqlVup = "SELECT count(Id) as count from Votes where VoteTypeId = 2 and PostId = %s"
+				sqlVdown = "SELECT count(Id) as count from Votes where VoteTypeId = 3 and PostId = %s"
+				upCount = cursor.execute(sqlVup, (id))
+				up = cursor.fetchone()
+				downCount = cursor.execute(sqlVdown, (id))
+				down = cursor.fetchone()
+				row[u'CreationDate'] = str(row[u'CreationDate'])
+				row[u'UpVotes'] = up[u'count']
+				row[u'DownVotes'] = down[u'count']	
+				row[u'ViewCountRank'] = getRange(v1, v2, v3, row[u'ViewCount'])
+				row[u'UsefulnessRank'] = getRange(u1, u2, u3, row[u'Usefulness'])
+			data = questionIds
+				
+		return data
+	except:
+		print traceback.print_exc()
+		return -1
 
 def searchQuery(query, resultCount):
     try:

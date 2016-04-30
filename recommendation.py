@@ -71,6 +71,7 @@ def getAllUsers():
 def getSimilarUsers(user):
 	try:
 		print "In getSimilarUsers"
+		user = int(user)
 		allUsers = getAllUsers()
 		scores = [(pearson_correlation(user, otherUser), otherUser)
 		 			for otherUser in allUsers if otherUser != user]
@@ -92,17 +93,23 @@ def getTopicsToRecommend(user):
 	for userID in similarUsers:
 		topics.extend(ratingsData[userID].items())
 
-	interestedTopics = sorted(topics, key=operator.itemgetter(1))[::-1]
+	topics = sorted(topics, key=operator.itemgetter(1))[::-1]
+
+	interestedTopics.extend(row for row in topics 
+						if row[0] not in [item[0] for item in interestedTopics])
+
 	return interestedTopics[0:3]
 
 def recommendQuestions(user):
 	try:
+		user = int(user)
 		topics = getTopicsToRecommend(user)
+		print topics
 		questions = []
 		for topic in topics:
-			questions = questions + searchQuery(topic[0], 2)
+			questions.extend(searchQuery(topic[0], 2))
 		#print questions
-		return questions[:7]
+		return questions
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
@@ -110,5 +117,7 @@ def recommendQuestions(user):
 
 
 if __name__ == "__main__":
-	print recommendQuestions('821742')
-	print getSimilarUsers('821742')
+	q =  recommendQuestions('821742')
+	for i in q:
+			print i[u'Id']
+	print getSimilarUsers(int('821742'))
