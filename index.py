@@ -12,6 +12,7 @@ from recommendation import recommendQuestions
 from search import searchQuery
 from users import follow, unFollow, getUserDetails, getAllDetailsOfUser
 from search import searchQuery, fetchResults
+from vis import getDataForPie
 '''
 POST - 201 - Created, 200 - OK {error message}
 GET - 200 - OK, 404 - Not Found
@@ -365,7 +366,6 @@ def userId(userName):
 
 @app.route('/getUserDetails/<uId>', method = "GET")
 def userDetails(uId):
-	print("inside")
 	returnValue = getAllDetailsOfUser(uId)
 	if(returnValue == -1):
 		response.status = 404
@@ -383,6 +383,18 @@ def bookmarkList():
 @app.route('/profile', method = 'GET')
 def interest():
 	return template('index/profile.html')
+
+@app.route('/piechartdata/<userName>', method = "GET")
+def getpiechartdata(userName):
+	userId = getUserId(userName)
+	returnValue = getDataForPie(userId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "success", "result" : returnValue}
+	
 	
 run(app, host='localhost', port=8200, debug=True)
 
