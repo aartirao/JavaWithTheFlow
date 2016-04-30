@@ -103,16 +103,21 @@ def fetchResults(pageId):
 									# a hit for this query. So skip if present in list.
 									if record not in questionIds:
 										questionIds.append(record)
-			
-			sumViewCount = 0
+		
 			viewCounts = []
+			usefulnessCounts = []
 			for row in questionIds:				
 				viewCounts.append(int(row[u'ViewCount']))
-			viewCounts.sort()			
+				usefulnessCounts.append(int(row[u'Usefulness']))
+			viewCounts.sort()
+			usefulnessCounts.sort()			
 			splitAt = len(questionIds) / 3
 			v1 = viewCounts[:splitAt]
 			v2 = viewCounts[splitAt:splitAt*2]
 			v3 = viewCounts[splitAt*2:]
+			u1 = usefulnessCounts[:splitAt]
+			u2 = usefulnessCounts[splitAt:splitAt*2]
+			u3 = usefulnessCounts[splitAt*2:]
 		
 			for row in questionIds:
 				id = row[u'Id']
@@ -126,6 +131,7 @@ def fetchResults(pageId):
 				row[u'UpVotes'] = up[u'count']
 				row[u'DownVotes'] = down[u'count']	
 				row[u'ViewCountRank'] = getRange(v1, v2, v3, row[u'ViewCount'])
+				row[u'UsefulnessRank'] = getRange(u1, u2, u3, row[u'Usefulness'])
 			data = questionIds
 				
 		return data
