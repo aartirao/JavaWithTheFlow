@@ -5,7 +5,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
+    <title>Visualization</title>
     <link rel="stylesheet" href="/static/css/bootstrap.css" type="text/css" />
     <link rel="stylesheet" href="/static/css/jquery-ui.css" type="text/css" />
     <link rel="stylesheet" href="/static/css/powerange.css" type="text/css" />
@@ -16,8 +16,9 @@
     <script src="/static/scripts/vendor/powerange.js"></script>
     <script src="/static/scripts/vendor/ckeditor/ckeditor.js"></script>
     <script src="/static/scripts/vendor/moment.js"></script>
-    <link rel="stylesheet" href="/static/css/profile.css" type="text/css" />
-    <script src="/static/scripts/profile.js"></script>
+    <script src="/static/scripts/vendor/d3.js"></script>
+    <link rel="stylesheet" href="/static/css/topicvis.css" type="text/css" />
+    <script src="/static/scripts/vis.js"></script>
     <script src="/static/scripts/richtexteditor.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="/static/scripts/vendor/sb-admin-2.js"></script>
@@ -142,11 +143,11 @@
 
                 <!-- /.row -->
                 <div class="row">
-                    <div class="col-lg-8">
+                    <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <i class="fa fa-bar-chart-o fa-fw"></i>
-                                <h3 id="heading">Profile</h3>
+                                <h3 id="heading">Visualizations</h3>
                                 <div class="pull-right">
 
                                 </div>
@@ -154,71 +155,11 @@
                             <!-- /.panel-heading -->
                             <div class="panel-body">
                                 <div id="container">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <h4 id="name"></h4>
-                                            <h4 id="hidden" style="display:none;"></h4>
-                                            <h4 id="aboutme"></h4>
-                                            <p class="date-class">
-                                                Member since <span id="date"></span>
-                                            </p>
-                                            <p>
-                                                <span id="clickable">Follow</span>
-                                            </p>
-                                            <p>
-                                            </p>
-                                            <hr>
-                                            <div id="followcontainer">
-                                                <div class='follwersdiv'>
-                                                    <div class='table-responsive'>
-                                                        <table class='table'>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td id='followerscell'>
-                                                                        <p><strong>Following</strong></p>
-                                                                        <div id="followerlinks">
+                                    <div id="chartcontainer">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div id="piechart">
 
-                                                                        </div>
-                                                                    </td>
-                                                                    <td id='followingcell'>
-                                                                        <p><strong>Followers</strong></p>
-                                                                        <div id="followinglinks">
-
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                        <!--
-                                                        <div id="dialogUnfollow" title="Unfollow User">
-                                                            <p>
-
-                                                                <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>                                                                
-                                                            </p>
-                                                            <p>
-                                                                Are you sure to unfollow this user?    
-                                                            </p>
-                                                        </div>
-                                                        -->
-                                                        <div id="dialogOk" title="Unfollow User">
-                                                            <p>
-
-                                                                <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>                                                                
-                                                            </p>
-                                                            <p>
-                                                                Unfollow successfull.    
-                                                            </p>
-                                                        </div>
-                                                        <div id="dialogOkFollow" title="Follow User">
-                                                            <p>
-
-                                                                <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>                                                                
-                                                            </p>
-                                                            <p>
-                                                                You are now following this user.   
-                                                            </p>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -234,38 +175,6 @@
                         <!-- /.panel -->
                     </div>
                     <!-- /.col-lg-8 -->
-                    <div class="col-lg-4">
-
-                        <!-- /.panel -->
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <i class="fa fa-bar-chart-o fa-fw"></i> Donut Chart Example
-                            </div>
-                            <div class="panel-body">
-                                <div id="morris-donut-chart"></div>
-                                <a href="#" class="btn btn-default btn-block">View Details</a>
-                            </div>
-                            <!-- /.panel-body -->
-                        </div>
-
-
-
-
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                Tracking your position
-                            </div>
-                            <!-- /.panel-heading -->
-                            <div class="panel-body">
-                                <div class="list-group">
-
-                                </div>
-                                <!-- /.list-group -->
-
-                            </div>
-                            <!-- /.panel-body -->
-                        </div>
-                    </div>
 
 
                 </div>

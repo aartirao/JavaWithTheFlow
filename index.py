@@ -395,6 +395,12 @@ def interest():
 def getpiechartdata(userName):
 	userId = getUserId(userName)
 	returnValue = getDataForPie(userId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "success", "result" : returnValue}
 
 @app.route('/searchQuery', method='GET')
 def callSearch():
@@ -413,7 +419,14 @@ def getQuestionList(topic, parameter, page=1):
 	else:
 		response.status = 200
 		return {"status": "success", "result" : returnValue}
-	
+
+		
+		
+@app.route('/topicvis')
+def topicvisualization(): 
+	username = request.GET.get('username')
+	return template('index/topicvis.html', username=username)
+
 @app.route('/getTagCloudList/<userId>', method = 'GET')
 def getTagCloudList(userId):
 	returnValue = getTagFrequency(userId)
@@ -424,6 +437,7 @@ def getTagCloudList(userId):
 		response.status = 200
 		return returnValue
 	
+
 	
 run(app, host=config.get('database','host'), port=config.get('database','port'), debug=True)
 
