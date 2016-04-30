@@ -12,14 +12,14 @@ from recommendation import recommendQuestions
 from search import searchQuery
 from users import follow, unFollow, getUserDetails, getAllDetailsOfUser
 from search import searchQuery, fetchResults
-<<<<<<< HEAD
+
 from vis import getDataForPie
-=======
+
 import ConfigParser
 
 config = ConfigParser.ConfigParser()
 config.read('db.cfg')
->>>>>>> e08d38e5c91b3e2dbdd8390a504153e27c09ed98
+
 '''
 POST - 201 - Created, 200 - OK {error message}
 GET - 200 - OK, 404 - Not Found
