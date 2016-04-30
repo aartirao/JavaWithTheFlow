@@ -17,11 +17,11 @@ config = ConfigParser.ConfigParser()
 config.read('db.cfg')
 
 connection = pymysql.connect(host=config.get('database','host'),
-							 user=config.get('database','username'),
-							 password=config.get('database','password'),
-							 db = config.get('database','db'),
-							 charset = 'utf8mb4',
-							 cursorclass=pymysql.cursors.DictCursor)
+                             user=config.get('database','username'),
+                             password=config.get('database','password'),
+                             db = config.get('database','db'),
+                             charset = 'utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
 
 postIds = []
 
@@ -38,44 +38,43 @@ const*  float  native  super  while""".split()
 
 # Method to remove stopwords and lemmatize the words in given text.
 def stopWordsAndLemmatize(text):
-	wordnet_lemmatizer = WordNetLemmatizer()
-	stopWordsSet = set(stopwords.words('english'))
-	# Updated punctuations because punctuations could be important for code.
-	stopWordsSet.update(set(['.', ',', '"', "'", '?', '!', 
-				':', ';', '(', ')', '[', ']', '{', '}']))
-	stopWordsSet = stopWordsSet - set(javaKeywords)
-	newText = " ".join([wordnet_lemmatizer.lemmatize(word.lower()) 
-		for word in text.split() 
-		if word.lower() not in stopWordsSet])
-	return newText
-	
+    wordnet_lemmatizer = WordNetLemmatizer()
+    stopWordsSet = set(stopwords.words('english'))
+    # Updated punctuations because punctuations could be important for code.
+    stopWordsSet.update(set(['.', ',', '"', "'", '?', '!', 
+                ':', ';', '(', ')', '[', ']', '{', '}']))
+    stopWordsSet = stopWordsSet - set(javaKeywords)
+    newText = " ".join([wordnet_lemmatizer.lemmatize(word.lower()) 
+        for word in text.split() 
+        if word.lower() not in stopWordsSet])
+    return newText
+    
 #Method to index Posts table based on Body, Title and Tag fields.
 def indexPosts():
-	try:
-		with connection.cursor() as cursor:
-			query = "select Id, PostTypeId, Body, Title, Tags from `Posts`"
-			cursor.execute(query)
-			c = 1
-			for row in cursor:
-				print "Row: ", c
-				c += 1
-				for key in row:
-					row[str(key)] = str(row.pop(key))
-				# Remove stopwords and lemmatize words in Body and Title
-				for key in ('Body', 'Title'):
-					row[key] = stopWordsAndLemmatize(row[key])
-				# The ID of each index is the ID of the post in the Posts table
-				docId = row.pop('Id')
-				es.index(index="posts_index", doc_type="posts_table", 
-						id = docId, body=row)
+    try:
+        with connection.cursor() as cursor:
+            query = "select Id, PostTypeId, Body, Title, Tags from `Posts`"
+            cursor.execute(query)
+            c = 1
+            for row in cursor:
+                print "Row: ", c
+                c += 1
+                for key in row:
+                    row[str(key)] = str(row.pop(key))
+                # Remove stopwords and lemmatize words in Body and Title
+                for key in ('Body', 'Title'):
+                    row[key] = stopWordsAndLemmatize(row[key])
+                # The ID of each index is the ID of the post in the Posts table
+                docId = row.pop('Id')
+                es.index(index="posts_index", doc_type="posts_table", 
+                        id = docId, body=row)
 
-	except Exception, e:
-		print traceback.print_exc()
+    except Exception, e:
+        print traceback.print_exc()
 
 def fetchResults(pageId):
 	questionIds = []
 	data = []
-	print pageId
 	endIndex = int(pageId) * 10
 	startIndex = endIndex - 10
 	try:
@@ -140,29 +139,32 @@ def fetchResults(pageId):
 		return -1
 
 def searchQuery(query, resultCount):
-	try:
-		data = []
-		# Remove stopwords from query and lemmatize the words
-		query = stopWordsAndLemmatize(query)
+    try:
+        data = []
+        # Remove stopwords from query and lemmatize the words
+        global postIds;
+        postIds = []
+        query = stopWordsAndLemmatize(query)
 
-		# Return "size" hits for the given query. Size arbitrarily set to 50 
-		matches = es.search(index = "posts_index", q = query, size = resultCount)
-		hits = matches['hits']['hits']
-		for hit in hits:
-			postIds.append(str(hit['_id']))
-
-		data = fetchResults(1)
-		return data
-	except:
-		print traceback.print_exc()
-		return -1
+        # Return "size" hits for the given query. Size arbitrarily set to 50 
+        matches = es.search(index = "posts_index", q = query, size = resultCount)
+        hits = matches['hits']['hits']
+        for hit in hits:
+            postIds.append(str(hit['_id']))
+        data = fetchResults(1)
+        return data
+    except:
+        print traceback.print_exc()
+        return -1
 
 if __name__ == "__main__":
-	# Run this file initially to create index for Posts table.
-	indexPosts()
-	# Sample query
-	#qIdList = searchQuery("abstract class create object")
-	#print qIdList
+    # Run this file initially to create index for Posts table.
+    #indexPosts()
+    # Sample query
+    qIdList = searchQuery("constructors", 2)
+    print qIdList
+    qIdList = searchQuery("abstract class", 2)
+    print qIdList
 
 
 
