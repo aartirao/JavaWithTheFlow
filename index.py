@@ -5,7 +5,7 @@ import pymysql.cursors
 from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, \
 		getSortedQuestionListByTopic, saveUserRating, createBookmark, getQuestionListByBookmark, createUserInterest, \
 		getInterestOfUser
-from users import checkPassword, createUser, getUserId
+from users import checkPassword, createUser, getUserId, isActive
 from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
 from recommendation import recommendQuestions
 
@@ -14,7 +14,7 @@ from users import follow, unFollow, getUserDetails, getAllDetailsOfUser
 from search import searchQuery, fetchResults
 from tagger import getTagFrequency
 
-from vis import getDataForPie
+from vis import getDataForPie, getDataForStack, getDataForStack1
 
 import ConfigParser
 
@@ -437,7 +437,32 @@ def getTagCloudList(userId):
 		response.status = 200
 		return returnValue
 	
+@app.route('/stackchartdata/<userName>', method = "GET")
+def getStackData(userName):
+	userId = getUserId(userName)
+	returnValue = getDataForStack1(userId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "success", "result" : returnValue}
+		
+@app.route('/stack')
+def stackData(): 
+	username = request.GET.get('username')
+	return template('index/stack.html', username=username)
 
+@app.route('/isactive/<userName>', method = "GET")
+def isUserActive(userName):
+	userId = getUserId(userName)
+	returnValue = isActive(userId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "success", "result" : returnValue}
 	
 run(app, host=config.get('database','host'), port=config.get('database','port'), debug=True)
 

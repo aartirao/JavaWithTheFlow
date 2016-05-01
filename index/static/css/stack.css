@@ -1,0 +1,38 @@
+.tooltipPiechart{
+  background: #808080;
+  box-shadow: 0 0 5px #999999;
+  color: #333;
+  display: none;
+  font-size: 14px;
+  left: 130px;
+  padding: 10px;
+  position: absolute;
+  text-align: center;
+  top: 95px;
+  width: 120px;
+  z-index: 10;
+}
+
+#piechart{
+    text-align: center;
+}
+
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: steelblue;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.radio{
+    display: inline;
+    margin-right: 5px !important;
+}

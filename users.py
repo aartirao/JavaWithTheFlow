@@ -199,5 +199,32 @@ def getAllDetailsOfUser(data):
         print traceback.print_exc()
         return -1
             
+def isActive(userId):
+    returnVal = -1
+    postcount = 0
+    commentcount = 0
+  
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT COUNT(*) AS COUNT FROM Posts WHERE OwnerUserId = %s"
+            cursor.execute(sql, (userId))
+            postcount = cursor.fetchone()
+            postcount = postcount["COUNT"]
+        with connection.cursor() as cursor:
+            sql = "SELECT COUNT(*) AS COUNT FROM Comments WHERE UserId = %s"
+            cursor.execute(sql, (userId))
+            commentcount = cursor.fetchone()
+            commentcount = commentcount["COUNT"]
+        connection.commit()
+        
+        if postcount >= 10 or commentcount >= 30:
+            returnVal = 1
+        else:
+            returnVal = 0
             
+        return returnVal
+    except Exception, e:
+        print traceback.print_exc()
+        return -1    
+       
 
