@@ -4,6 +4,8 @@ import traceback
 import json
 import ConfigParser
 
+from posts import getRange
+
 config = ConfigParser.ConfigParser()
 config.read('db.cfg')
 
@@ -226,5 +228,97 @@ def isActive(userId):
     except Exception, e:
         print traceback.print_exc()
         return -1    
-       
 
+
+def getMyQuestions(userId):
+    pageNum = (int(page)-1) * 10;
+    data = {}
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT P.Id, P.Title, P.ViewCount, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
+            P.AnswerCount, P.CreationDate, P.Usefulness from Posts as P where P.PostTypeId = 1 and P.OwnerUserId = %s"
+            rowCount = cursor.execute(sql, (userId, pageNum))
+            if rowCount > 0:
+                results = cursor.fetchall()
+                print(results)
+                usefulnessCounts = []
+                viewCounts = []
+                for row in results:
+                    viewCounts.append(int(row[u'ViewCount']))
+                    usefulnessCounts.append(int(row[u'Usefulness']))
+                viewCounts.sort()
+                usefulnessCounts.sort()
+                splitAt = rowCount / 3
+                v1 = viewCounts[:splitAt]
+                v2 = viewCounts[splitAt:splitAt*2]
+                v3 = viewCounts[splitAt*2:]
+                u1 = usefulnessCounts[:splitAt]
+                u2 = usefulnessCounts[splitAt:splitAt*2]
+                u3 = usefulnessCounts[splitAt*2:]
+                for row in results:
+                    id = row[u'Id']
+                    sqlVup = "SELECT count(Id) as count from Votes where VoteTypeId = 2 and PostId = %s"
+                    sqlVdown = "SELECT count(Id) as count from Votes where VoteTypeId = 3 and PostId = %s"
+                    upCount = cursor.execute(sqlVup, (id))
+                    up = cursor.fetchone()
+                    downCount = cursor.execute(sqlVdown, (id))
+                    down = cursor.fetchone()
+                    row[u'CreationDate'] = str(row[u'CreationDate'])
+                    row[u'UpVotes'] = up[u'count']
+                    row[u'DownVotes'] = down[u'count']
+                    row[u'ViewCountRank'] = getRange(v1, v2, v3, row[u'ViewCount'])
+                    row[u'UsefulnessRank'] = getRange(u1, u2, u3, row[u'Usefulness'])
+                data = results
+        return data
+    except Exception, e:
+        print traceback.print_exc()
+        return -1                
+                
+def getMyAnswerQuestions(userId):
+    pageNum = (int(page)-1) * 10;
+    data = {}
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT P.Id, P.Title, P.ViewCount, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
+            P.AnswerCount, P.CreationDate, P.Usefulness from Posts as P where P.PostTypeId = 1 \
+            AND P.Id IN (SELECT Ps.ParentId FROM Posts as Ps WHERE Ps.PostTypeId = 2 AND Ps.OwnerUserId = %s)"
+            rowCount = cursor.execute(sql, (userId, pageNum))
+            if rowCount > 0:
+                results = cursor.fetchall()
+                print(results)
+                usefulnessCounts = []
+                viewCounts = []
+                for row in results:
+                    viewCounts.append(int(row[u'ViewCount']))
+                    usefulnessCounts.append(int(row[u'Usefulness']))
+                viewCounts.sort()
+                usefulnessCounts.sort()
+                splitAt = rowCount / 3
+                v1 = viewCounts[:splitAt]
+                v2 = viewCounts[splitAt:splitAt*2]
+                v3 = viewCounts[splitAt*2:]
+                u1 = usefulnessCounts[:splitAt]
+                u2 = usefulnessCounts[splitAt:splitAt*2]
+                u3 = usefulnessCounts[splitAt*2:]
+                for row in results:
+                    id = row[u'Id']
+                    sqlVup = "SELECT count(Id) as count from Votes where VoteTypeId = 2 and PostId = %s"
+                    sqlVdown = "SELECT count(Id) as count from Votes where VoteTypeId = 3 and PostId = %s"
+                    upCount = cursor.execute(sqlVup, (id))
+                    up = cursor.fetchone()
+                    downCount = cursor.execute(sqlVdown, (id))
+                    down = cursor.fetchone()
+                    row[u'CreationDate'] = str(row[u'CreationDate'])
+                    row[u'UpVotes'] = up[u'count']
+                    row[u'DownVotes'] = down[u'count']
+                    row[u'ViewCountRank'] = getRange(v1, v2, v3, row[u'ViewCount'])
+                    row[u'UsefulnessRank'] = getRange(u1, u2, u3, row[u'Usefulness'])
+                data = results
+        return data
+    except Exception, e:
+        print traceback.print_exc()
+        return -1                
+                
+
+
+#print(getMyAnswerQuestions(2526083, 1))
