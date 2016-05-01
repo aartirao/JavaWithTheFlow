@@ -52,7 +52,8 @@ $(document).ready(function () {
 
                 var followerHtml = "";
                 $.each(data.data.Following, function (key, element) {
-                    var hyperlink = "/profile?uId=" + element.UserId;
+                    //var cId = getParametersByName("cId");
+                    var hyperlink = "/profile?uId=" + element.UserId + "&cId=" + cId;
                     var htmlItem = "<p class='link'><a id='link-" + element.UserId + "' class = 'followlink' href='" + hyperlink + "'>" + element.DisplayName + "</a></p>";
                     followerHtml = followerHtml + htmlItem;
                 });
@@ -156,9 +157,11 @@ $(document).on("click", "i[class='fa fa-times unfollow']", function () {
         .done(function (data) {
             if (data.status == "successfully saved") {
                 //modal pop up
-                
+                //console.log("Hello man");
                 $(this).closest('.link').remove();
-                
+                //$(this).parent().remove();
+                //$(this).hide();
+                //$(this).remove();
                 $("#dialogOk").dialog("open");
             }
 
