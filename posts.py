@@ -203,7 +203,7 @@ def addQuestion(data):
 		return -1
 
 #Method to retrieve comments
-def getComments(parentId):
+def getComments(parentId, uId):
 	comments = []
 	comment = {}
 	try:
@@ -217,7 +217,8 @@ def getComments(parentId):
 					commentedUser = row[u'UserDisplayName']
 					commentedTime = str(row[u'CreationDate'])
 					commentText = row[u'Text']
-					userUrl = "#"
+					commentedUserId = row[u'UserId']
+					userUrl = "/profile?uId="+str(commentedUserId)+"&cId="+str(uId)
 					comment = {
 						"commentId": commentId,
 						"commentedUser": commentedUser,
@@ -271,7 +272,7 @@ def getAnswers(parentId, userId):
 					postText =  row[u'Body']
 					answeredByUserName = row[u'OwnerDisplayName']
 					answeredByUserId = row[u'OwnerUserId']
-					answeredUserProfile = "#"
+					answeredUserProfile = "/profile?uId="+str(answeredByUserId)+"&cId="+str(userId)
 					answeredDate = str(row[u'CreationDate'])
 					isAcceptedAnswer = "#"
 					usefulness = "#"
@@ -305,7 +306,7 @@ def getAnswers(parentId, userId):
 			            "currentUserRating": userRating
 					}
 
-					comments = getComments(postId)
+					comments = getComments(postId, userId)
 					temp = {"answer" : answer, "comments" : comments}
 					answers.append(temp)
 
@@ -382,8 +383,9 @@ def getQuestion(data,user):
 					status = "#"
 					askedByUserName = row[u'OwnerDisplayName']
 					askedByUserId = row[u'OwnerUserId']
-					askedUserProfile = "#"
+					askedUserProfile = "/profile?uId="+str(askedByUserId)+"&cId="+str(uId)
 					noOfAnswers = row[u'AnswerCount']
+					acceptedAnswerId = row[u'AcceptedAnswerId']
 
 					question =  {
 						"postId": postId,
@@ -401,11 +403,12 @@ def getQuestion(data,user):
 						"status": status,
 						"askedbyUserName": askedByUserName,
 						"askedbyUserId": askedByUserId,
-						"askedUserProfile": "#",
-						"noOfAnswers": noOfAnswers
+						"askedUserProfile": askedUserProfile,
+						"noOfAnswers": noOfAnswers,
+						"acceptedAnswerId" : acceptedAnswerId
 	  				}
 
-		comments = getComments(qId)
+		comments = getComments(qId, uId)
 		answers = getAnswers(qId,uId)
 		final = {"question" : question, "comments" : comments, "answers" : answers}
 
