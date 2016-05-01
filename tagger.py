@@ -43,7 +43,7 @@ def putTags(tags):
             i = i + 1
             
             
-def getTagFrequency(userId):
+def getTagFrequency(username):
     i = 1
     result = {}
     with connection.cursor() as cursor:
@@ -55,8 +55,8 @@ def getTagFrequency(userId):
         for tag in Tags:
             tags[tag[u'TagName']] = tag[u'TopicId']
         
-        query2 = "select TopicId, Weight from UserInterests where UserId = %s order by Weight desc Limit 5"
-        cursor.execute(query2, (userId))
+        query2 = "select TopicId, Weight from UserInterests where DisplayName = %s order by Weight desc Limit 5"
+        cursor.execute(query2, (username))
         Interests = cursor.fetchall()
         query3 = "SELECT Distinct(Tags) as Tags from Posts where Id in (SELECT PT.PostId from Topics as T join PostTopicMap as PT on \
                 PT.TopicId = T.Id where T.Id = %s or T.Id = %s or T.Id = %s or T.Id = %s or T.Id = %s)"
@@ -85,6 +85,7 @@ def getTagFrequency(userId):
         for (each, val) in resultlist[:150]:
             if each != "java":
                 #children.append({"name":each, "size": val})
+                print each, tags[each]
                 if tags[each] not in childs.keys():
                     childs[tags[each]] = [{"name":each, "size": val}]
                 else:
