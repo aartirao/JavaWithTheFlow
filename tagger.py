@@ -69,13 +69,13 @@ def getTagFrequency(userId):
             i = i + 1
         resultlist = sorted(result.items(), key=operator.itemgetter(1))
         resultlist.reverse()
-        print resultlist[:100]
         res = {}
         res["name"] = "words"
         children = []
         for (each, val) in resultlist:
-            children.append({"name":each, "size": val})
-        res["children"] = children
+            if each != "java":
+                children.append({"name":each, "size": val})
+        res["children"] = children[:150]
         return res
              
             
