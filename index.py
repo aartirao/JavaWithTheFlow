@@ -311,7 +311,8 @@ def getInterest(userId):
 
 @app.route('/interest', method = 'GET')
 def interest():
-	return template('index/interest.html')
+    username = request.GET.get('username') 
+    return template('index/interest.html',username=username)
 	
 @app.route('/follow', method = "POST")
 def followUser():
