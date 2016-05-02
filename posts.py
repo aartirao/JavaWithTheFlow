@@ -381,6 +381,13 @@ def getQuestion(data,user):
 			rowCount = cursor.execute(sql, (qId))
 			if rowCount > 0:
 				results = cursor.fetchall()
+				sql = """SELECT COUNT(*) AS Count FROM Bookmarks WHERE UserId = %s AND PostId = %s
+					 AND isDeleted = 0"""
+				cursor.execute(sql,(uId, qId))
+				bookmarkcount = cursor.fetchone()
+				isbookmark = bookmarkcount["Count"]
+				if isbookmark >= 1:
+					isbookmark = 1
 				for row in results:																
 					postId = row[u'Id']
 					postTypeId = row[u'PostTypeId']
@@ -400,13 +407,8 @@ def getQuestion(data,user):
 					askedUserProfile = "/profile?uId="+str(askedByUserId)+"&cId="+str(uId)
 					noOfAnswers = row[u'AnswerCount']
 					acceptedAnswerId = row[u'AcceptedAnswerId']
-			sql = """SELECT COUNT(*) AS Count FROM Bookmarks WHERE UserId = %s AND PostId = %s
-					 AND isDeleted = 0"""
-			cursor.execute(sql,(uId, qId))
-			bookmarkcount = cursor.fetchone()
-			isbookmark = bookmarkcount["Count"]
-			if isbookmark >= 1:
-				isbookmark = 1
+			
+				
 					question =  {
 						"postId": postId,
 						"postTypeId": postTypeId,
@@ -646,3 +648,5 @@ def getInterestOfUser(userId):
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
+		
+
