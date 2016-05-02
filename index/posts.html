@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/static/css/bootstrap.css" type="text/css" />
     <link rel="stylesheet" href="/static/css/jquery-ui.css" type="text/css" />
     <link rel="stylesheet" href="/static/css/powerange.css" type="text/css" />
+    <link href="/static/css/styles.css" rel="stylesheet">
     <script src="/static/scripts/vendor/jquery.js"></script>
     <script src="/static/scripts/vendor/bootstrap.js"></script>
     <script src="/static/scripts/vendor/jquery-ui.js"></script>
@@ -16,6 +17,9 @@
     <script src="/static/scripts/vendor/powerange.js"></script>
     <script src="/static/scripts/vendor/ckeditor/ckeditor.js"></script>
     <script src="/static/scripts/vendor/moment.js"></script>
+    <script src="/static/scripts/vendor/mustache.min.js"></script>
+    <script src="/static/scripts/reccom.js"></script>
+    
     <link rel="stylesheet" href="/static/css/posts.css" type="text/css" />
     <script src="/static/scripts/posts.js"></script>
     <script src="/static/scripts/richtexteditor.js"></script>
@@ -33,6 +37,40 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+     <script>
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };      
+        
+        $(function() {
+           $.ajax({url: '/getsimilarusers/'+getUrlParameter("username"), success: function(result){
+                $("#templates").load("/static/templates/usertemplate.html", function() {
+                    console.log("going on..");
+                    var template = document.getElementById('usertemplate').innerHTML;
+                    qList = result.result;
+                    for(var i=0; i<qList.length; i++) {
+                        console.log("loop");
+                        var output = Mustache.render(template, qList[i]);
+                        $("#user-follow-list").append(output);
+                        console.log(qList[i]);
+                        }                        
+                    });                
+                } 
+            });
+       });    
+    
+    </script>
 
 </head>
 
@@ -247,31 +285,34 @@
                     </div>
                     <!-- /.col-lg-8 -->
                     <div class="col-lg-4">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                Tracking your position
-                            </div>
-                            <!-- /.panel-heading -->
-                            <div class="panel-body">
-                                <div class="list-group">
-
-                                </div>
-                                <!-- /.list-group -->
-
-                            </div>
-                            <!-- /.panel-body -->
-                        </div>
                         <!-- /.panel -->
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <i class="fa fa-bar-chart-o fa-fw"></i> Donut Chart Example
-                            </div>
-                            <div class="panel-body">
-                                <div id="morris-donut-chart"></div>
-                                <a href="#" class="btn btn-default btn-block">View Details</a>
-                            </div>
-                            <!-- /.panel-body -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Related Questions
                         </div>
+                        <div id="reccobar" class="panel-body">
+                            
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                   
+               
+                   
+        
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                             Users you might like to follow
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div id="user-follow-list">
+                               
+                            </div>
+                            <!-- /.list-group -->
+                            
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
 
                     </div>
                     <!-- /.col-lg-4 -->
@@ -282,7 +323,7 @@
 
         </div>
         <!-- /#wrapper -->
-
+        <div id ="templates" style="display:none;" > </div>
 </body>
 
 </html>
