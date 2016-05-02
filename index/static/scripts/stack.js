@@ -1,4 +1,5 @@
 "use strict"
+
 var userName = '2526083';
 var allactivies = {
     "Questions": 0,
@@ -7,7 +8,19 @@ var allactivies = {
     "Answer Comments": 0
 };
 var n = 4;
+
+function getParametersByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)", "i"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
 $(document).ready(function () {
+    userName = getParametersByName("username");
     var url = "stackchartdata/" + userName;
     $.ajax(
         {

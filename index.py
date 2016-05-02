@@ -5,7 +5,7 @@ import pymysql.cursors
 from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, \
 		getSortedQuestionListByTopic, saveUserRating, createBookmark, getQuestionListByBookmark, createUserInterest, \
 		getInterestOfUser
-from users import checkPassword, createUser, getUserId, isActive
+from users import checkPassword, createUser, getUserId, isActive, getMyQuestions, getMyAnswerQuestions
 from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
 from recommendation import recommendQuestions
 
@@ -311,8 +311,8 @@ def getInterest(userId):
 
 @app.route('/interest', method = 'GET')
 def interest():
-	username = request.GET.get('username')
-	return template('index/interest.html',username=username)
+    username = request.GET.get('username') 
+    return template('index/interest.html',username=username)
 	
 @app.route('/follow', method = "POST")
 def followUser():
@@ -381,7 +381,7 @@ def userDetails(uId):
 		return {"status": "not found"}
 	else:
 		response.status = 200
-		return {"status": "success", "result" : returnValue}
+		return {"status": "successfully retrieved", "data" : returnValue}
 
 @app.route('/bookmarkList', method='GET')
 def bookmarkList():
@@ -464,6 +464,48 @@ def isUserActive(userName):
 	else:
 		response.status = 200
 		return {"status": "success", "result" : returnValue}
+		
+@app.route('/getMyQuestions/<userName>/<pageNo>', method = "GET")
+def getMyQuestionList(userName, pageNo):
+	userId = getUserId(userName)
+	returnValue = getMyQuestions(userId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "success", "result" : returnValue}
+		
+@app.route('/getMyAnswers/<userName>/<pageNo>', method = "GET")
+def getMyAnswersList(userName, pageNo):
+	userId = getUserId(userName)
+	returnValue = getMyAnswerQuestions(userId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "success", "result" : returnValue}
+		
+@app.route('/myquestions', method='GET')
+def bookmarkList():
+	username = request.GET.get('username')
+	return template('index/myquestions.html',username=username)
+	
+@app.route('/myanswers', method='GET')
+def bookmarkList():
+	username = request.GET.get('username')
+	return template('index/myanswers.html',username=username)
+	
+@app.route('/topicvis', method = 'GET')
+def topicVis():
+	username = request.GET.get('username')
+	return template('index/topicvis.html', username=username)
+	
+@app.route('/activities', method = 'GET')
+def activities():
+	username = request.GET.get('username')
+	return template('index/stack.html', username=username)
 	
 run(app, host=config.get('database','host'), port=config.get('database','port'), debug=True)
 

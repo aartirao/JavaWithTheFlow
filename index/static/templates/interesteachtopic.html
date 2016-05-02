@@ -1,4 +1,4 @@
 <div id="topictemplate">
-    <span class="initial"> {{Name}}  : <output class="rangeroutput" name="{{Topic}}Output" for="{{TopicName}}Input">{{Weight}}</output> </span>
-    <input class="ranger" type="range" id="{{Topic}}Input" name="{{Id}}Topic" min="0" max="5" oninput="{{Topic}}Output.value={{Topic}}Input.value" value="{{Weight}}">
+    <span class="initial"> {{Name}}  : <output class="rangeroutput" name="Output{{Id}}" for="Input{{Id}}">{{Weight}}</output> </span>
+    <input class="ranger" type="range" id="Input{{Id}}" name="{{Id}}Topic" min="0" max="10" oninput="Output{{Id}}.value=Input{{Id}}.value" value="{{Weight}}">
 </div>
