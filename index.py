@@ -10,7 +10,7 @@ from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
 from recommendation import recommendQuestions, getSimilarUsersForUI
 
 from search import searchQuery
-from users import follow, unFollow, getUserDetails, getAllDetailsOfUser
+from users import follow, unFollow, getUserDetails, getAllDetailsOfUser, getUserName
 from search import searchQuery, fetchResults
 from tagger import getTagFrequency
 
@@ -391,7 +391,8 @@ def bookmarkList():
 
 @app.route('/profile', method = 'GET')
 def interest():
-	username = request.GET.get('username')
+	userId = request.GET.get('cId')
+	username = getUserName(userId)
 	return template('index/profile.html',username=username)
 
 @app.route('/piechartdata/<userName>', method = "GET")
