@@ -92,7 +92,6 @@ def createUser(data):
 
 #Method to get user id
 def getUserId(username):
-
 	try:
 		#Get user id
 		with connection.cursor() as cursor:
@@ -101,6 +100,21 @@ def getUserId(username):
 			result = cursor.fetchone()
 			if count > 0:
 				return result[u'Id']            		
+		return -1
+	except Exception, e:
+		print traceback.print_exc()
+		return -1
+        
+#Method to get user id
+def getUserName(userId):
+	try:
+		#Get user id
+		with connection.cursor() as cursor:
+			sql = "SELECT `DisplayName` from `Users` where `Id` = %s"
+			count = cursor.execute(sql, (userId))
+			result = cursor.fetchone()
+			if count > 0:
+				return result[u'DisplayName']            		
 		return -1
 	except Exception, e:
 		print traceback.print_exc()

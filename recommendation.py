@@ -105,8 +105,9 @@ def getSimilarUsersForUI(user):
 				res = cursor.fetchone()
 				users.append(res)
 		
-		for user in users:
-			user[u'DisplayName'] = user[u'DisplayName'].title() 
+		for userr in users:
+			userr[u'DisplayName'] = userr[u'DisplayName'].title()
+			userr[u'CurrentUserId'] = user 
 		
 		return users
 	except Exception, e:
