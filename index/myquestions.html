@@ -87,6 +87,7 @@
             $("#templates").load("/static/templates/question.html", function() {
                 var template = document.getElementById('qTemplate').innerHTML;
                 qList = result["result"];
+                
                 for(var i=0; i<qList.length; i++) {
                     qList[i]["username"] = username;
                     var output = Mustache.render(template, qList[i], user);
