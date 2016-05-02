@@ -405,7 +405,8 @@ def getQuestion(data,user):
 			cursor.execute(sql,(uId, qId))
 			bookmarkcount = cursor.fetchone()
 			isbookmark = bookmarkcount["Count"]
-			
+			if isbookmark >= 1:
+				isbookmark = 1
 					question =  {
 						"postId": postId,
 						"postTypeId": postTypeId,
