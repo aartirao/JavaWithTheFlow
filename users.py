@@ -243,16 +243,16 @@ def isActive(userId):
 
 
 def getMyQuestions(userId):
-    pageNum = (int(page)-1) * 10;
+    #pageNum = (int(page)-1) * 10;
     data = {}
     try:
         with connection.cursor() as cursor:
             sql = "SELECT P.Id, P.Title, P.ViewCount, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
-            P.AnswerCount, P.CreationDate, P.Usefulness from Posts as P where P.PostTypeId = 1 and P.OwnerUserId = %s"
-            rowCount = cursor.execute(sql, (userId, pageNum))
+            P.AnswerCount, P.CreationDate, IFNULL(P.Usefulness,0) AS Usefulness from Posts as P where P.PostTypeId = 1 and P.OwnerUserId = %s"
+            rowCount = cursor.execute(sql, (userId))
             if rowCount > 0:
                 results = cursor.fetchall()
-                print(results)
+                #print(results)
                 usefulnessCounts = []
                 viewCounts = []
                 for row in results:
@@ -287,17 +287,17 @@ def getMyQuestions(userId):
         return -1                
                 
 def getMyAnswerQuestions(userId):
-    pageNum = (int(page)-1) * 10;
+    #pageNum = (int(page)-1) * 10;
     data = {}
     try:
         with connection.cursor() as cursor:
             sql = "SELECT P.Id, P.Title, P.ViewCount, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
-            P.AnswerCount, P.CreationDate, P.Usefulness from Posts as P where P.PostTypeId = 1 \
+            P.AnswerCount, P.CreationDate, IFNULL(P.Usefulness,0) AS Usefulness from Posts as P where P.PostTypeId = 1 \
             AND P.Id IN (SELECT Ps.ParentId FROM Posts as Ps WHERE Ps.PostTypeId = 2 AND Ps.OwnerUserId = %s)"
-            rowCount = cursor.execute(sql, (userId, pageNum))
+            rowCount = cursor.execute(sql, (userId))
             if rowCount > 0:
                 results = cursor.fetchall()
-                print(results)
+                #print(results)
                 usefulnessCounts = []
                 viewCounts = []
                 for row in results:

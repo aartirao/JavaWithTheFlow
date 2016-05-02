@@ -1,5 +1,6 @@
 //JS used in ask.html
 var CKEDITOR_BASEPATH = '/static/scripts/vendor/ckeditor/';
+var username = "";
 function getParametersByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -11,6 +12,7 @@ function getParametersByName(name, url) {
 }
 
 $(document).ready(function () {
+    username = getParametersByName("username");
     var textreceived = getParametersByName("text");
     var tagreceived = getParametersByName("tags");
 
@@ -58,11 +60,12 @@ $(document).on("click", "button[class='post-question btn btn-primary']", functio
         $("#body-validate").text("Body should not be empty");
         return;
     }
+    
     postData = {
         "Body": questionHtmlText,
         "Title": textEntered,
         "Tags": tagsEntered,
-        "DisplayName": "Jayaprakash"
+        "DisplayName": username
     };
     $.ajax(
         {
