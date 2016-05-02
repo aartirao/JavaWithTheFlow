@@ -19,8 +19,8 @@ connection = pymysql.connect(host=config.get('database','host'),
 
 #Method to follow a user
 def follow(data):
-	currentUserId = data["UserId"];
-	followUserId = data["Follow"];
+	currentUserId = data["UserId"]
+	followUserId = data["Follow"]
 	count = -1
 	try:
 		with connection.cursor() as cursor:
