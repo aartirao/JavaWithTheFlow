@@ -78,6 +78,22 @@ def getSimilarUsers(user):
 
 		scores.sort()
 		scores.reverse()
+		similarUsers = [row[1] for row in scores]
+		return similarUsers[0:5]
+	except Exception, e:
+		print traceback.print_exc()
+		return -1
+
+def getSimilarUsersForUI(user):
+	try:
+		print "In getSimilarUsers"
+		user = int(user)
+		allUsers = getAllUsers()
+		scores = [(pearson_correlation(user, otherUser), otherUser)
+		 			for otherUser in allUsers if otherUser != user]
+
+		scores.sort()
+		scores.reverse()
 		scores = scores[0:5]		
 		similarUsers = [row[1] for row in scores]
 		

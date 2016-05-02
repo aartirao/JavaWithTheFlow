@@ -7,7 +7,7 @@ from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCoun
 		getInterestOfUser
 from users import checkPassword, createUser, getUserId, isActive, getMyQuestions, getMyAnswerQuestions
 from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
-from recommendation import recommendQuestions, getSimilarUsers
+from recommendation import recommendQuestions, getSimilarUsersForUI
 
 from search import searchQuery
 from users import follow, unFollow, getUserDetails, getAllDetailsOfUser
@@ -511,7 +511,7 @@ def activities():
 @app.route('/getsimilarusers/<userName>', method = "GET")
 def isUserActive(userName):
 	userId = getUserId(userName)
-	returnValue = getSimilarUsers(userId)
+	returnValue = getSimilarUsersForUI(userId)
 	if(returnValue == -1):
 		response.status = 404
 		return {"status": "not found"}
