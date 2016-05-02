@@ -190,7 +190,7 @@
             $.ajax({url: '/getSortedQuestionList/'+getUrlParameter('topic')+'/'+parameter, success: function(result){
             $("#templates").load("/static/templates/question.html", function() {
                 var template = document.getElementById('qTemplate').innerHTML;
-                qList = result["data"];
+                qList = result.result;
                 for(var i=0; i<qList.length; i++) {
                     a = qList[i]["Tags"]
                     words = []

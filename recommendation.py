@@ -84,6 +84,32 @@ def getSimilarUsers(user):
 		print traceback.print_exc()
 		return -1
 
+def getSimilarUsersForUI(user):
+	try:
+		print "In getSimilarUsers"
+		user = int(user)
+		allUsers = getAllUsers()
+		scores = [(pearson_correlation(user, otherUser), otherUser)
+		 			for otherUser in allUsers if otherUser != user]
+
+		scores.sort()
+		scores.reverse()
+		scores = scores[0:5]		
+		similarUsers = [row[1] for row in scores]
+		
+		users = []
+		for user in similarUsers:
+			with connection.cursor() as cursor:
+				sql = """select `Id`, `DisplayName` from `Users` where Id = %s"""
+				rowCount = cursor.execute(sql, (user))
+				res = cursor.fetchone()
+				users.append(res)
+		
+		return users
+	except Exception, e:
+		print traceback.print_exc()
+		return -1
+
 
 def getTopicsToRecommend(user):
 	topics = []

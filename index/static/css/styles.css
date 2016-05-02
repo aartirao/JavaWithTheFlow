@@ -217,6 +217,10 @@ mark {
     margin-bottom: 10px;
 }
 
+.user {
+    margin-bottom: 10px;
+}
+
 .grid {
     padding-top: 120px;
     padding: 15px;
@@ -229,6 +233,3 @@ mark {
 .tagline {
     font-size: x-large;
 }
-
-
-

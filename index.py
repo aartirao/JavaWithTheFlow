@@ -7,7 +7,7 @@ from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCoun
 		getInterestOfUser
 from users import checkPassword, createUser, getUserId, isActive, getMyQuestions, getMyAnswerQuestions
 from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
-from recommendation import recommendQuestions
+from recommendation import recommendQuestions, getSimilarUsersForUI
 
 from search import searchQuery
 from users import follow, unFollow, getUserDetails, getAllDetailsOfUser
@@ -414,6 +414,7 @@ def callSearch():
 @app.route('/getSortedQuestionList/<topic>/<parameter>', method='GET')
 @app.route('/getSortedQuestionList/<topic>/<parameter>/<page>', method='GET')
 def getQuestionList(topic, parameter, page=1):
+	print topic, parameter, page
 	returnValue = getSortedQuestionListByTopic(topic,parameter,page)
 	if(returnValue == -1):
 		response.status = 404
@@ -507,7 +508,18 @@ def topicVis():
 def activities():
 	username = request.GET.get('username')
 	return template('index/stack.html', username=username)
-	
+
+@app.route('/getsimilarusers/<userName>', method = "GET")
+def isUserActive(userName):
+	userId = getUserId(userName)
+	returnValue = getSimilarUsersForUI(userId)
+	if(returnValue == -1):
+		response.status = 404
+		return {"status": "not found"}
+	else:
+		response.status = 200
+		return {"status": "success", "result" : returnValue}
+
 run(app, host=config.get('database','host'), port=config.get('database','port'), debug=True)
 
 
