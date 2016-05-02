@@ -7,11 +7,69 @@ text {
 }
 
 </style>
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualization</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="/static/css/jquery-ui.css" type="text/css" />
+    <link rel="stylesheet" href="/static/css/powerange.css" type="text/css" />
+    <script src="/static/scripts/vendor/jquery.js"></script>
+    <script src="/static/scripts/vendor/bootstrap.js"></script>
+    <script src="/static/scripts/vendor/jquery-ui.js"></script>
+    <script src="/static/scripts/vendor/jquery_loadTemplate.js"></script>
+    <script src="/static/scripts/vendor/powerange.js"></script>
+    <script src="/static/scripts/vendor/ckeditor/ckeditor.js"></script>
+    <script src="/static/scripts/vendor/moment.js"></script>
+    <script src="/static/scripts/vendor/d3.js"></script>
+    <link rel="stylesheet" href="/static/css/topicvis.css" type="text/css" />
+    <script src="/static/scripts/vis.js"></script>
+    <script src="/static/scripts/richtexteditor.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="/static/scripts/vendor/sb-admin-2.js"></script>
+
+    <!-- Custom CSS -->
+    <link href="/static/css/sb-admin-2.css" rel="stylesheet" />
+    <!-- Custom Fonts -->
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
 <body>
 <script src="/static/scripts/vendor/jquery.js"></script>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script>
-setData();
+
+function getParametersByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)", "i"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    console.log(results[2].replace(/\+/g, " "));
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+
+}
+
+var username;
+username = getParametersByName("username");
+getUserId(username);
+
+function getUserId(username) {
+    $.ajax({url: '/getUserId/'+username, success: function(result){
+        userId = result.result;
+        setData(userId);
+    } 
+    });   
+}
 
 function bubble(root) {
     var diameter = 960,
@@ -23,7 +81,7 @@ function bubble(root) {
         .size([diameter, diameter])
         .padding(1.5);
 
-    var svg = d3.select("body").append("svg")
+    var svg = d3.select("#bubble").append("svg")
         .attr("width", diameter)
         .attr("height", diameter)
         .attr("class", "bubble");
@@ -64,12 +122,147 @@ function bubble(root) {
     d3.select(self.frameElement).style("height", diameter + "px");   
  }
 
- function setData() {
-      $.ajax({url: '/getTagCloudList/821742', success: function(result){
+ function setData(userId) {
+      $.ajax({url: '/getTagCloudList/'+userId, success: function(result){
              bubble(result);  
       }}); 
     }
     
 </script>
+<div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/mainPage?username={{username}}">Java With the flow !</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+
+                <li>
+                    <a href="services.html">Home</a>
+                </li>
+                <li>
+                    <a href="contact.html">Profile</a>
+                </li>
+
+
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        </li>
+
+                        <li class="divider"></li>
+                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                            <br>
+                            <li>
+                                <a href="forms.html">My Answers </a>
+                            </li>
+                            <li>
+                                <a href="forms.html">My Questions </a>
+                            </li>
+                            <li>
+                                <a href="forms.html"> Bookmarks </a>
+                            </li>
+                            <li>
+                                <a href="forms.html">Interests </a>
+                            </li>
+
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-sm-12">
+                    
+                </div>
+                <!-- /.col-lg-12 -->
+                <div class="row">
+                    <div class="col-lg-12 col-md-6">
+
+
+                    </div>
+
+                </div>
+
+                <!-- /.row -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-bar-chart-o fa-fw"></i>
+                                <h3 id="heading">Trends - Popular tags</h3>
+                                <div class="pull-right">
+
+                                </div>
+                            </div>
+                            <!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div id="container">
+                                    <div id="chartcontainer">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div id="bubble">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                        <!-- /.panel -->
+
+                        <!-- /.panel -->
+
+                        <!-- /.panel -->
+                    </div>
+                    <!-- /.col-lg-8 -->
+
+
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /#page-wrapper -->
+
+        </div>
+        <!-- /#wrapper -->
 </body>
 

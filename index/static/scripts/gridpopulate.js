@@ -24,7 +24,58 @@ function getParametersByName(name, url) {
 
 }
 
+function setVizLinks(active){
+	if(active) {
+		$("#vis1").hide();
+		$("#vis2").show();
+		$("#vis3").show();
+	} else {
+		$("#vis1").show();
+		$("#vis2").hide();
+		$("#vis3").hide();
+	}
+}
+
+function checkActive(username) {
+	$.ajax({url: '/isactive/'+username, success: function(result){
+        setVizLinks(result.result);
+    } 
+    });
+}
+
+
+function getUserId(username) {
+    $.ajax({url: '/getUserId/'+username, success: function(result){
+        loadProfile(result.result);
+    } 
+    });   
+}
+
+function loadProfile(userId) {
+	window.location.href = "/profile?uId="+userId+"&cId="+userId;
+}
+
 $(document).ready(function () {
+
+	var username = getParametersByName("username");
+	checkActive(username);
+
+	$("#profile").click(function(){
+		var username = getParametersByName(username);
+		getUserId(username);
+
+	});
+
+	$('#search-box').keypress(function (e) {
+	 var key = e.which;
+	 if(key == 13)  // the enter key code
+	  {
+	   var query = $('#search-box').val();
+	   window.location.href = "/searchQuery?query="+query+"&username="+getParametersByName("username");
+	  }
+	});  
+
+
 	jQuery.ajaxSetup({
           beforeSend: function() {
              $('#loader').show();
@@ -35,7 +86,8 @@ $(document).ready(function () {
           success: function() {}
         });
 	
-	var url = "getViewCount";
+		var url = "/getViewCount";
+	
 	//Ajax call to get all the details about the question
 	$.ajax(
 		{

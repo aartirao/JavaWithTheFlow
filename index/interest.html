@@ -69,7 +69,7 @@
         }
         
         function getUserId(username) {
-            $.ajax({url: '/getUserId/'+username, success: function(result){
+            $.ajax({url: '/getUserId/'+getUrlParameter("username"), success: function(result){
                 displayInterestForm(username, result.result);
             } 
             });   
@@ -293,8 +293,6 @@
 
 
         <!-- Custom Theme JavaScript -->
-        <script src="/static/scripts/vendor/sb-admin-2.js"></script>
-        <script src="/static/scripts/gridpopulate.js"></script>
         <div id ="templates" style="display:none;" > </div>
 </body>
 

@@ -26,6 +26,49 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <!-- jQuery -->
+    <script src="/static/scripts/vendor/jquery.js"></script>
+    <script src="/static/scripts/vendor/mustache.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/static/scripts/vendor/bootstrap.js"></script>
+     <script src="/static/scripts/vendor/sb-admin-2.js"></script>
+     <script src="/static/scripts/gridpopulate.js"></script>
+     <script src="/static/scripts/reccom.js"></script>
+    <script>
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };      
+        
+        $(function() {
+           $.ajax({url: '/getsimilarusers/'+getUrlParameter("username"), success: function(result){
+                $("#templates").load("/static/templates/usertemplate.html", function() {
+                    console.log("going on..");
+                    var template = document.getElementById('usertemplate').innerHTML;
+                    qList = result.result;
+                    for(var i=0; i<qList.length; i++) {
+                        console.log("loop");
+                        var output = Mustache.render(template, qList[i]);
+                        $("#user-follow-list").append(output);
+                        console.log(qList[i]);
+                        }                        
+                    });                
+                } 
+            });
+       });    
+    
+    </script>
 
 </head>
 
@@ -42,7 +85,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/mainPage?username={{username}}">Java With the flow !</a>
+                <a class="navbar-brand tagline" href="/mainPage?username={{username}}">Java With the flow !</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -51,10 +94,10 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{username}} <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="portfolio-1-col.html">My Questions</a>
+                                <a href="/myquestions?username={{username}}">My Questions</a>
                             </li>
                             <li>
-                                <a href="portfolio-2-col.html">My Answers</a>
+                                <a href="/myanswers?username={{username}}">My Answers</a>
                             </li>
                             
                         </ul>
@@ -73,7 +116,7 @@
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a id="profile" href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        <li><a id="profile" href="/profile?username={{username}}"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
                         
                         <li class="divider"></li>
@@ -90,31 +133,34 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
-                            <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="Search...">
-                                <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                            </div>
+                            
                             <!-- /input-group -->
                             <!--  <li>
                             <a href="tables.html"><i class="fa fa-table fa-fw"></i> All Activities</a>
                         </li> -->
                         <br>
                         <li>
-                            <a href="forms.html">My Answers </a>
+                            <a href="/myanswers?username={{username}}">My Answers </a>
                         </li>
                         <li>
-                            <a href="forms.html">My Questions </a>
+                            <a href="/myquestions?username={{username}}">My Questions </a>
                         </li>
                         <li>
-                            <a href="forms.html"> Bookmarks </a>
+                            <a href="/bookmarkList?username={{username}}"> Bookmarks </a>
                         </li>
                         <li>
-                            <a href="forms.html">Interests </a>
+                            <a href="/interest?username={{username}}">Interests </a>
                         </li>
+                        <li>
+                            <a id="vis1" style="display: none" href="/bubble?username={{username}}">Visualization - Trending topics in Interests </a>
+                        </li>
+                        <li>
+                            <a id="vis2" style="display: none" href="/stack?username={{username}}">Visualization - Topic-wise contributions  </a>
+                        </li>
+                        <li>
+                            <a id="vis3" style="display: none" href="/topicvis?username={{username}}">Visualization - Time spent under each category </a>
+                        </li>
+
                        
                     </ul>
                 </div>
@@ -129,20 +175,34 @@
                     <!--<h3 class="page-header">Welcome name !!!</h3>-->
                 </div>
                 <!-- /.col-lg-12 -->
-            <div class="row">
-                <div class="col-lg-12 col-md-6">
-                  
+            <div class="row search">
+                <div class="col-lg-12">
+                  <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Search
+
+                            <div class="panel-body">
+                              <div class="input-group custom-search-form">
+                                <input id="search-box" type="text" class="form-control" placeholder="Eg. Inheritance">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            </div>
+                        </div>
              
 				</div>
                 
             </div>
                
             <!-- /.row -->
-            <div class="row">
+            <div class="row grid">
                 <div class="col-lg-8">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-bar-chart-o fa-fw"></i> JAVA TOPICS
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Java Topics
 
                             <div class="pull-right">
                               
@@ -199,7 +259,7 @@
                     <!-- /.panel -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-bar-chart-o fa-fw"></i> Related Questions
+                            <i class="fa fa-fw"></i> Recommended Questions
                         </div>
                         <div id="reccobar" class="panel-body">
                             
@@ -216,7 +276,7 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <div class="list-group">
+                            <div id="user-follow-list">
                                
                             </div>
                             <!-- /.list-group -->
@@ -235,20 +295,13 @@
     </div>
     <!-- /#wrapper -->
 
-    <!-- jQuery -->
-    <script src="/static/scripts/vendor/jquery.js"></script>
-    <script src="/static/scripts/vendor/mustache.min.js"></script>
+    
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="/static/scripts/vendor/bootstrap.js"></script>
-
-    <div id="templates"></div>
+    <div style="display:none" id="templates"></div>
   
 
     <!-- Custom Theme JavaScript -->
-    <script src="/static/scripts/vendor/sb-admin-2.js"></script>
-     <script src="/static/scripts/gridpopulate.js"></script>
-     <script src="/static/scripts/reccom.js"></script>
+   
 
 </body>
 

@@ -97,13 +97,11 @@ def getUserId(username):
 		#Get user id
 		with connection.cursor() as cursor:
 			sql = "SELECT `Id` from `Users` where `DisplayName` = %s"
-			cursor.execute(sql, (username))
+			count = cursor.execute(sql, (username))
 			result = cursor.fetchone()
-			if result[u'Id']:
-				return result[u'Id']
-
-		connection.commit()
-		return 0 
+			if count > 0:
+				return result[u'Id']            		
+		return -1
 	except Exception, e:
 		print traceback.print_exc()
 		return -1

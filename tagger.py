@@ -43,7 +43,7 @@ def putTags(tags):
             i = i + 1
             
             
-def getTagFrequency(username):
+def getTagFrequency(userid):
     i = 1
     result = {}
     with connection.cursor() as cursor:
@@ -55,8 +55,8 @@ def getTagFrequency(username):
         for tag in Tags:
             tags[tag[u'TagName']] = tag[u'TopicId']
         
-        query2 = "select TopicId, Weight from UserInterests where DisplayName = %s order by Weight desc Limit 5"
-        cursor.execute(query2, (username))
+        query2 = "select TopicId, Weight from UserInterests where UserId = %s order by Weight desc Limit 5"
+        cursor.execute(query2, (userid))
         Interests = cursor.fetchall()
         query3 = "SELECT Distinct(Tags) as Tags from Posts where Id in (SELECT PT.PostId from Topics as T join PostTopicMap as PT on \
                 PT.TopicId = T.Id where T.Id = %s or T.Id = %s or T.Id = %s or T.Id = %s or T.Id = %s)"
