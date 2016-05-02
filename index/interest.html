@@ -71,17 +71,30 @@
         $( document ).ready(function() {
             $("#submitinterest").click(function(){
             console.log("submit interest");
-            var userid = getUrlParameter("userId");
+            var username = getUrlParameter("username");
+                getUserId(username);
+            });
+
+        });
+
+        function getUserId(username) {
+            $.ajax({url: '/getUserId/'+username, success: function(result){
+                sendInterests(result.result);
+            } 
+            });   
+        }
+
+        function sendInterests(userId) {
             var data = [];
             $('.ranger').each(function () {
                 str = this.name;
                 str = str.substring(0,str.indexOf("Topic"));
-                json = { "UserId": userid, "TopicId": str, "Weight": this.value};
+                json = { "UserId": userId, "TopicId": str, "Weight": this.value};
                 data.push(json);
             }); 
             setInterests(data);
-            });
-        });
+            window.location.href = "/mainPage?username="+getUrlParameter("username");
+        }
 
         function setInterests(data){
             $.ajax({
