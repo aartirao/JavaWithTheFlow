@@ -70,6 +70,7 @@ TagId INT
 CREATE TABLE Tags(
 Id  INT,
 TagName  VARCHAR(200),
+TopicId int,
 Count  INT
 );
 
