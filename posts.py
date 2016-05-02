@@ -474,7 +474,7 @@ def getSortedQuestionListByTopic(topic, parameter, page):
 		with connection.cursor() as cursor:
 			sql = "SELECT P.Id, P.Title, P.ViewCount, P.OwnerUserId, P.OwnerDisplayName, P.FavouriteCount, P.Tags, \
 			P.AnswerCount, P.CreationDate, P.Usefulness from Posts as P where P.PostTypeId = 1 and P.Id in (select PT.PostId from \
-			Topics as T join PostTopicMap as PT on T.Name = %s and PT.TopicId = T.Id) ORDER BY `%s` LIMIT `%s`,10"
+			Topics as T join PostTopicMap as PT on T.Name = %s and PT.TopicId = T.Id) ORDER BY %s DESC LIMIT %s,10"
 			rowCount = cursor.execute(sql, (topic, parameter, pageNum))	
 			if rowCount > 0:
 				results = cursor.fetchall()

@@ -413,6 +413,7 @@ def callSearch():
 @app.route('/getSortedQuestionList/<topic>/<parameter>', method='GET')
 @app.route('/getSortedQuestionList/<topic>/<parameter>/<page>', method='GET')
 def getQuestionList(topic, parameter, page=1):
+	print topic, parameter, page
 	returnValue = getSortedQuestionListByTopic(topic,parameter,page)
 	if(returnValue == -1):
 		response.status = 404
