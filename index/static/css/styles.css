@@ -99,7 +99,7 @@ th, td {
 
 input[type="range"] {
     width: 200px; 
-    
+    margin-bottom: 15px;
 }
 
 .rangeroutput{
@@ -232,4 +232,8 @@ mark {
 
 .tagline {
     font-size: x-large;
+}
+
+#interestbar {
+    margin-top: 20px;
 }
