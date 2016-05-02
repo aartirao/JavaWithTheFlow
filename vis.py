@@ -32,7 +32,7 @@ def getDataForPie(userId):
 			overalltimespent = cursor.fetchone()
         '''
         with connection.cursor() as cursor:
-            sql = """SELECT DISTINCT P.TopicId, T.Name,U.UserId, SUM(Duration) FROM PostTopicMap P JOIN UserEventStore U ON P.PostId = U.PostId 
+            sql = """SELECT DISTINCT P.TopicId, T.Name,U.UserId, SUM(IFNULL(Duration,0)) FROM PostTopicMap P JOIN UserEventStore U ON P.PostId = U.PostId 
                      JOIN Topics T ON P.TopicId = T.Id 
                      WHERE U.EventId = 2 AND U.UserId = %s GROUP BY P.TopicId, U.UserId, T.Name"""
             cursor.execute(sql, (userId))
@@ -46,7 +46,7 @@ def getDataForPie(userId):
             
             topicData = {
                          "Name" : topicname,
-                         "Duration" : str(item["SUM(Duration)"])
+                         "Duration" : str(item["SUM(IFNULL(Duration,0))"])
                          }
             returnData.append(topicData)
             

@@ -208,7 +208,11 @@ def getComments(parentId, uId):
 	comment = {}
 	try:
 		with connection.cursor() as cursor:
-			sql = "SELECT * FROM `Comments` WHERE `PostId` = %s"
+			sql = """SELECT C.Id AS Id, C.CreationDate AS CreationDate, C.Text AS Text, 
+					 C.UserId AS UserId, U.DisplayName AS UserDisplayName
+					 FROM Comments C JOIN Users U
+					 ON C.UserId = U.Id
+					 WHERE C.PostId = %s"""
 			rowCount = cursor.execute(sql, (parentId))
 			if rowCount > 0:
 				results = cursor.fetchall()
@@ -262,7 +266,12 @@ def getAnswers(parentId, userId):
 	try:
 		#Select the answer with the particular id
 		with connection.cursor() as cursor:
-			sql = "SELECT * FROM `Posts` WHERE `ParentId` = %s"
+			sql = """SELECT P.Id AS Id, P.PostTypeId AS PostTypeId, P.Title AS Title, P.Body AS Body, 
+					 P.CreationDate AS CreationDate, P.OwnerUserId AS OwnerUserId, P.Score AS Score,
+					 P.AcceptedAnswerId AS AcceptedAnswerId, U.DisplayName AS OwnerDisplayName
+					 FROM Posts P JOIN Users U
+					 ON P.OwnerUserId = U.Id
+					 WHERE P.ParentId =  %s"""
 			rowCount = cursor.execute(sql, (parentId))
 			if rowCount > 0:
 				results = cursor.fetchall()
@@ -363,10 +372,22 @@ def getQuestion(data,user):
 	try:
 		#Select the question with the particular postId
 		with connection.cursor() as cursor:
-			sql = "SELECT * FROM `Posts` WHERE `Id` = %s"
+			sql = """SELECT P.Id AS Id, P.PostTypeId AS PostTypeId, P.Title AS Title, P.Body AS Body,
+				 	 P.CreationDate AS CreationDate, P.OwnerUserId AS OwnerUserId, P.Score AS Score, P.Tags AS Tags,
+					 P.AcceptedAnswerId AS AcceptedAnswerId, U.DisplayName AS OwnerDisplayName, P.AnswerCount AS AnswerCount
+					 FROM Posts P JOIN Users U
+					 ON P.OwnerUserId = U.Id
+					 WHERE P.Id =  %s"""
 			rowCount = cursor.execute(sql, (qId))
 			if rowCount > 0:
 				results = cursor.fetchall()
+				sql = """SELECT COUNT(*) AS Count FROM Bookmarks WHERE UserId = %s AND PostId = %s
+					 AND isDeleted = 0"""
+				cursor.execute(sql,(uId, qId))
+				bookmarkcount = cursor.fetchone()
+				isbookmark = bookmarkcount["Count"]
+				if isbookmark >= 1:
+					isbookmark = 1
 				for row in results:																
 					postId = row[u'Id']
 					postTypeId = row[u'PostTypeId']
@@ -386,7 +407,8 @@ def getQuestion(data,user):
 					askedUserProfile = "/profile?uId="+str(askedByUserId)+"&cId="+str(uId)
 					noOfAnswers = row[u'AnswerCount']
 					acceptedAnswerId = row[u'AcceptedAnswerId']
-
+			
+				
 					question =  {
 						"postId": postId,
 						"postTypeId": postTypeId,
@@ -405,7 +427,8 @@ def getQuestion(data,user):
 						"askedbyUserId": askedByUserId,
 						"askedUserProfile": askedUserProfile,
 						"noOfAnswers": noOfAnswers,
-						"acceptedAnswerId" : acceptedAnswerId
+						"acceptedAnswerId" : acceptedAnswerId,
+						"isBookMarked" : isbookmark
 	  				}
 
 		comments = getComments(qId, uId)
@@ -625,3 +648,5 @@ def getInterestOfUser(userId):
 	except Exception, e:
 		print traceback.print_exc()
 		return -1
+		
+
