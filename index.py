@@ -389,8 +389,9 @@ def bookmarkList():
 	return template('index/bookmarks.html',username=username)
 
 @app.route('/profile', method = 'GET')
-def profile():
-	return template('index/profile.html')
+def interest():
+	username = request.GET.get('username')
+	return template('index/profile.html',username=username)
 
 @app.route('/piechartdata/<userName>', method = "GET")
 def getpiechartdata(userName):
@@ -412,7 +413,6 @@ def callSearch():
 @app.route('/getSortedQuestionList/<topic>/<parameter>', method='GET')
 @app.route('/getSortedQuestionList/<topic>/<parameter>/<page>', method='GET')
 def getQuestionList(topic, parameter, page=1):
-	print "called"
 	returnValue = getSortedQuestionListByTopic(topic,parameter,page)
 	if(returnValue == -1):
 		response.status = 404

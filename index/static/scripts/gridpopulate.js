@@ -24,7 +24,36 @@ function getParametersByName(name, url) {
 
 }
 
+
+function getUserId(username) {
+    $.ajax({url: '/getUserId/'+username, success: function(result){
+        loadProfile(result.result);
+    } 
+    });   
+}
+
+function loadProfile(userId) {
+	window.location.href = "/profile?uId="+userId+"&cId="+userId;
+}
+
 $(document).ready(function () {
+
+	$("#profile").click(function(){
+		var username = getParametersByName(username);
+		getUserId(username);
+
+	});
+
+	$('#search-box').keypress(function (e) {
+	 var key = e.which;
+	 if(key == 13)  // the enter key code
+	  {
+	   var query = $('#search-box').val();
+	   window.location.href = "/searchQuery?query="+query+"&username="+getParametersByName("username");
+	  }
+	});  
+
+
 	jQuery.ajaxSetup({
           beforeSend: function() {
              $('#loader').show();
@@ -35,7 +64,8 @@ $(document).ready(function () {
           success: function() {}
         });
 	
-	var url = "getViewCount";
+		var url = "/getViewCount";
+	
 	//Ajax call to get all the details about the question
 	$.ajax(
 		{
