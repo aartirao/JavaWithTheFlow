@@ -400,7 +400,12 @@ def getQuestion(data,user):
 					askedUserProfile = "/profile?uId="+str(askedByUserId)+"&cId="+str(uId)
 					noOfAnswers = row[u'AnswerCount']
 					acceptedAnswerId = row[u'AcceptedAnswerId']
-
+			sql = """SELECT COUNT(*) AS Count FROM Bookmarks WHERE UserId = %s AND PostId = %s
+					 AND isDeleted = 0"""
+			cursor.execute(sql,(uId, qId))
+			bookmarkcount = cursor.fetchone()
+			isbookmark = bookmarkcount["Count"]
+			
 					question =  {
 						"postId": postId,
 						"postTypeId": postTypeId,
@@ -419,7 +424,8 @@ def getQuestion(data,user):
 						"askedbyUserId": askedByUserId,
 						"askedUserProfile": askedUserProfile,
 						"noOfAnswers": noOfAnswers,
-						"acceptedAnswerId" : acceptedAnswerId
+						"acceptedAnswerId" : acceptedAnswerId,
+						"isBookMarked" : isbookmark
 	  				}
 
 		comments = getComments(qId, uId)
