@@ -29,9 +29,10 @@ PUT - 200 - OK, 404 - Not Found
 '''
 app = Bottle()
 
-@app.route('/hello')
+@app.route('/bubble')
 def hello():
-    return template('index/viz1.html')
+	username = request.GET.get('username')
+	return template('index/viz1.html',username=username)
 
 @app.route('/mainPage')
 def index():
