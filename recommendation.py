@@ -78,8 +78,18 @@ def getSimilarUsers(user):
 
 		scores.sort()
 		scores.reverse()
+		scores = scores[0:5]		
 		similarUsers = [row[1] for row in scores]
-		return similarUsers[0:5]
+		
+		users = []
+		for user in similarUsers:
+			with connection.cursor() as cursor:
+				sql = """select `Id`, `DisplayName` from `Users` where Id = %s"""
+				rowCount = cursor.execute(sql, (user))
+				res = cursor.fetchone()
+				users.append(res)
+		
+		return users
 	except Exception, e:
 		print traceback.print_exc()
 		return -1

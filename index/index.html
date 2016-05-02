@@ -26,6 +26,49 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <!-- jQuery -->
+    <script src="/static/scripts/vendor/jquery.js"></script>
+    <script src="/static/scripts/vendor/mustache.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/static/scripts/vendor/bootstrap.js"></script>
+     <script src="/static/scripts/vendor/sb-admin-2.js"></script>
+     <script src="/static/scripts/gridpopulate.js"></script>
+     <script src="/static/scripts/reccom.js"></script>
+    <script>
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };      
+        
+        $(function() {
+           $.ajax({url: '/getsimilarusers/'+getUrlParameter("username"), success: function(result){
+                $("#templates").load("/static/templates/usertemplate.html", function() {
+                    console.log("going on..");
+                    var template = document.getElementById('usertemplate').innerHTML;
+                    qList = result.result;
+                    for(var i=0; i<qList.length; i++) {
+                        console.log("loop");
+                        var output = Mustache.render(template, qList[i]);
+                        $("#user-follow-list").append(output);
+                        console.log(qList[i]);
+                        }                        
+                    });                
+                } 
+            });
+       });    
+    
+    </script>
 
 </head>
 
@@ -216,7 +259,7 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <div class="list-group">
+                            <div id="user-follow-list">
                                
                             </div>
                             <!-- /.list-group -->
@@ -235,20 +278,13 @@
     </div>
     <!-- /#wrapper -->
 
-    <!-- jQuery -->
-    <script src="/static/scripts/vendor/jquery.js"></script>
-    <script src="/static/scripts/vendor/mustache.min.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="/static/scripts/vendor/bootstrap.js"></script>
+    
 
     <div id="templates"></div>
   
 
     <!-- Custom Theme JavaScript -->
-    <script src="/static/scripts/vendor/sb-admin-2.js"></script>
-     <script src="/static/scripts/gridpopulate.js"></script>
-     <script src="/static/scripts/reccom.js"></script>
+   
 
 </body>
 
