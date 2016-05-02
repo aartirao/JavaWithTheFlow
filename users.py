@@ -27,6 +27,7 @@ def follow(data):
 			sql = "SELECT COUNT(*) FROM `FollowDetails` WHERE `UserId` = %s AND `FollowingUserId` = %s"
 			cursor.execute(sql, (currentUserId, followUserId))
 			count = cursor.fetchone()
+            count = count["COUNT(*)"]
 		if count > 0:
 		    #Update the row
 			with connection.cursor() as cursor:
