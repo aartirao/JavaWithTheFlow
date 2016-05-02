@@ -114,28 +114,28 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/mainPage">Java With the flow !</a>
+                <a class="navbar-brand" href="/mainPage?username={{username}}">Java With the flow !</a>
             </div>
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
-                <li class="dropdown">
+                  <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{username}} <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="portfolio-1-col.html">Question</a>
+                                <a href="/myquestions?username={{username}}">My Questions</a>
                             </li>
                             <li>
-                                <a href="portfolio-2-col.html">Answer</a>
+                                <a href="/myanswers?username={{username}}">My Answers</a>
                             </li>
+                            
                         </ul>
                     </li>
-                    
                     <li>
-                        <a href="services.html">Home</a>
+                        <a href="/mainPage?username={{username}}">Home</a>
                     </li>
                     <li>
-                        <a href="contact.html">Profile</a>
+                        <a id="profile" href="/profile?uId={{username}}&cId={{username}}">Profile</a>
                     </li>
                    
                 <li class="dropdown">
@@ -180,32 +180,27 @@
                             </span>
                             </div>
                             <!-- /input-group -->
-                             <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> All Activities</a>
-                        </li>
-                        <br>
-                        <li>
-                            <a href="forms.html"> Answers </a>
+                              <li>
+                            <a href="/myanswers?username={{username}}">My Answers </a>
                         </li>
                         <li>
-                            <a href="forms.html"> Questions </a>
+                            <a href="/myquestions?username={{username}}">My Questions </a>
                         </li>
                         <li>
-                            <a href="forms.html"> Bookmarks </a>
+                            <a href="/bookmarkList?username={{username}}"> Bookmarks </a>
                         </li>
                         <li>
-                            <a href="forms.html">Interests </a>
+                            <a href="/interest?username={{username}}">Interests </a>
                         </li>
                         <li>
-                            <a href="forms.html">Followers </a>
+                            <a id="vis1" style="display: none" href="/bubble?username={{username}}">Visualization - Trending topics in Interests </a>
                         </li>
                         <li>
-                            <a href="forms.html"> Following </a>
+                            <a id="vis2" style="display: none" href="/stack?username={{username}}">Visualization - Topic-wise contributions  </a>
                         </li>
                         <li>
-                            <a href="forms.html"> Account </a>
+                            <a id="vis3" style="display: none" href="/topicvis?username={{username}}">Visualization - Time spent under each category </a>
                         </li>
-                            
                        
                     </ul>
                 </div>

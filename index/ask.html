@@ -52,36 +52,47 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Java With the flow !</a>
+                <a class="navbar-brand" href="/mainPage?username={{username}}">Java With the flow !</a>
             </div>
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
-
-                <li>
-                    <a href="services.html">Home</a>
-                </li>
-                <li>
-                    <a href="contact.html">Profile</a>
-                </li>
-
+               
 
                 <!-- /.dropdown -->
-                <li class="dropdown">
+               <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{username}} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="/myquestions?username={{username}}">My Questions</a>
+                            </li>
+                            <li>
+                                <a href="/myanswers?username={{username}}">My Answers</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/mainPage?username={{username}}">Home</a>
+                    </li>
+                    <li>
+                        <a id="profile" href="">Profile</a>
+                    </li>
+                <!-- /.dropdown -->
+                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        <li><a id="profile" href="/profile?username={{username}}"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
-
+                        
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="/loginPage"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
                 </li>
-                <!-- /.dropdown -->
             </ul>
             <!-- /.navbar-top-links -->
 
@@ -99,27 +110,27 @@
                             </div>
                             <!-- /input-group -->
                             <li>
-                                <a href="tables.html"><i class="fa fa-table fa-fw"></i> All Activities</a>
-                            </li>
-                            <br>
-                            <li>
-                                <a href="forms.html">My Answers </a>
-                            </li>
-                            <li>
-                                <a href="forms.html">My Questions </a>
-                            </li>
-                            <li>
-                                <a href="forms.html"> Bookmarks </a>
-                            </li>
-                            <li>
-                                <a href="forms.html">Interests </a>
-                            </li>
-                            <li>
-                                <a href="forms.html">Followers </a>
-                            </li>
-                            <li>
-                                <a href="forms.html"> Following </a>
-                            </li>
+                            <a href="/myanswers?username={{username}}">My Answers </a>
+                        </li>
+                        <li>
+                            <a href="/myquestions?username={{username}}">My Questions </a>
+                        </li>
+                        <li>
+                            <a href="/bookmarkList?username={{username}}"> Bookmarks </a>
+                        </li>
+                        <li>
+                            <a href="/interest?username={{username}}">Interests </a>
+                        </li>
+                        <li>
+                            <a id="vis1" style="display: none" href="/bubble?username={{username}}">Visualization - Trending topics in Interests </a>
+                        </li>
+                        <li>
+                            <a id="vis2" style="display: none" href="/stack?username={{username}}">Visualization - Topic-wise contributions  </a>
+                        </li>
+                        <li>
+                            <a id="vis3" style="display: none" href="/topicvis?username={{username}}">Visualization - Time spent under each category </a>
+                        </li>
+
 
 
                     </ul>
@@ -131,8 +142,7 @@
 
         <div id="page-wrapper">
             <div class="row">
-                <div class="col-sm-12">
-                    <h3 class="page-header">Welcome name !!!</h3>
+                <div class="col-sm-12">                    
                 </div>
                 <!-- /.col-lg-12 -->
                 <div class="row">
@@ -199,35 +209,7 @@
                     <!-- /.col-lg-8 -->
                     <div class="col-lg-4">
 
-                        <!-- /.panel -->
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <i class="fa fa-bar-chart-o fa-fw"></i> Donut Chart Example
-                            </div>
-                            <div class="panel-body">
-                                <div id="morris-donut-chart"></div>
-                                <a href="#" class="btn btn-default btn-block">View Details</a>
-                            </div>
-                            <!-- /.panel-body -->
-                        </div>
-
-
-
-
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                Tracking your position
-                            </div>
-                            <!-- /.panel-heading -->
-                            <div class="panel-body">
-                                <div class="list-group">
-
-                                </div>
-                                <!-- /.list-group -->
-
-                            </div>
-                            <!-- /.panel-body -->
-                        </div>
+                       
                     </div>
 
 
