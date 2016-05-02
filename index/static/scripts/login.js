@@ -53,7 +53,7 @@ $(document).ready(function () {
 		  contentType: 'application/json'
 		}).done(function( msg ) {
 		  console.log("User logged in");
-		  window.location.href = "/mainPage?username="+username;
+		  window.location.href = "/interests?username="+username;
 
 		}).fail(function( jqXHR, textStatus ) {
 		  alert( "Request failed: " + textStatus );

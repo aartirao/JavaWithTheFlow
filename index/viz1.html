@@ -46,8 +46,22 @@ text {
 <script src="/static/scripts/vendor/jquery.js"></script>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script>
-var userId;
-getUserId();
+
+function getParametersByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)", "i"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    console.log(results[2].replace(/\+/g, " "));
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+
+}
+
+var username;
+username = getParametersByName("username");
+getUserId(username);
 
 function getUserId(username) {
     $.ajax({url: '/getUserId/'+username, success: function(result){
@@ -108,8 +122,8 @@ function bubble(root) {
     d3.select(self.frameElement).style("height", diameter + "px");   
  }
 
- function setData() {
-      $.ajax({url: '/getTagCloudList/821742', success: function(result){
+ function setData(userId) {
+      $.ajax({url: '/getTagCloudList/'+userId, success: function(result){
              bubble(result);  
       }}); 
     }
@@ -126,7 +140,7 @@ function bubble(root) {
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Java With the flow !</a>
+                <a class="navbar-brand" href="/mainPage?username={{username}}">Java With the flow !</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -172,9 +186,6 @@ function bubble(root) {
                             </span>
                             </div>
                             <!-- /input-group -->
-                            <li>
-                                <a href="tables.html"><i class="fa fa-table fa-fw"></i> All Activities</a>
-                            </li>
                             <br>
                             <li>
                                 <a href="forms.html">My Answers </a>
@@ -188,13 +199,6 @@ function bubble(root) {
                             <li>
                                 <a href="forms.html">Interests </a>
                             </li>
-                            <li>
-                                <a href="forms.html">Followers </a>
-                            </li>
-                            <li>
-                                <a href="forms.html"> Following </a>
-                            </li>
-
 
                     </ul>
                 </div>
@@ -206,7 +210,7 @@ function bubble(root) {
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-sm-12">
-                    <h3 class="page-header">Welcome name !!!</h3>
+                    
                 </div>
                 <!-- /.col-lg-12 -->
                 <div class="row">
@@ -223,7 +227,7 @@ function bubble(root) {
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <i class="fa fa-bar-chart-o fa-fw"></i>
-                                <h3 id="heading">Visualizations</h3>
+                                <h3 id="heading">Trends - Popular tags</h3>
                                 <div class="pull-right">
 
                                 </div>
