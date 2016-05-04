@@ -3,7 +3,7 @@ import datetime
 import json
 import traceback
 import ConfigParser
-
+import random
 config = ConfigParser.ConfigParser()
 config.read('db.cfg')
 
@@ -64,13 +64,14 @@ try:
 
                 if(a['ViewCount'] == None):
                     a['ViewCount'] = 0
-                    usefulness = (((a['ViewCount']) * 1 )+ (sumOfDuration * 2) + (SelectTextScore * 3) ) + user_rating
+                    randomNumber=random.randint(10,300)
+                    usefulness = (((a['ViewCount']) * 1 )+ (sumOfDuration * 2) + (SelectTextScore * 3) ) + user_rating + randomNumber
                 else:
-                    usefulness = (((a['ViewCount']) * 1 )+ (sumOfDuration * 2) + (SelectTextScore * 3) ) + user_rating
+                    usefulness = (((a['ViewCount']) * 1 )+ (sumOfDuration * 2) + (SelectTextScore * 3) ) + user_rating + randomNumber
 
                 with connection.cursor() as cursor:
                  sql = """UPDATE `Posts` SET
-                 `Usefulness` = %s   WHERE Id = %s"""
+                 `usefulness` = %s   WHERE Id = %s"""
                  cursor.execute(sql, (usefulness,a['Id']))
                 print(a['Id'])
                 usefulness=0
