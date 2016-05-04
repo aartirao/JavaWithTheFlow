@@ -32,7 +32,32 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    
+    <script>
+          var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };   
+        $(function() {
+            $('#search-box').keypress(function (e) {
+                var key = e.which;
+                if(key == 13)  // the enter key code
+                {
+                    var query = $('#search-box').val();
+                    window.location.href = "/searchQuery?query="+query+"&username="+getUrlParameter("username");
+                }
+            });              
+        });    
+    </script>
     <script type="text/javascript">
         var getUrlParameter = function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -134,50 +159,40 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/mainPage">Java With the flow !</a>
+                <a class="navbar-brand" href="/mainPage?username={{username}}">Java With the flow !</a>
             </div>
             <!-- /.navbar-header -->
 
-            <ul class="nav navbar-top-links navbar-right">
+             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{username   }} <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{username}} <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="portfolio-1-col.html">Question</a>
+                                <a href="/myquestions?username={{username}}">My Questions</a>
                             </li>
                             <li>
-                                <a href="portfolio-2-col.html">Answer</a>
+                                <a href="/myanswers?username={{username}}">My Answers</a>
                             </li>
                             
                         </ul>
                     </li>
-                    
                     <li>
-                        <a href="services.html">Home</a>
+                        <a href="/mainPage?username={{username}}">Home</a>
                     </li>
                     <li>
-                        <a href="contact.html">Profile</a>
+                        <a id="profile" href="/profile?uId={{username}}&cId={{username}}">Profile</a>
                     </li>
                    
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-alerts">
-                       
-                    </ul>
-                    <!-- /.dropdown-alerts -->
-                </li>
+             
                 <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        <li><a id="profile" href="/profile?username={{username}}"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                        </li>
+                        
                         <li class="divider"></li>
                         <li><a href="/loginPage"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
@@ -193,7 +208,7 @@
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
                             <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="Search...">
+                                <input id="search-box" type="text" class="form-control" placeholder="Eg. Inheritance">
                                 <span class="input-group-btn">
                                 <button class="btn btn-default" type="button">
                                     <i class="fa fa-search"></i>
