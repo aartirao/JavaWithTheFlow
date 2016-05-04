@@ -10,10 +10,6 @@
     <meta name="author" content="">
 
     <title>Java With flow</title>
-    <script src="/static/scripts/vendor/jquery.js"></script>
-    <script src="/static/scripts/vendor/bootstrap.js"></script>
-    <script src="/static/scripts/vendor/jquery-ui.js"></script>
-    <script src="/static/scripts/vendor/mustache.min.js"></script>
     <!-- Bootstrap Core CSS -->
     <link href="/static/css/bootstrap.css" rel="stylesheet">
     
@@ -29,6 +25,14 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    
+    <script src="/static/scripts/vendor/jquery.js"></script>
+    <script src="/static/scripts/vendor/bootstrap.js"></script>
+    <script src="/static/scripts/vendor/sb-admin-2.js"></script>
+    <script src="/static/scripts/vendor/jquery-ui.js"></script>
+    <script src="/static/scripts/vendor/mustache.min.js"></script>
+    <script src="/static/scripts/vendor/sb-admin-2.js"></script>
+    <script src="/static/scripts/activateViz.js"></script>
     <script>
         var getUrlParameter = function getUrlParameter(sParam) {
             var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -151,39 +155,37 @@
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
- <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{username}} <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="/myquestions?username={{username}}">My Questions</a>
-                            </li>
-                            <li>
-                                <a href="/myanswers?username={{username}}">My Answers</a>
-                            </li>
-                            
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="/mainPage?username={{username}}">Home</a>
-                    </li>
-                    <li>
-                        <a id="profile" href="/profile?uId={{username}}&cId={{username}}">Profile</a>
-                    </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{username}} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="/myquestions?username={{username}}">My Questions</a>
+                        </li>
+                        <li>
+                            <a href="/myanswers?username={{username}}">My Answers</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="/mainPage?username={{username}}">Home</a>
+                </li>
+                <li>
+                    <a id="profile" href="/profile?uId={{userid}}&cId={{userid}}">Profile</a>
+                </li>
                    
-             
                 <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <a id="profile" href="/profile?uId={{username}}&cId={{username}}">Profile</a>
+                        <li><a id="profile" href="/profile?uId={{userid}}&cId={{userid}}"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
                         
                         <li class="divider"></li>
                         <li><a href="/loginPage"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
-                    </ul>                    
+                    </ul>
                     <!-- /.dropdown-user -->
                 </li>
                 <!-- /.dropdown -->

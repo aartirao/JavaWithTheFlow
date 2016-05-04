@@ -3,8 +3,8 @@ import pymysql.cursors
 
 
 from posts import saveAnswer, saveComment, addQuestion, getQuestion, getViewCount, \
-		getSortedQuestionListByTopic, saveUserRating, createBookmark, getQuestionListByBookmark, createUserInterest, \
-		getInterestOfUser
+        getSortedQuestionListByTopic, saveUserRating, createBookmark, getQuestionListByBookmark, createUserInterest, \
+        getInterestOfUser
 from users import checkPassword, createUser, getUserId, isActive, getMyQuestions, getMyAnswerQuestions
 from browserEvents import updateTimeSpent, updateSelectAction,updateViewCount
 from recommendation import recommendQuestions, getSimilarUsersForUI
@@ -31,13 +31,15 @@ app = Bottle()
 
 @app.route('/bubble')
 def hello():
-	username = request.GET.get('username')
-	return template('index/viz1.html',username=username)
+    username = request.GET.get('username')
+    userid = getUserId(username)
+    return template('index/viz1.html',username=username, userid=userid)
 
 @app.route('/mainPage')
 def index():
-	username = request.GET.get('username')
-	return template('index/index.html', username=username)
+    username = request.GET.get('username')
+    userid = getUserId(username)
+    return template('index/index.html', username=username, userid=userid)
 
 @app.route('/loginPage')
 def index():
@@ -57,8 +59,9 @@ def stylesheets(path):
 @app.route('/posts')
 @app.route('/posts/')
 def index(): 
-	username = request.GET.get('username')
-	return template('index/posts.html', username=username)
+    username = request.GET.get('username')
+    userid = getUserId(username)
+    return template('index/posts.html', username=username, userid=userid)
 
 @app.route('/login', method='POST')
 def login():
@@ -76,162 +79,163 @@ def login():
 #Post service to add answers
 @app.route('/saveAnswer', method='POST')
 def postAnswer():
-	data = request.json
-	returnValue = saveAnswer(data)
-	if(returnValue != -1):
-		response.status = 201
-		return {"status": "successfully saved", "postId": returnValue}
-	else:
-		response.status = 200
-		return {"status": "some error occured"}
+    data = request.json
+    returnValue = saveAnswer(data)
+    if(returnValue != -1):
+        response.status = 201
+        return {"status": "successfully saved", "postId": returnValue}
+    else:
+        response.status = 200
+        return {"status": "some error occured"}
 
 #Post service to add comments
 @app.route('/saveComment', method='POST')
 def postComment():
-	data = request.json
-	returnValue = saveComment(data)
-	if(returnValue == 1):
-		response.status = 201
-		return {"status": "successfully saved"}
-	else:
-		response.status = 200
-		return {"status": "some error occured"}
+    data = request.json
+    returnValue = saveComment(data)
+    if(returnValue == 1):
+        response.status = 201
+        return {"status": "successfully saved"}
+    else:
+        response.status = 200
+        return {"status": "some error occured"}
 
-		response.status = 200
-		return {"status": "successfully retrieved", "data": returnValue}
+        response.status = 200
+        return {"status": "successfully retrieved", "data": returnValue}
 
 #Post service to add questions
 @app.route('/addQuestion', method='POST')
 def postQuestion():
-	data = request.json
-	returnValue = addQuestion(data)
-	if(returnValue == 1):
-		response.status = 201
-		return {"status": "successfully saved"}
-	else:
-		response.status = 200
-		return {"status": "some error occured"}
+    data = request.json
+    returnValue = addQuestion(data)
+    if(returnValue == 1):
+        response.status = 201
+        return {"status": "successfully saved"}
+    else:
+        response.status = 200
+        return {"status": "some error occured"}
 
 #Get service to retrieve posts
 @app.route('/getQuestion/<qId>', method ='GET')
 @app.route('/getQuestion/<qId>/<uId>', method ='GET')
 def findQuestion(qId,uId=0):
-	returnValue = getQuestion(qId,uId)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "successfully retrieved", "data": returnValue}
+    returnValue = getQuestion(qId,uId)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "successfully retrieved", "data": returnValue}
 
 #Get service to retrieve view counts
 @app.route('/getViewCount', method ='GET')
 def getViews():
-	returnValue = getViewCount()
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
- 		response.status = 200
- 		return {"status": "successfully retrieved", "data": returnValue}
+    returnValue = getViewCount()
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "successfully retrieved", "data": returnValue}
 
 #Method to get the list of questions for a topic (First page of results)
 @app.route('/getQuestionList/<topic>', method='GET')
 def getQuestionList(topic):
-	#returnValue = getQuestionListByTopic(topic)
-	returnValue = searchQuery(topic, 70)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "successfully retrieved", "data": returnValue}
+    #returnValue = getQuestionListByTopic(topic)
+    returnValue = searchQuery(topic, 70)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "successfully retrieved", "data": returnValue}
 
 #Method to get the list of questions for a topic (Pages 2 to 5)
 @app.route('/getQuestionList/<topic>/<pageId>', method='GET')
 def getQuestionListResults(topic, pageId):
-	returnValue = fetchResults(pageId)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "successfully retrieved", "data": returnValue}
+    returnValue = fetchResults(pageId)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "successfully retrieved", "data": returnValue}
 
 #Method to update the time spend by user in a page
 @app.route('/updateTime', method = 'POST')
 def updateTime():
-	data = request.json
-	returnValue = updateTimeSpent(data)
-	if(returnValue == 1):
-		response.status = 201
-		return {"status": "successfully saved"}
-	else:
-		response.status = 200
-		return {"status": "some error occured"}
+    data = request.json
+    returnValue = updateTimeSpent(data)
+    if(returnValue == 1):
+        response.status = 201
+        return {"status": "successfully saved"}
+    else:
+        response.status = 200
+        return {"status": "some error occured"}
 
 #Method to update the text selection action performed by the user
 @app.route('/updateSelectAction', method = 'POST')
 def updateSelect():
-	data = request.json
-	returnValue = updateSelectAction(data)
-	if returnValue == 1:
-		response.status = 201
-		return {"status": "successfully saved"}
-	else:
-		response.status = 200
-		return {"status": "some error occured"}
+    data = request.json
+    returnValue = updateSelectAction(data)
+    if returnValue == 1:
+        response.status = 201
+        return {"status": "successfully saved"}
+    else:
+        response.status = 200
+        return {"status": "some error occured"}
 
 #Method to return search results for a given query (Page 1)
 @app.route('/search/<query>', method = 'GET')
 def callSearch(query):
-	returnValue = searchQuery(query, 70)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "successfully retrieved", "data": returnValue}
-	
+    returnValue = searchQuery(query, 70)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "successfully retrieved", "data": returnValue}
+    
 #Method to return search results for a given query (Pages 2 to 5)
-@app.route('/search/<query>/<pageId>', method = 'GET')	
+@app.route('/search/<query>/<pageId>', method = 'GET')  
 def callSearchResults(query, pageId):
-	returnValue = fetchResults(pageId)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "successfully retrieved", "data": returnValue}
+    returnValue = fetchResults(pageId)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "successfully retrieved", "data": returnValue}
 
 #Method to save the user ratings
 @app.route('/saveUserRating', method = 'POST')
 def saveUserRatingScore():
-	data = request.json
-	returnValue = saveUserRating(data)
-	if(returnValue == 1):
-		response.status = 201
-		return {"status": "successfully saved"}
-	else:
-		response.status = 200
-		return {"status": "some error occured"}
-		
+    data = request.json
+    returnValue = saveUserRating(data)
+    if(returnValue == 1):
+        response.status = 201
+        return {"status": "successfully saved"}
+    else:
+        response.status = 200
+        return {"status": "some error occured"}
+        
 #Method to updating view count
 @app.route('/updateViewCount', method = 'POST')
 def updateViewCountForQuestions():
-	data = request.json
-	returnValue = updateViewCount(data)
-	if(returnValue == 1):
-		response.status = 201
-		return {"status": "successfully saved"}
-	else:
-		response.status = 200
-		return {"status": "some error occured"}
+    data = request.json
+    returnValue = updateViewCount(data)
+    if(returnValue == 1):
+        response.status = 201
+        return {"status": "successfully saved"}
+    else:
+        response.status = 200
+        return {"status": "some error occured"}
 
 @app.route('/questionList', method='GET')
 def questionList():
-	username = request.GET.get('username')
-	return template('index/questions.html',username=username)
+    username = request.GET.get('username')
+    userid = getUserId(username)
+    return template('index/questions.html',username=username, userid=userid)
 
 
 """ Sample
@@ -243,34 +247,34 @@ def questionList():
 
 @app.route('/bookmark', method='POST')
 def addBookmark():
-	data = request.json	
-	returnValue = createBookmark(data['UserId'], data['PostId'])
-	if returnValue == 1:
-		response.status = 201
-		return {"status": "successfully saved"}
-	else:
-		response.status = 200
-		return {"status": "some error occured"}
+    data = request.json 
+    returnValue = createBookmark(data['UserId'], data['PostId'])
+    if returnValue == 1:
+        response.status = 201
+        return {"status": "successfully saved"}
+    else:
+        response.status = 200
+        return {"status": "some error occured"}
 
 @app.route('/getBookmarks/<userId>', method='GET')
 def getQuestionList(userId):
-	returnValue = getQuestionListByBookmark(userId)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "successfully retrieved", "data": returnValue}
+    returnValue = getQuestionListByBookmark(userId)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "successfully retrieved", "data": returnValue}
 
 @app.route('/getRecommendations/<userId>', method='GET')
 def getQuestionList(userId):
-	returnValue = recommendQuestions(userId)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "successfully retrieved", "data": returnValue}
+    returnValue = recommendQuestions(userId)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "successfully retrieved", "data": returnValue}
 
 
 """ Sample
@@ -286,241 +290,251 @@ def getQuestionList(userId):
 
 @app.route('/userInterest', method='POST')
 def addUserInterest():
-	data = request.json	
-	returnValue = createUserInterest(data)
-	if returnValue == 1:
-		response.status = 201
-		return {"status": "successfully saved"}
-	else:
-		response.status = 200
-		return {"status": "some error occured"}
-			
+    data = request.json 
+    returnValue = createUserInterest(data)
+    if returnValue == 1:
+        response.status = 201
+        return {"status": "successfully saved"}
+    else:
+        response.status = 200
+        return {"status": "some error occured"}
+            
 #Route for ask question page
 @app.route('/ask', method = 'GET')
 def askQuestion():
-	username = request.GET.get('username')
-	return template('index/ask.html', username=username)
-		
+    username = request.GET.get('username')
+    userid = getUserId(username)
+    return template('index/ask.html', username=username, userid=userid)
+        
 @app.route('/getInterest/<userId>', method='GET')
 def getInterest(userId):
-	returnValue = getInterestOfUser(userId)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "successfully retrieved", "data": returnValue}
+    returnValue = getInterestOfUser(userId)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "successfully retrieved", "data": returnValue}
 
 @app.route('/interest', method = 'GET')
 def interest():
     username = request.GET.get('username') 
-    return template('index/interest.html',username=username)
-	
+    userid = getUserId(username)
+    return template('index/interest.html',username=username, userid=userid)
+    
 @app.route('/follow', method = "POST")
 def followUser():
-	data = request.json
-	returnValue = follow(data)
-	if returnValue == 1:
-		response.status = 201
-		return {"status": "successfully saved"}
-	else:
-		response.status = 200
-		return {"status": "some error occured"}
-		
+    data = request.json
+    returnValue = follow(data)
+    if returnValue == 1:
+        response.status = 201
+        return {"status": "successfully saved"}
+    else:
+        response.status = 200
+        return {"status": "some error occured"}
+        
 @app.route('/unfollow', method = "POST")
 def unFollowUser():
-	data = request.json
-	returnValue = unFollow(data)
-	if returnValue == 1:
-		response.status = 201
-		return {"status": "successfully saved"}
-	else:
-		response.status = 200
-		return {"status": "some error occured"}
+    data = request.json
+    returnValue = unFollow(data)
+    if returnValue == 1:
+        response.status = 201
+        return {"status": "successfully saved"}
+    else:
+        response.status = 200
+        return {"status": "some error occured"}
 
 
 #Method to verify password
 @app.route('/checkPassword', method = 'POST')
 def verifyPassword():
-	data = request.json
-	returnValue = checkPassword(data)
-	if(returnValue == 1):
-		response.status = 200
-		return {"status": "successfully saved", "result" : returnValue}
-	else:
-		response.status = 404
-		return {"status": "some error occured", "result" : returnValue}
+    data = request.json
+    returnValue = checkPassword(data)
+    if(returnValue == 1):
+        response.status = 200
+        return {"status": "successfully saved", "result" : returnValue}
+    else:
+        response.status = 404
+        return {"status": "some error occured", "result" : returnValue}
 
 #Method to add a user
 @app.route('/createUser', method = 'POST')
 def addUser():
-	data = request.json
-	returnValue = createUser(data)
-	if(returnValue == 1):
-		response.status = 201
-		return {"status": "successfully saved", "result" : returnValue}
-	else:
-		response.status = 200
-		return {"status": "some error occured", "result" : returnValue}
+    data = request.json
+    returnValue = createUser(data)
+    if(returnValue == 1):
+        response.status = 201
+        return {"status": "successfully saved", "result" : returnValue}
+    else:
+        response.status = 200
+        return {"status": "some error occured", "result" : returnValue}
 
 #Method to get user id
 @app.route('/getUserId/<userName>', method = 'GET')
 def userId(userName):
-	data = request.json
-	returnValue = getUserId(userName)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "success", "result" : returnValue}
+    data = request.json
+    returnValue = getUserId(userName)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "success", "result" : returnValue}
 
 @app.route('/getUserDetails/<uId>', method = "GET")
 def userDetails(uId):
-	returnValue = getAllDetailsOfUser(uId)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "successfully retrieved", "data" : returnValue}
+    returnValue = getAllDetailsOfUser(uId)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "successfully retrieved", "data" : returnValue}
 
 @app.route('/bookmarkList', method='GET')
 def bookmarkList():
-	username = request.GET.get('username')
-	return template('index/bookmarks.html',username=username)
+    username = request.GET.get('username')
+    userid = getUserId(username)
+    return template('index/bookmarks.html',username=username, userid=userid)
 
 @app.route('/profile', method = 'GET')
 def interest():
-	userId = request.GET.get('cId')
-	username = getUserName(userId)
-	return template('index/profile.html',username=username)
+    userid = request.GET.get('cId')
+    username = getUserName(userid)
+    return template('index/profile.html',username=username, userid=userid)
 
 @app.route('/piechartdata/<userName>', method = "GET")
 def getpiechartdata(userName):
-	userId = getUserId(userName)
-	returnValue = getDataForPie(userId)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "success", "result" : returnValue}
+    userId = getUserId(userName)
+    returnValue = getDataForPie(userId)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "success", "result" : returnValue}
 
 @app.route('/searchQuery', method='GET')
 def callSearch():
-	username = request.GET.get('username')
-	return template('index/search.html',username=username)
+    username = request.GET.get('username')
+    userid = getUserId(username)
+    return template('index/search.html',username=username, userid=userid)
 
 #Method to get sorted list of questions for a topic 
 @app.route('/getSortedQuestionList/<topic>/<parameter>', method='GET')
 @app.route('/getSortedQuestionList/<topic>/<parameter>/<page>', method='GET')
 def getQuestionList(topic, parameter, page=1):
-	print topic, parameter, page
-	returnValue = getSortedQuestionListByTopic(topic,parameter,page)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "success", "result" : returnValue}
+    print topic, parameter, page
+    returnValue = getSortedQuestionListByTopic(topic,parameter,page)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "success", "result" : returnValue}
 
-		
-		
+        
+        
 @app.route('/topicvis')
 def topicvisualization(): 
-	username = request.GET.get('username')
-	return template('index/topicvis.html', username=username)
+    username = request.GET.get('username')
+    userid = getUserId(username)
+    return template('index/topicvis.html', username=username, userid=userid)
 
 @app.route('/getTagCloudList/<userId>', method = 'GET')
 def getTagCloudList(userId):
-	returnValue = getTagFrequency(userId)
-	if returnValue == -1:
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return returnValue
-	
+    returnValue = getTagFrequency(userId)
+    if returnValue == -1:
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return returnValue
+    
 @app.route('/stackchartdata/<userName>', method = "GET")
 def getStackData(userName):
-	userId = getUserId(userName)
-	returnValue = getDataForStack1(userId)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "success", "result" : returnValue}
-		
+    userId = getUserId(userName)
+    returnValue = getDataForStack1(userId)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "success", "result" : returnValue}
+        
 @app.route('/stack')
 def stackData(): 
-	username = request.GET.get('username')
-	return template('index/stack.html', username=username)
+    username = request.GET.get('username')
+    userid = getUserId(username)
+    return template('index/stack.html', username=username, userid=userid)
 
 @app.route('/isactive/<userName>', method = "GET")
 def isUserActive(userName):
-	userId = getUserId(userName)
-	returnValue = isActive(userId)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "success", "result" : returnValue}
-		
+    userId = getUserId(userName)
+    returnValue = isActive(userId)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "success", "result" : returnValue}
+        
 @app.route('/getMyQuestions/<userName>/<pageNo>', method = "GET")
 def getMyQuestionList(userName, pageNo):
-	userId = getUserId(userName)
-	returnValue = getMyQuestions(userId)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "success", "result" : returnValue}
-		
+    userId = getUserId(userName)
+    returnValue = getMyQuestions(userId)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "success", "result" : returnValue}
+        
 @app.route('/getMyAnswers/<userName>/<pageNo>', method = "GET")
 def getMyAnswersList(userName, pageNo):
-	userId = getUserId(userName)
-	returnValue = getMyAnswerQuestions(userId)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "success", "result" : returnValue}
-		
+    userId = getUserId(userName)
+    returnValue = getMyAnswerQuestions(userId)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "success", "result" : returnValue}
+        
 @app.route('/myquestions', method='GET')
 def bookmarkList():
-	username = request.GET.get('username')
-	return template('index/myquestions.html',username=username)
-	
+    username = request.GET.get('username')
+    userid = getUserId(username)
+    return template('index/myquestions.html',username=username, userid=userid)
+    
 @app.route('/myanswers', method='GET')
 def bookmarkList():
-	username = request.GET.get('username')
-	return template('index/myanswers.html',username=username)
-	
+    username = request.GET.get('username')
+    userid = getUserId(username)
+    return template('index/myanswers.html',username=username, userid=userid)
+    
 @app.route('/topicvis', method = 'GET')
 def topicVis():
-	username = request.GET.get('username')
-	return template('index/topicvis.html', username=username)
-	
+    username = request.GET.get('username')
+    userid = getUserId(username)
+    return template('index/topicvis.html', username=username, userid=userid)
+    
 @app.route('/activities', method = 'GET')
 def activities():
-	username = request.GET.get('username')
-	return template('index/stack.html', username=username)
+    username = request.GET.get('username')
+    userid = getUserId(username)
+    return template('index/stack.html', username=username, userid=userid)
 
 @app.route('/getsimilarusers/<userName>', method = "GET")
 def isUserActive(userName):
-	userId = getUserId(userName)
-	returnValue = getSimilarUsersForUI(userId)
-	if(returnValue == -1):
-		response.status = 404
-		return {"status": "not found"}
-	else:
-		response.status = 200
-		return {"status": "success", "result" : returnValue}
+    userId = getUserId(userName)
+    returnValue = getSimilarUsersForUI(userId)
+    if(returnValue == -1):
+        response.status = 404
+        return {"status": "not found"}
+    else:
+        response.status = 200
+        return {"status": "success", "result" : returnValue}
 
 run(app, host=config.get('database','host'), port=config.get('database','port'), debug=True)
 

@@ -18,6 +18,7 @@
         <script src="/static/scripts/vendor/ckeditor.js"></script>
         <script src="/static/scripts/vendor/mustache.min.js"></script>
         <script src="/static/scripts/vendor/sb-admin-2.js"></script>
+        <script src="/static/scripts/activateViz.js"></script>
         <!-- <script src="/static/scripts/richtexteditor.js"></script> -->
        
     <!-- Custom CSS -->
@@ -160,7 +161,7 @@
                         <a href="/mainPage?username={{username}}">Home</a>
                     </li>
                     <li>
-                        <a id="profile" href="/profile?uId={{username}}&cId={{username}}">Profile</a>
+                        <a id="profile" href="/profile?uId={{userid}}&cId={{userid}}">Profile</a>
                     </li>
                    
              
@@ -170,7 +171,7 @@
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a id="profile" href="/profile?username={{username}}"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        <li><a id="profile" href="/profile?uId={{userid}}&cId={{userid}}"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
                         
                         <li class="divider"></li>

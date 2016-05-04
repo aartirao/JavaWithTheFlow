@@ -28,7 +28,6 @@ def getTags():
                 a = s.split("><")
                 for each in a:
                     tags[each] = row[u'TopicId']                            
-            print i
             i = i + 1
     return tags
 
@@ -39,7 +38,6 @@ def putTags(tags):
             query = "INSERT INTO Tags(TagName, TopicId) values (%s, %s)"
             cursor.execute(query, (tag, tags[tag]))
             connection.commit()
-            print "ins" + str(i) 
             i = i + 1
             
             
@@ -73,7 +71,6 @@ def getTagFrequency(userid):
                         result[each] = result[each] + 1
                     else:
                         result[each] = 1
-            #print i
             i = i + 1
         resultlist = sorted(result.items(), key=operator.itemgetter(1))
         resultlist.reverse()
@@ -83,9 +80,7 @@ def getTagFrequency(userid):
         childs = {}
         
         for (each, val) in resultlist[:150]:
-            if each != "java":
-                #children.append({"name":each, "size": val})
-                print each, tags[each]
+            if each != "java":                
                 if tags[each] not in childs.keys():
                     childs[tags[each]] = [{"name":each, "size": val}]
                 else:
@@ -97,8 +92,7 @@ def getTagFrequency(userid):
             subchildren = []
             #for e in childs[each]:
             #    subchildren.append(e)
-            children.append({"name": i, "children":childs[each]})
-        print childs                
+            children.append({"name": i, "children":childs[each]})                        
         res["children"] = children
         return res
              
