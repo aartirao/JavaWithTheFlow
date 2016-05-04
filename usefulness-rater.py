@@ -65,7 +65,7 @@ try:
 
                 TimeScore= 2 ** ((sumOfDuration+1)/5)
 
-                randomNumber=random.randint(10,300)
+                randomNumber=random.randint(1500,5000)
                 if(a['ViewCount'] == None):
                     a['ViewCount'] = 0
                     

@@ -15,11 +15,36 @@
         <script src="/static/scripts/vendor/jquery-ui.js"></script>
         <script src="/static/scripts/vendor/jquery_loadTemplate.js"></script>
         <script src="/static/scripts/vendor/powerange.js"></script>
-        <script src="/static/scripts/vendor/ckeditor.js"></script>
+     
         <script src="/static/scripts/vendor/mustache.min.js"></script>
         <script src="/static/scripts/vendor/sb-admin-2.js"></script>
         <!-- <script src="/static/scripts/richtexteditor.js"></script> -->
-       
+       <script>
+             var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };   
+        $(function() {
+            $('#search-box').keypress(function (e) {
+                var key = e.which;
+                if(key == 13)  // the enter key code
+                {
+                    var query = $('#search-box').val();
+                    window.location.href = "/searchQuery?query="+query+"&username="+getUrlParameter("username");
+                }
+            });              
+        });    
+    </script>
     <!-- Custom CSS -->
     <link href="/static/css/sb-admin-2.css" rel="stylesheet" />
     <!-- Custom Fonts -->
@@ -138,9 +163,7 @@
                     </li>
                    
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
-                    </a>
+                    
                     <ul class="dropdown-menu dropdown-alerts">
                        
                     </ul>
@@ -171,7 +194,7 @@
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
                             <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="Search...">
+                                <input id="search-box" type="text" class="form-control" placeholder="Eg. Inheritance">
                                 <span class="input-group-btn">
                                 <button class="btn btn-default" type="button">
                                     <i class="fa fa-search"></i>

@@ -34,7 +34,32 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script>
+          var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
 
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };   
+        $(function() {
+            $('#search-box').keypress(function (e) {
+                var key = e.which;
+                if(key == 13)  // the enter key code
+                {
+                    var query = $('#search-box').val();
+                    window.location.href = "/searchQuery?query="+query+"&username="+getUrlParameter("username");
+                }
+            });              
+        });    
+    </script>
 </head>
 
 <body>
@@ -54,27 +79,38 @@
             </div>
             <!-- /.navbar-header -->
 
-            <ul class="nav navbar-top-links navbar-right">
-
-                <li>
-                    <a href="services.html">Home</a>
-                </li>
-                <li>
-                    <a href="contact.html">Profile</a>
-                </li>
-
-
+           <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{username}} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="/myquestions?username={{username}}">My Questions</a>
+                            </li>
+                            <li>
+                                <a href="/myanswers?username={{username}}">My Answers</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/mainPage?username={{username}}">Home</a>
+                    </li>
+                    <li>
+                        <a id="profile" href="/profile?uId={{username}}&cId={{username}}">Profile</a>
+                    </li>
+                   
+             
                 <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        <li><a id="profile" href="/profile?username={{username}}"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
-
+                        
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="/loginPage"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -88,7 +124,7 @@
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
                             <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="Search...">
+                                <input id="search-box" type="text" class="form-control" placeholder="Eg. Inheritance">
                                 <span class="input-group-btn">
                                 <button class="btn btn-default" type="button">
                                     <i class="fa fa-search"></i>
@@ -96,29 +132,27 @@
                             </span>
                             </div>
                             <!-- /input-group -->
-                            <li>
-                                <a href="tables.html"><i class="fa fa-table fa-fw"></i> All Activities</a>
-                            </li>
-                            <br>
-                            <li>
-                                <a href="forms.html">My Answers </a>
-                            </li>
-                            <li>
-                                <a href="forms.html">My Questions </a>
-                            </li>
-                            <li>
-                                <a href="forms.html"> Bookmarks </a>
-                            </li>
-                            <li>
-                                <a href="forms.html">Interests </a>
-                            </li>
-                            <li>
-                                <a href="forms.html">Followers </a>
-                            </li>
-                            <li>
-                                <a href="forms.html"> Following </a>
-                            </li>
-
+                             <li>
+                            <a href="/myanswers?username={{username}}">My Answers </a>
+                        </li>
+                        <li>
+                            <a href="/myquestions?username={{username}}">My Questions </a>
+                        </li>
+                        <li>
+                            <a href="/bookmarkList?username={{username}}"> Bookmarks </a>
+                        </li>
+                        <li>
+                            <a href="/interest?username={{username}}">Interests </a>
+                        </li>
+                        <li>
+                            <a id="vis1" style="display: none" href="/bubble?username={{username}}">Visualization - Trending topics in Interests </a>
+                        </li>
+                        <li>
+                            <a id="vis2" style="display: none" href="/stack?username={{username}}">Visualization - Topic-wise contributions  </a>
+                        </li>
+                        <li>
+                            <a id="vis3" style="display: none" href="/topicvis?username={{username}}">Visualization - Time spent under each category </a>
+                        </li>
 
                     </ul>
                 </div>
