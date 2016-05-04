@@ -61,10 +61,10 @@ try:
 
                 TimeScore= 2 ** ((sumOfDuration+1)/5)
 
-
+                randomNumber=random.randint(10,300)
                 if(a['ViewCount'] == None):
                     a['ViewCount'] = 0
-                    randomNumber=random.randint(10,300)
+                    
                     usefulness = (((a['ViewCount']) * 1 )+ (sumOfDuration * 2) + (SelectTextScore * 3) ) + user_rating + randomNumber
                 else:
                     usefulness = (((a['ViewCount']) * 1 )+ (sumOfDuration * 2) + (SelectTextScore * 3) ) + user_rating + randomNumber
