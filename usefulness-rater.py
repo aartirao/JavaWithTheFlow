@@ -75,7 +75,7 @@ try:
 
                 with connection.cursor() as cursor:
                  sql = """UPDATE `Posts` SET
-                 `usefullness` = %s   WHERE Id = %s"""
+                 `usefulness` = %s   WHERE Id = %s"""
                  cursor.execute(sql, (usefulness,a['Id']))
                 print(a['Id'])
                 usefulness=0
