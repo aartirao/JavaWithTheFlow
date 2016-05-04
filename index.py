@@ -298,7 +298,8 @@ def addUserInterest():
 #Route for ask question page
 @app.route('/ask', method = 'GET')
 def askQuestion():
-	return template('index/ask.html')
+	username = request.GET.get('username')
+	return template('index/ask.html', username=username)
 		
 @app.route('/getInterest/<userId>', method='GET')
 def getInterest(userId):

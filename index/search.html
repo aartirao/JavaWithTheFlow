@@ -201,30 +201,26 @@
                             </span>
                             </div>
                             <!-- /input-group -->
-                             <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> All Activities</a>
-                        </li>
-                        <br>
-                        <li>
-                            <a href="forms.html"> Answers </a>
+                           <li>
+                            <a href="/myanswers?username={{username}}">My Answers </a>
                         </li>
                         <li>
-                            <a href="forms.html"> Questions </a>
+                            <a href="/myquestions?username={{username}}">My Questions </a>
                         </li>
                         <li>
-                            <a id="bookmarks" href="#"> Bookmarks </a>
+                            <a href="/bookmarkList?username={{username}}"> Bookmarks </a>
                         </li>
                         <li>
-                            <a href="forms.html">Interests </a>
+                            <a href="/interest?username={{username}}">Interests </a>
                         </li>
                         <li>
-                            <a href="forms.html">Followers </a>
+                            <a id="vis1" style="display: none" href="/bubble?username={{username}}">Visualization - Trending topics in Interests </a>
                         </li>
                         <li>
-                            <a href="forms.html"> Following </a>
+                            <a id="vis2" style="display: none" href="/stack?username={{username}}">Visualization - Topic-wise contributions  </a>
                         </li>
                         <li>
-                            <a href="forms.html"> Account </a>
+                            <a id="vis3" style="display: none" href="/topicvis?username={{username}}">Visualization - Time spent under each category </a>
                         </li>
                             
                        
@@ -239,9 +235,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <h1 class="page-header">Search Results</h1>
-                   
-                        <br/>
-
+                        <h4> <a href="/ask?username={{username}}"> Ask a question </a></h4>
                         <div id="loader">
                             <img class="coffee" src="/static/img/coffee.gif">
                         </div>

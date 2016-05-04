@@ -3,7 +3,7 @@ import datetime
 import json
 import traceback
 import ConfigParser
-
+import random
 config = ConfigParser.ConfigParser()
 config.read('db.cfg')
 
@@ -44,33 +44,38 @@ try:
                 sumOfDuration = 0 ;
                 for b in rating:
                     if(a['Id']==b['PostId']):
-                       user_rating = b['sum(Rating)']
-                       print (user_rating)
-                       break
+                    	user_rating = b['sum(Rating)']
+                      	if(user_rating == None ):
+							user_rating = 0
+                       	break
 
                 for c in count_act:
                     if(a['Id']==c['PostId']):
                        SelectTextScore = c['count(EventId)']
-                       print (user_rating)
+                       if(SelectTextScore == None):
+                            SelectTextScore = 0
                        break
                 for d in dur:
                     if(a['Id']==d['PostId']):
                        sumOfDuration = d['sum(Duration)']
-                       print (user_rating)
+                       if(sumOfDuration == None):
+                            sumOfDuration = 0
                        break
+                       
 
                 TimeScore= 2 ** ((sumOfDuration+1)/5)
 
-
+                randomNumber=random.randint(10,300)
                 if(a['ViewCount'] == None):
                     a['ViewCount'] = 0
-                    usefulness = (((a['ViewCount']) * 1 )+ (sumOfDuration * 2) + (SelectTextScore * 3) ) + user_rating
+                    
+                    usefulness = (((a['ViewCount']) * 1 )+ (sumOfDuration * 2) + (SelectTextScore * 3) ) + user_rating + randomNumber
                 else:
-                    usefulness = (((a['ViewCount']) * 1 )+ (sumOfDuration * 2) + (SelectTextScore * 3) ) + user_rating
+                    usefulness = (((a['ViewCount']) * 1 )+ (sumOfDuration * 2) + (SelectTextScore * 3) ) + user_rating + randomNumber
 
                 with connection.cursor() as cursor:
                  sql = """UPDATE `Posts` SET
-                 `Usefulness` = %s   WHERE Id = %s"""
+                 `usefulness` = %s   WHERE Id = %s"""
                  cursor.execute(sql, (usefulness,a['Id']))
                 print(a['Id'])
                 usefulness=0
