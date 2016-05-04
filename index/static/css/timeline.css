@@ -177,4 +177,7 @@
         border-right-width: 14px;
         border-left-width: 0;
     }
+
+.tagline {
+    font-size: x-large;
 }
