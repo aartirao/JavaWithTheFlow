@@ -6,6 +6,7 @@ import traceback
 import json
 import operator
 import ConfigParser
+import random
 from search import searchQuery
 
 config = ConfigParser.ConfigParser()
@@ -44,10 +45,12 @@ def getRatings(user):
 		return -1
 
 def pearson_correlation(user1, user2):
+	print "pearson_correlation"
 	user1RatingsDict = getRatings(user1)
-	user1Ratings = [user1RatingsDict[topic] for topic in user1RatingsDict]
 	user2RatingsDict = getRatings(user2)
-	user2Ratings = [user2RatingsDict[topic] for topic in user2RatingsDict]
+	common_topics = [topic for topic in user1RatingsDict if user1RatingsDict[topic] != 0 and user2RatingsDict[topic] != 0]
+	user1Ratings = [user1RatingsDict[topic] for topic in common_topics]
+	user2Ratings = [user2RatingsDict[topic] for topic in common_topics]
 	return pearsonr(user1Ratings, user2Ratings)[0]
 
 def getAllUsers():
@@ -55,13 +58,14 @@ def getAllUsers():
 	print "In allUsers"
 	try:
 		with connection.cursor() as cursor:
-			sql = """select `Id` from `Users` LIMIT 10"""
+			sql = """select `Id` from `Users` LIMIT 1000"""
 			rowCount = cursor.execute(sql)
 			if rowCount > 0:
 				result = cursor.fetchall()
 			for row in result:
 				allUsers.append(row[u'Id'])
 		#print allUsers
+		allUsers = random.sample(allUsers, 10)
 		return allUsers
 
 	except Exception, e:
