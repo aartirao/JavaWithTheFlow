@@ -36,7 +36,7 @@ $(document).ready(function () {
 
 	});
 
-	$("#create").click(function(){
+	$("#create").click(function(event){
 		event.preventDefault();
 		username = $("#newuser").val();
 		password = $("#newpwd").val();
@@ -53,7 +53,7 @@ $(document).ready(function () {
 		  contentType: 'application/json'
 		}).done(function( msg ) {
 		  console.log("User logged in");
-		  window.location.href = "/interests?username="+username;
+		  window.location.href = "/interest?username="+username;
 
 		}).fail(function( jqXHR, textStatus ) {
 		  alert( "Request failed: " + textStatus );

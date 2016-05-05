@@ -108,7 +108,10 @@
               url: "/userInterest",
               method: "POST",
               data: JSON.stringify(data),
-              contentType: 'application/json'
+              contentType: 'application/json',
+              success: function(result) {
+                window.location.href = "/mainPage?username="+getUrlParameter("username");
+              }
             });
         }
         
