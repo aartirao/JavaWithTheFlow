@@ -134,10 +134,11 @@
             $(".post").empty();
             $("#grouptraffic").empty();
             var criteria = getTrueValue();
+            var user = getUrlParameter("username");
             if(criteria == "Relevance") {
-                getPostsPaginate(page);
+                getPostsPaginate(page,user);
             } else {
-                getPostsPaginateOrder(criteria,page);
+                getPostsPaginateOrder(criteria,page,user);
             }
 
             
@@ -149,25 +150,27 @@
 
         $("#sorter" ).change(function() {
           var current = $("#sorter").val();
+          var user = getUrlParameter("username");
           if(current == "Usefulness" || current == "ViewCount") {
-            getSortedList(current);
+            getSortedList(current,user);
           } else if(current == "Relevance") {
-            postsByRelevance();
+            postsByRelevance(user);
           }
         });
 
         $(".dropdown-content a").click(function () {
+            var user = getUrlParameter("username");
             $("#grouptraffic").empty();
             var current = $(this).attr("value");
             changeValues(current);
             if(current == "Usefulness" || current == "ViewCount") {
-            getSortedList(current);
+            getSortedList(current,user);
           } else if(current == "Relevance") {
-            postsByRelevance();
+            postsByRelevance(user);
           }
         });
 
-        function getPostsPaginate(page) {
+        function getPostsPaginate(page,user) {
             $.ajax({url: '/getQuestionList/'+getUrlParameter('topic')+'/'+page, success: function(result){
             $("#templates").load("/static/templates/question.html", function() {
                 var template = document.getElementById('qTemplate').innerHTML;
@@ -181,6 +184,7 @@
                         }
                     })
                     qList[i]["Tags1"] = words;
+                    qList[i]["username"] = user;
                     var output = Mustache.render(template, qList[i]);
                     $("#grouptraffic").append(output);
                     $(".paginationHolder").show();
@@ -189,7 +193,7 @@
         }}); 
         }
 
-        function getPostsPaginateOrder(parameter,page) {
+        function getPostsPaginateOrder(parameter,page,user) {
             $.ajax({url: '/getSortedQuestionList/'+getUrlParameter('topic')+'/'+parameter+'/'+page, success: function(result){
             $("#templates").load("/static/templates/question.html", function() {
                 var template = document.getElementById('qTemplate').innerHTML;
@@ -203,6 +207,7 @@
                         }
                     })
                     qList[i]["Tags1"] = words;
+                    qList[i]["username"] = user;
                     var output = Mustache.render(template, qList[i]);
                     $("#grouptraffic").append(output);
                     $(".paginationHolder").show();
@@ -211,7 +216,7 @@
             }}); 
         }
 
-        function getSortedList(parameter) {
+        function getSortedList(parameter,user) {
             var topic = getUrlParameter('topic');
             $.ajax({url: '/getSortedQuestionList/'+getUrlParameter('topic')+'/'+parameter, success: function(result){
             $("#templates").load("/static/templates/question.html", function() {
@@ -226,6 +231,7 @@
                         }
                     })
                     qList[i]["Tags1"] = words;
+                    qList[i]["username"] = user;
                     var output = Mustache.render(template, qList[i]);
                     $("#grouptraffic").append(output);
                     $(".paginationHolder").show();
