@@ -133,6 +133,17 @@ function bubble(root) {
              bubble(result);  
       }}); 
     }
+
+ $(function() {
+            $('#search-box').keypress(function (e) {
+                var key = e.which;
+                if(key == 13)  // the enter key code
+                {
+                    var query = $('#search-box').val();
+                    window.location.href = "/searchQuery?query="+query+"&username="+getUrlParameter("username");
+                }
+            });              
+        }); 
     
 </script>
 <div id="wrapper">
